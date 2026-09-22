@@ -1,0 +1,40 @@
+/* stylelint-disable max-line-length */
+@font-face {
+  font-family: asar;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/asar-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'source sans pro';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../fonts/source-sans-pro-light.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'source sans pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/source-sans-pro-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'source sans pro';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/source-sans-pro-italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'source sans pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/source-sans-pro-semibold.woff2') format('woff2');
+}
