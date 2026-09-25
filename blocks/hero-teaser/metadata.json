@@ -1,0 +1,39 @@
+{
+  "id": "hero-teaser",
+  "name": "hero-teaser",
+  "variantName": "hero-teaser",
+  "type": "hero",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "version": "1.0.0",
+  "created": "2026-09-25T12:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://wknd.site/us/en.html",
+    "discoveredDuring": "site-migration per-page path",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "featured-adventure",
+    "imagePattern": "full-bleed",
+    "structure": "image + heading + description + CTA",
+    "position": "middle",
+    "isFullWidth": true,
+    "notes": "Mid-page full-bleed photo with overlapping white content box; visually matches carousel-hero slide"
+  },
+  "contentPattern": {
+    "structure": "Row 1: image; Row 2: h2, paragraph, CTA link",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "options": [],
+  "memberVariantIds": ["hero-teaser"],
+  "usage": {
+    "pagesUsing": [
+      { "url": "https://wknd.site/us/en.html", "instanceId": null, "screenshot": "migration-work/screenshot.png" }
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-25T12:00:00.000Z"
+  }
+}

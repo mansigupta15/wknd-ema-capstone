@@ -1,0 +1,112 @@
+{
+  "templates": [
+    {
+      "name": "home",
+      "urls": [
+        "https://wknd.site/us/en.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en.html",
+      "description": "WKND homepage: hero carousel, featured article, article/adventure card grids and a hero teaser",
+      "blocks": [
+        {
+          "name": "carousel-hero",
+          "instances": [
+            ".carousel.cmp-carousel--hero"
+          ]
+        },
+        {
+          "name": "columns-featured",
+          "instances": [
+            ".teaser.cmp-teaser--featured"
+          ]
+        },
+        {
+          "name": "cards-article",
+          "instances": [
+            ".image-list.list"
+          ]
+        },
+        {
+          "name": "hero-teaser",
+          "instances": [
+            ".teaser.cmp-teaser--hero.cmp-teaser--imagebottom"
+          ]
+        }
+      ],
+      "urlPattern": "/us/*",
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "hero-carousel",
+          "selector": [
+            ".carousel.cmp-carousel--hero"
+          ],
+          "style": null,
+          "blocks": [
+            "carousel-hero"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "featured-article",
+          "selector": [
+            ".teaser.cmp-teaser--featured"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-featured"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3",
+          "name": "recent-articles",
+          "selector": [
+            ".teaser.cmp-teaser--featured + .title.cmp-title--underline"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            ".teaser.cmp-teaser--featured + .title.cmp-title--underline",
+            ".teaser.cmp-teaser--featured ~ .button.cmp-button--primary"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "next-adventures",
+          "selector": [
+            ".cmp-layout-container--fixed .separator + .title.cmp-title--underline"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-teaser"
+          ],
+          "defaultContent": [
+            ".cmp-layout-container--fixed .separator + .title.cmp-title--underline"
+          ]
+        },
+        {
+          "id": "section-5",
+          "name": "where-to-go",
+          "selector": [
+            ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed .title",
+            ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed .button.cmp-button--primary"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "projectType": "da"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "cards-article",
+  "name": "cards-article",
+  "variantName": "cards-article",
+  "type": "cards",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "version": "1.0.0",
+  "created": "2026-09-25T12:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://wknd.site/us/en.html",
+    "discoveredDuring": "site-migration per-page path",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "article-listing",
+    "imagePattern": "top-image",
+    "structure": "image + title + description",
+    "position": "middle",
+    "hasGrid": true,
+    "notes": "4-up row, uppercase bold title, single-line truncated grey uppercase description, no card borders"
+  },
+  "contentPattern": {
+    "structure": "One row per card: cell 1 = linked image; cell 2 = linked title (heading/strong), description paragraph",
+    "buttonCount": 0,
+    "imageCount": 4
+  },
+  "options": [],
+  "memberVariantIds": ["cards-article"],
+  "usage": {
+    "pagesUsing": [
+      { "url": "https://wknd.site/us/en.html", "instanceId": null, "screenshot": "migration-work/screenshot.png" }
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-09-25T12:00:00.000Z"
+  }
+}

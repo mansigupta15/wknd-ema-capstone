@@ -1,0 +1,207 @@
+/* full-bleed: undo the section max-width and gutter for this block's section */
+.carousel-hero-container .carousel-hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+/* WKND .root caps the page at 1680px and centres it; the hero follows that cap */
+.carousel-hero {
+  position: relative;
+  max-width: 1680px;
+  margin: 0 auto 72px;
+}
+
+.carousel-hero .carousel-hero-slides-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-hero .carousel-hero-slides,
+.carousel-hero .carousel-hero-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* all slides share one grid cell; only the active one is visible and sizes
+   the carousel (inactive slides are out of flow, like the source) */
+.carousel-hero .carousel-hero-slides {
+  position: relative;
+  display: grid;
+}
+
+.carousel-hero .carousel-hero-slide {
+  grid-area: 1 / 1;
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.carousel-hero .carousel-hero-slide.carousel-hero-slide-active {
+  position: relative;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* image: natural ratio in a 400px-max box that crops the bottom (WKND
+   .cmp-teaser--hero). The source img sits inline on a 27px line, leaving a 7px
+   baseline gap under it; reproduced as padding so it holds in any doc mode. */
+.carousel-hero .carousel-hero-slide-image {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 400px;
+  padding-bottom: 7px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.carousel-hero .carousel-hero-slide-image picture,
+.carousel-hero .carousel-hero-slide-image img {
+  display: block;
+  width: 100%;
+}
+
+.carousel-hero .carousel-hero-slide-image img {
+  height: auto;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* content stacks under the image on smaller screens */
+.carousel-hero .carousel-hero-slide-content {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 14px;
+  background-color: var(--background-color);
+}
+
+.carousel-hero .carousel-hero-slide-content > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 18px 0 0;
+}
+
+.carousel-hero .carousel-hero-slide-content > p:not(.carousel-hero-cta) {
+  margin: 0;
+  line-height: 31.5px;
+}
+
+/* CTA keeps the global a.button.accent look; only its spacing is set here */
+.carousel-hero .carousel-hero-slide-content > p.carousel-hero-cta {
+  margin: 18px 0;
+}
+
+/* controls: dots (left on mobile, centered from 768px) + arrows on the right.
+   Below 768px the source floats both, so they hang in the 72px bottom margin
+   and take no space; from 768px only the dots row (9px + 10px) is in flow. */
+.carousel-hero .carousel-hero-controls {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.carousel-hero .carousel-hero-controls nav {
+  flex: 1 1 auto;
+}
+
+.carousel-hero .carousel-hero-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 9px;
+  padding: 14px 0 0 14px;
+  line-height: 0;
+}
+
+.carousel-hero .carousel-hero-indicator {
+  margin: 0 7px;
+}
+
+.carousel-hero .carousel-hero-indicator button {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(175 175 175);
+  cursor: pointer;
+}
+
+.carousel-hero .carousel-hero-indicator button[aria-current='true'] {
+  background-color: rgb(0 0 0 / 80%);
+  cursor: default;
+}
+
+.carousel-hero .carousel-hero-arrows {
+  display: flex;
+  flex: 0 0 auto;
+  height: 0;
+  overflow: visible;
+}
+
+.carousel-hero .carousel-hero-arrows button {
+  box-sizing: border-box;
+  width: 26px;
+  height: 24px;
+  margin: 0 13.333px 0 0;
+  padding: 1px 0 1px 6px;
+  border: 0;
+  background: none;
+  color: rgb(0 0 0);
+  cursor: pointer;
+}
+
+/* 20px line-arrow icons (stand-in for the WKND icon font glyphs) */
+.carousel-hero .carousel-hero-arrows button::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.5 10h-15M9 3.5 2.5 10 9 16.5'/%3E%3C/svg%3E") center / 20px 20px no-repeat;
+}
+
+.carousel-hero .carousel-hero-arrows .carousel-hero-next::before {
+  transform: scaleX(-1);
+}
+
+@media (width >= 768px) {
+  .carousel-hero .carousel-hero-controls {
+    position: static;
+  }
+
+  .carousel-hero .carousel-hero-indicators {
+    justify-content: center;
+    padding: 0;
+  }
+}
+
+/* desktop: 640px image with a 1192px white box overlapping its bottom 180px */
+@media (width >= 1200px) {
+  .carousel-hero .carousel-hero-slide-image,
+  .carousel-hero .carousel-hero-slide-image img {
+    height: 640px;
+    max-height: 640px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content {
+    max-width: 1192px;
+    min-height: 180px;
+    margin-top: -180px;
+    padding: 0 28px;
+  }
+
+  .carousel-hero .carousel-hero-slide-no-image .carousel-hero-slide-content {
+    margin-top: 0;
+  }
+}

@@ -19,23 +19,24 @@
   --link-color: #0045ff;
   --link-hover-color: #002ba3;
   --accent-color: #ffea00;
+  --rule-color: #ebebeb;
 
   /* fonts */
   --body-font-family: 'source sans pro', source-sans-pro-fallback, sans-serif;
   --heading-font-family: asar, asar-fallback, georgia, 'times new roman', serif;
 
   /* body sizes */
-  --body-font-size-m: 20px;
-  --body-font-size-s: 18px;
-  --body-font-size-xs: 16px;
+  --body-font-size-m: 18px;
+  --body-font-size-s: 16px;
+  --body-font-size-xs: 14px;
 
-  /* heading sizes */
+  /* heading sizes (WKND uses the same scale on all viewports) */
   --heading-font-size-xxl: 48px;
-  --heading-font-size-xl: 40px;
-  --heading-font-size-l: 32px;
-  --heading-font-size-m: 28px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 20px;
+  --heading-font-size-xl: 36px;
+  --heading-font-size-l: 24px;
+  --heading-font-size-m: 20px;
+  --heading-font-size-s: 18px;
+  --heading-font-size-xs: 16px;
 
   /* nav height */
   --nav-height: 88px;
@@ -54,23 +55,6 @@
   src: local('Arial');
 }
 
-@media (width >= 900px) {
-  :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
-    /* heading sizes */
-    --heading-font-size-xxl: 60px;
-    --heading-font-size-xl: 44px;
-    --heading-font-size-l: 36px;
-    --heading-font-size-m: 30px;
-    --heading-font-size-s: 24px;
-    --heading-font-size-xs: 20px;
-  }
-}
-
 body {
   display: none;
   margin: 0;
@@ -78,7 +62,7 @@ body {
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 body.appear {
@@ -105,11 +89,11 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 0.8em;
-  margin-bottom: 0.25em;
+  margin-top: 27px;
+  margin-bottom: 13.5px;
   font-family: var(--heading-font-family);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.5;
   scroll-margin: 40px;
 }
 
@@ -126,8 +110,17 @@ ol,
 ul,
 pre,
 blockquote {
-  margin-top: 0.8em;
-  margin-bottom: 0.25em;
+  margin-top: 0;
+  margin-bottom: 13.5px;
+}
+
+/* section titles: short accent underline (WKND .cmp-title--underline) */
+main .default-content-wrapper h2::after {
+  content: '';
+  display: block;
+  width: 84px;
+  padding-top: 8px;
+  border-bottom: 2px solid var(--accent-color);
 }
 
 code,
@@ -168,7 +161,7 @@ a:hover {
 
 /* buttons */
 p.button-wrapper {
-  margin: 12px 0;
+  margin: 0 0 13.5px;
 }
 
 a.button:any-link,
@@ -181,13 +174,13 @@ button.button {
   margin: 0;
   border: 2px solid transparent;
   border-radius: 0;
-  padding: 0.6em 1.6em;
+  padding: 11.5px 30px;
   font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 21px;
   text-decoration: none;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -254,21 +247,25 @@ button.button.secondary:disabled:focus-visible {
   color: var(--dark-color);
 }
 
-/* high-impact call-to-action */
+/* high-impact call-to-action (WKND yellow CTA: borderless, no hover colour change) */
 a.button.accent,
 button.button.accent {
-  border-color: var(--accent-color);
+  border-width: 0;
+  padding: 14px 35px;
   background-color: var(--accent-color);
   color: var(--text-color);
 }
 
 a.button.accent:hover,
+button.button.accent:hover {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+}
+
 a.button.accent:focus-visible,
-button.button.accent:hover,
 button.button.accent:focus-visible {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--background-color);
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
 }
 
 a.button.accent[aria-disabled="true"],
@@ -280,6 +277,11 @@ button.button.accent:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
   color: var(--dark-color);
+}
+
+/* standalone section buttons ("All Articles") are a fixed 48px tall on WKND */
+main .default-content-wrapper a.button.accent {
+  padding: 13.5px 32px;
 }
 
 main img {
@@ -301,13 +303,24 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: 0;
 }
 
 main > .section > div {
+  box-sizing: border-box;
   max-width: 1200px;
   margin: auto;
-  padding: 0 24px;
+  padding: 0 14px;
+}
+
+/* card grids close with a light rule, like the WKND separators */
+main > .section.cards-article-container::after {
+  content: '';
+  display: block;
+  width: calc(100% - 28px);
+  max-width: 1136px;
+  margin: 64px auto 92px;
+  border-top: 1px solid var(--rule-color);
 }
 
 main > .section:first-of-type {

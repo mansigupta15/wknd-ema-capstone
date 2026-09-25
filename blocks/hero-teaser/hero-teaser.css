@@ -1,0 +1,81 @@
+/* hero-teaser: full-bleed photo with an overlapping white content box (WKND .cmp-teaser--hero) */
+
+/* full-bleed: release the block wrapper from the 1200px section column (source caps at 1680px) */
+.hero-teaser-container .hero-teaser-wrapper {
+  max-width: 1680px;
+  padding: 0;
+}
+
+.hero-teaser {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* image keeps its 1293:862 ratio, clipped to 400px tall; the source's 7px inline-img
+   baseline gap is reproduced as explicit padding so it is identical in quirks and standards mode */
+.hero-teaser .hero-teaser-media {
+  box-sizing: border-box;
+  max-height: 400px;
+  padding-bottom: 7px;
+  overflow: hidden;
+}
+
+.hero-teaser .hero-teaser-media picture,
+.hero-teaser .hero-teaser-media img {
+  display: block;
+}
+
+.hero-teaser .hero-teaser-media img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1293 / 862;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+/* content stacks under the image on smaller viewports */
+.hero-teaser .hero-teaser-content {
+  padding: 0 14px;
+}
+
+.hero-teaser .hero-teaser-content h2 {
+  margin: 18px 0 0;
+}
+
+.hero-teaser .hero-teaser-content p:not(.hero-teaser-cta) {
+  margin: 0;
+  line-height: 31.5px;
+}
+
+.hero-teaser .hero-teaser-content .hero-teaser-cta {
+  margin: 18px 0;
+}
+
+/* desktop: 640px photo with the content box overlapping its lower edge */
+@media (width >= 1165px) {
+  .hero-teaser .hero-teaser-media {
+    height: 640px;
+    max-height: 640px;
+    padding-bottom: 0;
+  }
+
+  .hero-teaser .hero-teaser-media picture,
+  .hero-teaser .hero-teaser-media img {
+    height: 100%;
+  }
+
+  .hero-teaser .hero-teaser-content {
+    position: relative;
+    box-sizing: border-box;
+    width: 1192px;
+    max-width: 100%;
+    margin: -180px auto 0;
+    padding: 0 28px;
+    background-color: var(--background-color);
+  }
+
+  .hero-teaser.hero-teaser-no-media .hero-teaser-content {
+    margin-top: 0;
+  }
+}
