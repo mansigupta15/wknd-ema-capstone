@@ -1,0 +1,77 @@
+/* WKND image list: fixed 260px cards that wrap, image on top, uppercase title, one-line description */
+.cards-article .cards-article-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards-article .cards-article-card {
+  flex: 0 1 260px;
+  min-width: 0;
+  margin: 0 0 32px;
+  padding: 0;
+}
+
+/* source image link block is 207px: 200px image plus the inline line-box gap */
+.cards-article .cards-article-card-image {
+  margin-bottom: 7px;
+  line-height: 0;
+}
+
+.cards-article .cards-article-card-image a,
+.cards-article .cards-article-card-image picture {
+  display: block;
+}
+
+.cards-article .cards-article-card-image img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  margin: 0;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.cards-article .cards-article-card-body > * {
+  margin: 0;
+}
+
+.cards-article .cards-article-card-title {
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  line-height: 27px;
+  text-transform: uppercase;
+}
+
+.cards-article .cards-article-card-title a:any-link {
+  color: inherit;
+}
+
+/* single-line truncated description */
+.cards-article .cards-article-card-body > .cards-article-card-description {
+  margin-top: 16px;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 21px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (width >= 768px) {
+  .cards-article .cards-article-list {
+    justify-content: normal;
+  }
+
+  .cards-article .cards-article-card {
+    padding-right: 14px;
+  }
+}

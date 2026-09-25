@@ -1,0 +1,39 @@
+{
+  "id": "columns-featured",
+  "name": "columns-featured",
+  "variantName": "columns-featured",
+  "type": "columns",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "version": "1.0.0",
+  "created": "2026-09-25T12:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://wknd.site/us/en.html",
+    "discoveredDuring": "site-migration per-page path",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light-grey-panel",
+    "density": "medium",
+    "purpose": "featured-article",
+    "imagePattern": "large-left",
+    "structure": "image + eyebrow + heading + paragraph + CTA",
+    "position": "middle",
+    "hasGrid": true,
+    "notes": "~62/38 split, right panel grey, yellow CTA"
+  },
+  "contentPattern": {
+    "structure": "1 row, 2 columns: cell 1 = image; cell 2 = eyebrow paragraph, h2, paragraph, CTA link",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "options": [],
+  "memberVariantIds": ["columns-featured"],
+  "usage": {
+    "pagesUsing": [
+      { "url": "https://wknd.site/us/en.html", "instanceId": null, "screenshot": "migration-work/screenshot.png" }
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-25T12:00:00.000Z"
+  }
+}
