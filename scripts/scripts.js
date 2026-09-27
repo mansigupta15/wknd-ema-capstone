@@ -223,21 +223,15 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  // fonts are small and preloaded in head.html: apply them before first paint on
+  // every viewport, so the text never re-wraps on a late font swap (CLS)
+  loadFonts();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
     prioritizeLcpImage(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
-  }
-
-  try {
-    /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
-    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
-      loadFonts();
-    }
-  } catch (e) {
-    // do nothing
   }
 }
 
