@@ -392,7 +392,9 @@ export default async function decorate(block) {
   // compact header once the page scrolls
   const onScroll = () => navWrapper.classList.toggle('is-scrolled', window.scrollY > 0);
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  // initial check on the next frame: reading scrollY right after inserting the header
+  // would force a synchronous reflow
+  requestAnimationFrame(onScroll);
 
   // reset open states when crossing the desktop breakpoint
   isDesktop.addEventListener('change', () => {
