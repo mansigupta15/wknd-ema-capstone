@@ -101,6 +101,10 @@ function buildAutoBlocks(main) {
       });
     }
     buildWidgetAutoBlocks(main);
+    // article pages: breadcrumb generated from the URL, closing the first (hero) section
+    if (document.body.classList.contains('article')) {
+      main.querySelector(':scope > div')?.append(buildBlock('breadcrumb', ''));
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
