@@ -1,9 +1,31 @@
 /* header: fixed two-row bar (dark utility row + white main row) */
+header {
+  background-color: var(--background-color);
+}
+
 header .nav-wrapper {
   position: fixed;
   inset: 0 0 auto;
   z-index: 100;
+  background-color: var(--background-color);
   font-family: var(--body-font-family);
+  transition: transform 0.5s;
+}
+
+/* the open mobile drawer pushes the whole page to the right */
+body > main,
+body > footer {
+  transition: transform 0.5s;
+}
+
+body.nav-menu-open {
+  overflow-x: hidden;
+}
+
+body.nav-menu-open header .nav-wrapper,
+body.nav-menu-open > main,
+body.nav-menu-open > footer {
+  transform: translateX(275px);
 }
 
 header nav {
@@ -36,7 +58,7 @@ header .nav-utility-inner {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 28px;
   max-width: 1200px;
   height: 25px;
@@ -59,6 +81,11 @@ header .nav-locale {
 header .nav-locale-toggle {
   position: relative;
   padding: 0 9px 0 35px;
+}
+
+/* locale code is shown from desktop up; mobile shows flag + chevron only */
+header .nav-locale-toggle span {
+  font-size: 0;
 }
 
 header .nav-locale-toggle-flag {
@@ -165,65 +192,121 @@ header .nav-locale-links a:hover {
 
 /* main row */
 header .nav-main {
+  padding: 15px 0;
   background-color: var(--background-color);
   transition: padding-top 0.5s, padding-bottom 0.5s;
+}
+
+header .nav-wrapper.is-scrolled .nav-main {
+  box-shadow: rgb(0 0 0 / 26%) 0 8px 20px 0;
 }
 
 header .nav-main-inner {
   box-sizing: border-box;
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
   max-width: 1200px;
+  height: 62px;
   margin: 0 auto;
-  padding: 14px;
+  padding: 0 14px;
 }
 
 header .nav-brand {
-  margin-right: auto;
+  margin: 12px 0 0 10px;
 }
 
-header .nav-brand-link {
+header .nav-brand-link,
+header .nav-brand-link:hover {
   display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 header .nav-brand img {
   display: block;
-  width: 128px;
+  width: 96px;
   height: auto;
 }
 
+/* hamburger: three left-aligned lines of decreasing length */
+header .nav-hamburger {
+  order: -1;
+  width: 40px;
+  height: 44px;
+  margin-left: -4px;
+}
+
+header .nav-hamburger-icon,
+header .nav-hamburger-icon::before,
+header .nav-hamburger-icon::after {
+  display: block;
+  height: 2px;
+  background-color: var(--text-color);
+}
+
+header .nav-hamburger-icon {
+  position: relative;
+  width: 23px;
+  margin-left: 8px;
+}
+
+header .nav-hamburger-icon::before,
+header .nav-hamburger-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+header .nav-hamburger-icon::before {
+  top: -7px;
+  width: 29px;
+}
+
+header .nav-hamburger-icon::after {
+  top: 7px;
+  width: 17px;
+}
+
+/* mobile drawer (off-canvas left, moves in with the pushed page) */
 header .nav-sections {
-  display: none;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: -275px;
+  width: 275px;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 15px;
+  background-color: var(--text-color);
+  box-shadow: rgb(0 0 0 / 35%) -3px 0 5px 0 inset;
+  visibility: hidden;
+  transition: visibility 0s 0.5s;
 }
 
 header nav.is-menu-open .nav-sections {
-  display: block;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: var(--background-color);
+  visibility: visible;
+  transition: none;
 }
 
 header .nav-sections a:any-link {
   display: block;
-  padding: 15px 17px;
-  color: var(--text-color);
+  border-top: 1px solid rgb(255 255 255 / 5%);
+  padding: 0 14px;
+  color: var(--rule-color);
   font-size: var(--body-font-size-xs);
-  line-height: 21px;
+  line-height: 44px;
   text-decoration: none;
   text-transform: uppercase;
 }
 
 header .nav-sections a:hover {
-  background-color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 /* search */
 header .nav-search {
   position: relative;
-  margin: 0;
+  margin: 10px 0 0 auto;
 }
 
 header .nav-search-icon {
@@ -238,7 +321,7 @@ header .nav-search-icon {
 
 header .nav-search input {
   box-sizing: border-box;
-  width: 166px;
+  width: 160px;
   height: 42px;
   border: 0;
   border-radius: 0;
@@ -253,39 +336,6 @@ header .nav-search input {
 header .nav-search input::placeholder {
   color: #757575;
   text-transform: uppercase;
-}
-
-/* hamburger */
-header .nav-hamburger {
-  order: 3;
-  width: 32px;
-  height: 32px;
-}
-
-header .nav-hamburger-icon,
-header .nav-hamburger-icon::before,
-header .nav-hamburger-icon::after {
-  display: block;
-  position: relative;
-  width: 22px;
-  height: 2px;
-  margin: 0 auto;
-  background-color: var(--text-color);
-}
-
-header .nav-hamburger-icon::before,
-header .nav-hamburger-icon::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-
-header .nav-hamburger-icon::before {
-  top: -7px;
-}
-
-header .nav-hamburger-icon::after {
-  top: 7px;
 }
 
 /* sign-in dialog (presentational) */
@@ -381,7 +431,12 @@ header .nav-signin-panel hr {
 /* desktop */
 @media (width >= 1200px) {
   header .nav-utility-inner {
+    justify-content: flex-end;
     padding: 0 107px 0 32px;
+  }
+
+  header .nav-locale-toggle span {
+    font-size: inherit;
   }
 
   header .nav-main {
@@ -390,13 +445,20 @@ header .nav-signin-panel hr {
 
   header .nav-wrapper.is-scrolled .nav-main {
     padding: 15px 0 5px;
-    box-shadow: rgb(0 0 0 / 26%) 0 8px 20px 0;
   }
 
   header .nav-main-inner {
-    gap: 0;
+    align-items: center;
     height: 69px;
     padding: 0 32px 7px;
+  }
+
+  header .nav-brand {
+    margin: 0 auto 0 0;
+  }
+
+  header .nav-brand img {
+    width: 128px;
   }
 
   header .nav-hamburger {
@@ -405,19 +467,43 @@ header .nav-signin-panel hr {
 
   header .nav-sections,
   header nav.is-menu-open .nav-sections {
-    display: block;
     position: static;
-  }
-
-  header .nav-sections ul {
-    display: flex;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    visibility: visible;
+    transition: none;
   }
 
   header .nav-sections a:any-link {
+    border-top: 0;
+    padding: 15px 17px;
+    color: var(--text-color);
     line-height: 18px;
   }
 
+  header .nav-sections a:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+  }
+
+  /* the Home root item is mobile-only; desktop shows its children in a row */
+  header .nav-sections .nav-list > li > a {
+    display: none;
+  }
+
+  header .nav-sections .nav-list ul {
+    display: flex;
+  }
+
   header .nav-search {
-    margin-left: 28px;
+    margin: 0 0 0 28px;
+  }
+
+  header .nav-search input {
+    width: 166px;
   }
 }

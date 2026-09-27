@@ -10,16 +10,10 @@ const SECTION_NAMES = ['utility', 'brand', 'sections', 'search', 'signin'];
  * @returns {Promise<{html: string, base: string}|null>}
  */
 async function fetchNav() {
-  const paths = ['/content/nav.plain.html', '/nav.plain.html'];
-  for (let i = 0; i < paths.length; i += 1) {
-    // eslint-disable-next-line no-await-in-loop
-    const resp = await fetch(paths[i]);
-    if (resp.ok) {
-      // eslint-disable-next-line no-await-in-loop
-      return { html: await resp.text(), base: new URL(paths[i], window.location.href).href };
-    }
-  }
-  return null;
+  let resp = await fetch('/content/nav.plain.html');
+  if (!resp.ok) resp = await fetch('/nav.plain.html');
+  if (!resp.ok) return null;
+  return { html: await resp.text(), base: resp.url };
 }
 
 /**
@@ -305,6 +299,8 @@ export default async function decorate(block) {
   if (sections.sections) {
     const list = sections.sections.querySelector('ul');
     if (list) {
+      list.className = 'nav-list';
+      list.querySelectorAll(':scope > li > a').forEach((a) => a.classList.add('nav-trigger'));
       const current = normalizePath(window.location.pathname);
       list.querySelectorAll('a').forEach((a) => {
         if (normalizePath(new URL(a.href).pathname) === current) a.setAttribute('aria-current', 'page');
@@ -325,13 +321,13 @@ export default async function decorate(block) {
   block.append(navWrapper);
 
   // --- behavior ---
+  const isMenuOpen = () => nav.classList.contains('is-menu-open');
   const setMenu = (open) => {
     hamburger.setAttribute('aria-expanded', open);
     hamburger.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
     nav.classList.toggle('is-menu-open', open);
     document.body.classList.toggle('nav-menu-open', open && !isDesktop.matches);
   };
-  hamburger.addEventListener('click', () => setMenu(hamburger.getAttribute('aria-expanded') !== 'true'));
 
   const setSignIn = (open) => {
     if (!signIn || !signInTrigger) return;
@@ -339,10 +335,23 @@ export default async function decorate(block) {
     signIn.hidden = !open;
     if (open) signIn.querySelector('input')?.focus();
   };
+
+  // only one of drawer / locale panel / sign-in dialog is open at a time
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !isMenuOpen();
+    if (open) {
+      if (locale) closePanel(locale.trigger, locale.panel);
+      setSignIn(false);
+    }
+    setMenu(open);
+  });
+  if (locale) locale.trigger.addEventListener('click', () => setMenu(false));
   if (signInTrigger) {
     signInTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
       if (locale) closePanel(locale.trigger, locale.panel);
+      setMenu(false);
       setSignIn(signIn.hidden);
     });
   }
@@ -350,6 +359,7 @@ export default async function decorate(block) {
   document.addEventListener('click', (e) => {
     if (locale && !locale.wrapper.contains(e.target)) closePanel(locale.trigger, locale.panel);
     if (signIn && !signIn.hidden && !signIn.contains(e.target)) setSignIn(false);
+    if (isMenuOpen() && !navSections.contains(e.target)) setMenu(false);
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
@@ -359,7 +369,7 @@ export default async function decorate(block) {
     } else if (signIn && !signIn.hidden) {
       setSignIn(false);
       signInTrigger.focus();
-    } else if (hamburger.getAttribute('aria-expanded') === 'true') {
+    } else if (isMenuOpen()) {
       setMenu(false);
       hamburger.focus();
     }
