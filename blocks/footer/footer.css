@@ -76,7 +76,7 @@ footer .footer-social {
   margin-top: 27px;
 }
 
-footer .footer-social h4 {
+footer .footer-social :is(h2, h3, h4) {
   margin: 0 0 22px;
   color: var(--rule-color);
   font-family: var(--body-font-family);
@@ -163,7 +163,7 @@ footer .footer-legal a:hover {
     margin: 0 36px 0 auto;
   }
 
-  footer .footer-social h4 {
+  footer .footer-social :is(h2, h3, h4) {
     margin: 21px 14px 0 0;
   }
 }

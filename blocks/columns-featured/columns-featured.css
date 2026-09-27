@@ -111,3 +111,13 @@
     flex-basis: 100%;
   }
 }
+
+/* screen-reader-only context appended to generic CTA text */
+.columns-featured .columns-featured-cta-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

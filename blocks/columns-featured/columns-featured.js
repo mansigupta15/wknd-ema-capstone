@@ -41,6 +41,14 @@ export default function decorate(block) {
           if (links.length === 1 && p.textContent.trim() === links[0].textContent.trim()
             && !links[0].querySelector('picture, img')) {
             p.classList.add('columns-featured-cta');
+            // generic CTA text ("Read More"): add hidden context so the link is descriptive
+            const label = links[0].textContent.trim();
+            if (heading && /^(read|learn|see|view)?\s*more$/i.test(label)) {
+              const context = document.createElement('span');
+              context.className = 'columns-featured-cta-context';
+              context.textContent = ` about ${heading.textContent.trim()}`;
+              links[0].append(context);
+            }
           }
         });
       }
