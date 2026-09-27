@@ -406,6 +406,16 @@ main .default-content-wrapper blockquote u {
   padding: 7px 0;
 }
 
+/* WKND article parts are separate components whose margins add up rather than
+   collapse: reproduce the resulting gaps before quotes and section headings */
+.article main .default-content-wrapper blockquote {
+  margin-top: 31.5px;
+}
+
+.article main .default-content-wrapper h2 {
+  margin-top: 40.5px;
+}
+
 /* WKND sets the article title and running text 14px wider than the media column
    on each side (edge to edge on mobile) */
 .article main > .section:not(:first-child) .default-content-wrapper > :is(h1, p):not(:has(> picture)) {
