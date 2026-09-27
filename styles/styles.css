@@ -414,6 +414,8 @@ main .default-content-wrapper blockquote u {
   height: auto;
 }
 
+/* body images are WKND image components: 7px margins (padding here) that don't collapse with
+   the text, so 14px to the next paragraph (41px to a heading, 50px to a quote, see below) */
 .article main .default-content-wrapper p:has(> picture) {
   padding: 7px 0;
 }
@@ -458,17 +460,30 @@ main .default-content-wrapper blockquote u {
 }
 
 /* stylelint-disable no-descending-specificity --
-   body (plain-headings, captions) and sidebar rules below match disjoint elements */
+   body (images, captions, plain-headings) and sidebar rules below match disjoint elements */
 
 /* rich-text headings in the running text: text-wide (no underline, see above) */
 .article main > .section.plain-headings .default-content-wrapper > h2 {
   margin-inline: -14px;
 }
 
-/* image caption (WKND image title): a lone italic paragraph right after an image,
-   11px under it, aligned with the image (addresses are italic + bold, not captions) */
+.article main > .section:not(:first-child) .default-content-wrapper > p:has(> picture) {
+  margin-bottom: 7px;
+}
+
+/* after a body image: 41px to a heading, 50px to a quote (image margins + the element's own) */
+.article main > .section:not(:first-child) .default-content-wrapper > p:has(> picture) + h2 {
+  margin-top: 34px;
+}
+
+.article main > .section:not(:first-child) .default-content-wrapper > p:has(> picture) + blockquote {
+  margin-top: 43px;
+}
+
+/* image caption (WKND image title): a lone italic paragraph right after an image, 11px under
+   it and 27px above a following heading, aligned with the image (addresses are italic + bold) */
 .article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
-  margin: -9.5px 0 0;
+  margin: -3px 0 0;
   font-size: var(--body-font-size-xs);
   font-weight: 600;
   line-height: 21px;
@@ -480,21 +495,7 @@ main .default-content-wrapper blockquote u {
   font-style: normal;
 }
 
-/* rich-text bodies: images sit in the text, separated only by their own 7px margins
-   (41px to a following heading, a caption 11px under the image, 27px from caption to heading) */
-.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) {
-  margin-bottom: 7px;
-}
-
-.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + h2 {
-  margin-top: 34px;
-}
-
-.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
-  margin-top: -3px;
-}
-
-.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + p:has(> em:only-child) + h2 {
+.article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child) + h2 {
   margin-top: 27px;
 }
 
