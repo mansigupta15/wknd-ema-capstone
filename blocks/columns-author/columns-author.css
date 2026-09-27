@@ -1,6 +1,6 @@
 /* WKND byline card: light rule above, round avatar, name + role, dark icon-only social buttons */
 .columns-author {
-  margin-top: 78px;
+  margin-top: 58px;
   padding-top: 65px;
   border-top: 1px solid var(--rule-color);
 }
@@ -33,7 +33,7 @@
   margin: 0;
 }
 
-.columns-author .columns-author-name {
+.columns-author .columns-author-text .columns-author-name {
   margin: 0 0 4px;
   padding-top: 8px;
   font-family: var(--heading-font-family);
@@ -45,7 +45,7 @@
   font-weight: 400;
 }
 
-.columns-author .columns-author-role {
+.columns-author .columns-author-text .columns-author-role {
   margin-bottom: 13.5px;
   color: var(--dark-color);
   font-size: 12px;
