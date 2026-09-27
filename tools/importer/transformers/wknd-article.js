@@ -9,7 +9,8 @@
  * - byline title ("By Sofia Sjöberg", an h4) -> paragraph
  * - quote: the definition paragraph after the <blockquote> ("noun") moves inside it
  * - sidebar heading ("Share this story", an h5) -> h2, for a valid heading order
- * - quotes inside plain text -> paragraphs (only the quote component is a boxed blockquote)
+ * - quotes inside plain text -> one-paragraph blockquotes (the quote component, with its
+ *   attribution/definition paragraphs, is the boxed pull quote)
  * - image captions -> an italic paragraph after the image
  * - body of rich-text h2s -> section style "plain-headings" (no underline, text width)
  * - download component -> default content (label h3, description, file details, button link)
@@ -43,16 +44,14 @@ export default function transform(hookName, element, payload) {
     [...text.querySelectorAll(':scope > p')].forEach((p) => quote.append(p));
   });
 
-  // quotations inside ordinary text (arctic surfing) render as plain text on WKND; only the
-  // quote component (.cmp-text--quote) is the boxed pull quote, so unwrap the others
+  // quotations inside ordinary text (arctic surfing) are plain on WKND; only the quote
+  // component is the boxed pull quote (quote + attribution/definition paragraphs, see above).
+  // Keep them one-paragraph blockquotes, which styles.css sets in the running text.
   element.querySelectorAll('.cmp-text blockquote').forEach((quote) => {
     if (quote.closest('.cmp-text--quote')) return;
-    const parts = quote.querySelector('p') ? [...quote.childNodes] : (() => {
-      const p = document.createElement('p');
-      p.append(...quote.childNodes);
-      return [p];
-    })();
-    quote.replaceWith(...parts);
+    const p = document.createElement('p');
+    p.textContent = quote.textContent.replace(/\s+/g, ' ').trim();
+    quote.replaceChildren(p);
   });
 
   // image captions (the image component's title, shown under the image on WKND) -> an italic

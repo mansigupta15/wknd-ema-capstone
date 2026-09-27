@@ -379,15 +379,24 @@ main > .section:nth-child(n + 3) {
   contain-intrinsic-size: auto none auto 600px;
 }
 
-/* quotes (default content blockquote): grey box, large serif quote with accent
-   underline, then the attribution/definition paragraph(s) */
+/* quotes (default content blockquote). A quote followed by its attribution/definition
+   paragraph(s) is the pull quote: grey box, large serif quote with accent underline.
+   A single-paragraph quotation stays in the running text, set tighter (WKND 18px/27px) */
 main .default-content-wrapper blockquote {
   margin: 18px 0;
+}
+
+main .default-content-wrapper blockquote:where(:not(:has(> p + p))) p:not(.button-wrapper) {
+  margin: 0;
+  line-height: 27px;
+}
+
+main .default-content-wrapper blockquote:where(:has(> p + p)) {
   padding: 18px;
   background-color: var(--rule-color);
 }
 
-main .default-content-wrapper blockquote p:first-child {
+main .default-content-wrapper blockquote:where(:has(> p + p)) p:first-child {
   margin: 0 0 18px;
   padding: 14px 14px 2px;
   font-family: var(--heading-font-family);
@@ -395,7 +404,7 @@ main .default-content-wrapper blockquote p:first-child {
   line-height: 54px;
 }
 
-main .default-content-wrapper blockquote p:first-child::after {
+main .default-content-wrapper blockquote:where(:has(> p + p)) p:first-child::after {
   content: '';
   display: block;
   width: 84px;
@@ -422,7 +431,7 @@ main .default-content-wrapper blockquote u {
 
 /* WKND article parts are separate components whose margins add up rather than
    collapse: reproduce the resulting gaps before quotes and section headings */
-.article main .default-content-wrapper blockquote {
+.article main .default-content-wrapper blockquote:where(:has(> p + p)) {
   margin-top: 31.5px;
 }
 
@@ -432,7 +441,8 @@ main .default-content-wrapper blockquote u {
 
 /* WKND sets the article title and running text 14px wider than the media column
    on each side (edge to edge on mobile) */
-.article main > .section:not(:first-child, .sidebar) .default-content-wrapper > :is(h1, p):not(:has(> picture)) {
+.article main > .section:not(:first-child, .sidebar) .default-content-wrapper > :is(h1, p):not(:has(> picture)),
+.article main > .section:not(:first-child, .sidebar) .default-content-wrapper > blockquote:not(:has(> p + p)) {
   margin-inline: -14px;
 }
 

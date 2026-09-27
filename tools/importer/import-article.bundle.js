@@ -268,12 +268,9 @@ var CustomImportScript = (() => {
     });
     element.querySelectorAll(".cmp-text blockquote").forEach((quote) => {
       if (quote.closest(".cmp-text--quote")) return;
-      const parts = quote.querySelector("p") ? [...quote.childNodes] : (() => {
-        const p = document.createElement("p");
-        p.append(...quote.childNodes);
-        return [p];
-      })();
-      quote.replaceWith(...parts);
+      const p = document.createElement("p");
+      p.textContent = quote.textContent.replace(/\s+/g, " ").trim();
+      quote.replaceChildren(p);
     });
     element.querySelectorAll(".cmp-image__title").forEach((caption) => {
       const text = caption.textContent.trim();
