@@ -17,11 +17,22 @@ async function fetchNav() {
 }
 
 /**
- * Makes relative image paths in the fragment resolve against the fragment URL.
+ * Normalizes the fragment so local and Document Authoring markup look the same:
+ * unwraps the paragraphs DA adds inside list items, and resolves relative
+ * image paths (img src and picture source srcset) against the fragment URL.
  */
-function resolveImages(root, base) {
+function normalizeFragment(root, base) {
+  root.querySelectorAll('li > p').forEach((p) => p.replaceWith(...p.childNodes));
   root.querySelectorAll('img[src]').forEach((img) => {
     img.src = new URL(img.getAttribute('src'), base).href;
+  });
+  root.querySelectorAll('source[srcset]').forEach((source) => {
+    source.srcset = source.getAttribute('srcset').split(',')
+      .map((candidate) => {
+        const [url, ...descriptor] = candidate.trim().split(/\s+/);
+        return [new URL(url, base).href, ...descriptor].join(' ');
+      })
+      .join(', ');
   });
 }
 
@@ -231,7 +242,7 @@ export default async function decorate(block) {
 
   const source = document.createElement('div');
   source.innerHTML = fragment.html;
-  resolveImages(source, fragment.base);
+  normalizeFragment(source, fragment.base);
   const sections = {};
   [...source.children].forEach((section, i) => {
     if (SECTION_NAMES[i]) sections[SECTION_NAMES[i]] = section;

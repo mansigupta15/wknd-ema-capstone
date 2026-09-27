@@ -14,6 +14,26 @@ async function fetchFooter() {
 }
 
 /**
+ * Normalizes the fragment so local and Document Authoring markup look the same:
+ * unwraps the paragraphs DA adds inside list items, and resolves relative
+ * image paths (img src and picture source srcset) against the fragment URL.
+ */
+function normalizeFragment(root, base) {
+  root.querySelectorAll('li > p').forEach((p) => p.replaceWith(...p.childNodes));
+  root.querySelectorAll('img[src]').forEach((img) => {
+    img.src = new URL(img.getAttribute('src'), base).href;
+  });
+  root.querySelectorAll('source[srcset]').forEach((source) => {
+    source.srcset = source.getAttribute('srcset').split(',')
+      .map((candidate) => {
+        const [url, ...descriptor] = candidate.trim().split(/\s+/);
+        return [new URL(url, base).href, ...descriptor].join(' ');
+      })
+      .join(', ');
+  });
+}
+
+/**
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
@@ -23,9 +43,7 @@ export default async function decorate(block) {
 
   const source = document.createElement('div');
   source.innerHTML = fragment.html;
-  source.querySelectorAll('img[src]').forEach((img) => {
-    img.src = new URL(img.getAttribute('src'), fragment.base).href;
-  });
+  normalizeFragment(source, fragment.base);
 
   const inner = document.createElement('div');
   inner.className = 'footer-inner';
