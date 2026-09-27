@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/magazine/western-australia.html",
+  "path": "us/en/magazine/western-australia",
+  "timestamp": "2026-09-27T15:18:17.504Z",
+  "title": "Western Australia",
+  "template": "article",
+  "blocks": [
+    "columns-author",
+    "cards-related"
+  ],
+  "altReview": [
+    "Hiking and camping on the coast — empty alt, used nearest heading",
+    "A trusty vehicle — empty alt, used nearest heading",
+    "Surfing is a must do — empty alt, used nearest heading"
+  ]
+}
