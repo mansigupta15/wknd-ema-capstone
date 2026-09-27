@@ -461,13 +461,15 @@ main .default-content-wrapper blockquote u {
   padding-bottom: 48px;
 }
 
-/* desktop: 748px article column + 263px sidebar, hero (with breadcrumb) across both */
-@media (width >= 1200px) {
+/* desktop from 1025px, as on wknd.site: a fluid 12-column grid up to 1164px wide, article in
+   columns 1-8, sidebar in 10-12, 14px inside each; hero (with breadcrumb) across all.
+   From 1164px this is a 748px article column + 125px gap + 263px sidebar */
+@media (width >= 1025px) {
   .article main {
     display: grid;
-    grid-template-columns: 748px 263px;
-    column-gap: 125px;
-    justify-content: center;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 1fr) minmax(0, 3fr);
+    max-width: 1164px;
+    margin-inline: auto;
     align-items: start;
   }
 
@@ -480,12 +482,12 @@ main .default-content-wrapper blockquote u {
   }
 
   .article main > .section.sidebar {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 2;
   }
 
   .article main > .section > div {
     max-width: none;
-    padding: 0;
+    padding: 0 14px;
   }
 }

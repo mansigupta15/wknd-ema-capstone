@@ -93,9 +93,15 @@
   outline-offset: 2px;
 }
 
-@media (width >= 900px) {
+/* social buttons beside the name from 1025px; as on WKND the avatar + name take
+   9 of the column's 12 grid columns (14px gutters), so the name is 75% - 92px */
+@media (width >= 1025px) {
+  .columns-author .columns-author-text {
+    flex: 0 0 calc(75% - 92px);
+  }
+
   .columns-author .columns-author-social {
     flex: 0 0 auto;
-    margin: 0 36px 0 14px;
+    margin: 0 0 0 14px;
   }
 }
