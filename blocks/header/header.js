@@ -290,6 +290,8 @@ export default async function decorate(block) {
     const link = sections.brand.querySelector('a');
     if (link) {
       link.className = 'nav-brand-link';
+      // the logo is always visible in the fixed header: don't lazy-load it
+      link.querySelectorAll('img').forEach((img) => { img.loading = 'eager'; });
       brand.append(link);
     }
     mainInner.append(brand);
