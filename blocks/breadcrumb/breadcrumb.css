@@ -36,9 +36,11 @@
   border-left: 9px solid var(--accent-color);
 }
 
-.breadcrumb a:any-link {
+.breadcrumb a:any-link,
+.breadcrumb a:hover {
   color: var(--text-color);
   font-weight: 600;
+  text-decoration: none;
 }
 
 @media (width >= 600px) {

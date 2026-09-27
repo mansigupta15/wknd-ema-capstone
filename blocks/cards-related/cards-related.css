@@ -37,8 +37,11 @@
   line-height: 18px;
 }
 
+/* WKND hover: yellow card with a dark rule */
 .cards-related .cards-related-card:hover,
 .cards-related .cards-related-card:focus-visible {
-  border-left-color: var(--accent-color);
+  border-left-color: var(--text-color);
+  background-color: var(--accent-color);
+  color: var(--text-color);
   text-decoration: none;
 }

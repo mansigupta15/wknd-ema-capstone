@@ -83,9 +83,14 @@
   mask: var(--icon) left top / contain no-repeat;
 }
 
-.columns-author .columns-author-social-link:hover,
+/* no hover change on the source; keep a visible keyboard focus ring */
+.columns-author .columns-author-social-link:hover {
+  color: var(--rule-color);
+}
+
 .columns-author .columns-author-social-link:focus-visible {
-  color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 @media (width >= 900px) {
