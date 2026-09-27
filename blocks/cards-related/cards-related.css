@@ -1,5 +1,6 @@
 /* WKND "up next" list: stacked link cards with a light left rule, uppercase title + date */
 .cards-related .cards-related-list {
+  display: flow-root; /* last card's margin stacks with the list's, as on WKND (84px to the footer below 1200) */
   margin: 18px 0;
   padding: 0;
   list-style: none;
@@ -12,6 +13,7 @@
 .cards-related .cards-related-card {
   box-sizing: border-box;
   display: block;
+  max-width: 469px; /* WKND caps the cards on tablet, left-aligned */
   min-height: 136px;
   padding: 8px 16px;
   border-left: 5px solid var(--rule-color);
