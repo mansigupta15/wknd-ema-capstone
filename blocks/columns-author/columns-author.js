@@ -14,8 +14,9 @@ export default function decorate(block) {
   [...row.children].forEach((cell) => {
     const links = [...cell.querySelectorAll('a[href]')];
     const isImage = cell.querySelector('picture') && cell.textContent.trim() === '';
+    const squash = (s) => s.replace(/\s+/g, '');
     const isSocial = links.length > 0 && links.every((a) => !a.querySelector('picture, img'))
-      && cell.textContent.trim() === links.map((a) => a.textContent.trim()).join('');
+      && squash(cell.textContent) === squash(links.map((a) => a.textContent).join(''));
 
     if (isImage) {
       cell.classList.add('columns-author-avatar');
