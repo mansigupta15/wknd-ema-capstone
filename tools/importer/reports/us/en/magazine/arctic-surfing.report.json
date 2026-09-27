@@ -1,0 +1,18 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/magazine/arctic-surfing.html",
+  "path": "us/en/magazine/arctic-surfing",
+  "timestamp": "2026-09-27T17:14:39.932Z",
+  "title": "Arctic Surfing",
+  "template": "article",
+  "blocks": [
+    "columns-author",
+    "cards-related"
+  ],
+  "altReview": [
+    "Surfer back from the ocean — empty alt, used file name",
+    "Aloha Spirits in Northern Norway — empty alt, used nearest heading",
+    "Clear skies — empty alt, used nearest heading",
+    "Mythical northern lights — empty alt, used nearest heading"
+  ]
+}

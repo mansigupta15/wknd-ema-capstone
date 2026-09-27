@@ -5,8 +5,9 @@
  * For each content/<path>.plain.html:
  *   1. every external <img src> is downloaded and uploaded once to /assets/<path>/<file>
  *      (DA assets are ingested as optimized media_<hash> images on preview)
- *   2. the page is wrapped as a DA document with the rewritten image URLs
- *   3. the document is uploaded to /<path>.html and previewed (not published)
+ *   2. every external linked PDF is uploaded (and previewed) the same way, linked as /assets/<path>/<file>
+ *   3. the page is wrapped as a DA document with the rewritten image and file URLs
+ *   4. the document is uploaded to /<path>.html and previewed (not published)
  *
  * Usage:
  *   node tools/importer/upload-to-da.mjs us/en/magazine [us/en/other ...] [--org=o --repo=r] [--no-preview]
@@ -67,6 +68,24 @@ function main() {
       console.log(`  asset  ${assetPath}`);
     });
     uploaded.forEach((daUrl, src) => { html = html.split(src).join(daUrl); });
+
+    // linked PDFs (download buttons): uploaded to /assets/<path>/ and linked site-relative;
+    // AEM's ".coredownload.pdf" suffix is dropped from the file name
+    const files = new Map();
+    [...html.matchAll(/<a\b[^>]*\bhref="(https?:\/\/[^"]+\.pdf)"/g)].forEach(([, href]) => {
+      if (files.has(href)) return;
+      const url = new URL(href.replace(/&amp;/g, '&'));
+      const base = path.basename(url.pathname).toLowerCase()
+        .replace(/\.coredownload\.pdf$/, '').replace(/[^a-z0-9.-]+/g, '-');
+      const local = path.join(tmp, base);
+      curl(['-L', '-o', local, url.href]);
+      const assetPath = `assets/${page}/${base}`;
+      curl(['-X', 'POST', '-F', `data=@${local};type=application/pdf`, `https://admin.da.live/source/${org}/${repo}/${assetPath}`]);
+      if (preview) curl(['-X', 'POST', `https://admin.hlx.page/preview/${org}/${repo}/main/${assetPath}`]);
+      files.set(href, `/${assetPath}`);
+      console.log(`  file   ${assetPath}`);
+    });
+    files.forEach((local, href) => { html = html.split(href).join(local); });
 
     const doc = path.join(tmp, `${path.basename(page)}.html`);
     fs.writeFileSync(doc, `<body><header></header><main>${html}</main><footer></footer></body>\n`);

@@ -1,0 +1,19 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/magazine/ski-touring.html",
+  "path": "us/en/magazine/ski-touring",
+  "timestamp": "2026-09-27T17:14:56.103Z",
+  "title": "Ski Touring",
+  "template": "article",
+  "blocks": [
+    "columns-author",
+    "cards-related"
+  ],
+  "altReview": [
+    "Ski Touring — empty alt, used page title",
+    "Ski Touring (image 2) — empty alt, used nearest heading",
+    "Ski Touring (image 3) — empty alt, used nearest heading",
+    "Ski Touring (image 4) — empty alt, used nearest heading",
+    "Ski Touring (image 5) — empty alt, used nearest heading"
+  ]
+}

@@ -9,6 +9,7 @@
  * - byline title ("By Sofia Sjöberg", an h4) -> paragraph
  * - quote: the definition paragraph after the <blockquote> ("noun") moves inside it
  * - sidebar heading ("Share this story", an h5) -> h2, for a valid heading order
+ * - download component -> default content (description, file details, button link)
  */
 export default function transform(hookName, element, payload) {
   if (hookName !== 'beforeTransform') return;
@@ -37,6 +38,31 @@ export default function transform(hookName, element, payload) {
       quote.append(p);
     }
     [...text.querySelectorAll(':scope > p')].forEach((p) => quote.append(p));
+  });
+
+  // download (sidebar PDF, e.g. LA skateparks) -> default content: description, file details
+  // and a bold link (the dark primary button). The title link repeats the button and is
+  // dropped, which also keeps the sidebar heading order. upload-to-da.mjs localizes the PDF.
+  element.querySelectorAll('.cmp-download').forEach((download) => {
+    const action = download.querySelector('.cmp-download__action, .cmp-download__title-link');
+    if (!action || !action.getAttribute('href')) return;
+    const out = [...download.querySelectorAll('.cmp-download__description p')];
+    const props = [...download.querySelectorAll('.cmp-download__property-content')]
+      .map((d) => d.textContent.trim()).filter(Boolean);
+    if (props.length) {
+      const p = document.createElement('p');
+      p.textContent = props.join(' · ');
+      out.push(p);
+    }
+    const a = document.createElement('a');
+    a.href = new URL(action.getAttribute('href'), 'https://wknd.site').href;
+    a.textContent = action.textContent.trim() || 'Download';
+    const strong = document.createElement('strong');
+    strong.append(a);
+    const p = document.createElement('p');
+    p.append(strong);
+    out.push(p);
+    download.replaceWith(...out);
   });
 
   element.querySelectorAll('aside .title h1, aside .title h2, aside .title h3, aside .title h4, aside .title h5, aside .title h6').forEach((h) => {
