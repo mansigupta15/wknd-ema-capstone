@@ -125,8 +125,9 @@ main .default-content-wrapper p:not(.button-wrapper) {
   line-height: 2.5;
 }
 
-/* section titles: short accent underline (WKND .cmp-title--underline) */
-main .default-content-wrapper h2::after {
+/* section titles: short accent underline (WKND .cmp-title--underline);
+   plain labels in sidebar sections (e.g. "Share this story") have none */
+main > .section:not(.sidebar) .default-content-wrapper h2::after {
   content: '';
   display: block;
   width: 84px;
@@ -364,4 +365,116 @@ main .section.highlight {
 main > .section:nth-child(n + 3) {
   content-visibility: auto;
   contain-intrinsic-size: auto none auto 600px;
+}
+
+/* quotes (default content blockquote): grey box, large serif quote with accent
+   underline, then the attribution/definition paragraph(s) */
+main .default-content-wrapper blockquote {
+  margin: 18px 0;
+  padding: 18px;
+  background-color: var(--rule-color);
+}
+
+main .default-content-wrapper blockquote p:first-child {
+  margin: 0 0 18px;
+  padding: 14px 14px 2px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xl);
+  line-height: 54px;
+}
+
+main .default-content-wrapper blockquote p:first-child::after {
+  content: '';
+  display: block;
+  width: 84px;
+  padding-top: 12px;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+main .default-content-wrapper blockquote u {
+  text-decoration: none;
+}
+
+/* article template (metadata Template: article) */
+.article main .default-content-wrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.article main .default-content-wrapper p:has(> picture) {
+  padding: 7px 0;
+}
+
+/* WKND article parts are separate components whose margins add up rather than
+   collapse: reproduce the resulting gaps before quotes and section headings */
+.article main .default-content-wrapper blockquote {
+  margin-top: 31.5px;
+}
+
+.article main .default-content-wrapper h2 {
+  margin-top: 40.5px;
+}
+
+/* WKND sets the article title and running text 14px wider than the media column
+   on each side (edge to edge on mobile) */
+.article main > .section:not(:first-child) .default-content-wrapper > :is(h1, p):not(:has(> picture)) {
+  margin-inline: -14px;
+}
+
+.article main .default-content-wrapper p:not(.button-wrapper) {
+  text-align: justify;
+}
+
+/* byline right under the title */
+.article main .default-content-wrapper h1 + p:not(.button-wrapper) {
+  margin: 21.28px 0;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.article main > .section.sidebar h2 {
+  margin: 23.38px 0 110px;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+/* space before the footer, as on wknd.site */
+.article main {
+  padding-bottom: 48px;
+}
+
+/* desktop: 748px article column + 263px sidebar, hero (with breadcrumb) across both */
+@media (width >= 1200px) {
+  .article main {
+    display: grid;
+    grid-template-columns: 748px 263px;
+    column-gap: 125px;
+    justify-content: center;
+    align-items: start;
+  }
+
+  .article main > .section {
+    grid-column: 1;
+  }
+
+  .article main > .section:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .article main > .section.sidebar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .article main > .section > div {
+    max-width: none;
+    padding: 0;
+  }
 }

@@ -1,0 +1,57 @@
+/* WKND breadcrumb: uppercase trail, semibold ancestors, yellow triangle separators */
+.breadcrumb {
+  margin-top: 14px;
+}
+
+.breadcrumb nav ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 12px 0 0;
+  list-style: none;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  padding: 10px 5px 10px 0;
+}
+
+.breadcrumb li + li {
+  margin-left: 3px;
+  padding-left: 5px;
+}
+
+.breadcrumb li + li::before {
+  content: '';
+  width: 0;
+  height: 0;
+  margin: 0 9px 0 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 9px solid var(--accent-color);
+}
+
+.breadcrumb a:any-link,
+.breadcrumb a:hover {
+  color: var(--text-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (width >= 600px) {
+  .breadcrumb nav ol {
+    font-size: var(--body-font-size-xs);
+    line-height: 21px;
+  }
+}
+
+@media (width >= 1200px) {
+  .breadcrumb nav ol {
+    padding-top: 26px;
+  }
+}

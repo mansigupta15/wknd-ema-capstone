@@ -183,6 +183,75 @@
           "defaultContent": []
         }
       ]
+    },
+    {
+      "name": "article",
+      "urls": [
+        "https://wknd.site/us/en/magazine/western-australia.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/magazine/western-australia.html",
+      "description": "WKND magazine article: hero image, title + byline + content-fragment body with quote, author card, up-next sidebar",
+      "urlPattern": "/us/en/magazine/*",
+      "metadata": {
+        "Template": "article"
+      },
+      "blocks": [
+        {
+          "name": "columns-author",
+          "instances": [
+            ".byline"
+          ]
+        },
+        {
+          "name": "cards-related",
+          "instances": [
+            ".cmp-list--upnext"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "hero",
+          "selector": [
+            "main > .cmp-container > .aem-Grid > .image"
+          ],
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            "main > .cmp-container > .aem-Grid > .image"
+          ]
+        },
+        {
+          "id": "section-2",
+          "name": "article-body",
+          "selector": [
+            "main main"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-author"
+          ],
+          "defaultContent": [
+            "main main .title",
+            "main main .contentfragment"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "sidebar",
+          "selector": [
+            "aside.cmp-layoutcontainer--sidebar"
+          ],
+          "style": "sidebar",
+          "blocks": [
+            "cards-related"
+          ],
+          "defaultContent": [
+            "aside .title.cmp-title--black"
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
