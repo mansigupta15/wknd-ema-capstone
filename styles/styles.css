@@ -445,6 +445,11 @@ main .default-content-wrapper blockquote u {
   text-transform: uppercase;
 }
 
+/* space before the footer, as on wknd.site */
+.article main {
+  padding-bottom: 48px;
+}
+
 /* desktop: 748px article column + 263px sidebar, hero (with breadcrumb) across both */
 @media (width >= 1200px) {
   .article main {
