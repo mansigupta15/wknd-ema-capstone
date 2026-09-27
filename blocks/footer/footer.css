@@ -1,20 +1,130 @@
+/* footer: dark band with brand / nav / social row and legal copy */
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  background-color: var(--text-color);
+  color: #f7f7f7;
 }
 
-footer .footer > div {
-  margin: auto;
+footer .footer-inner {
+  box-sizing: border-box;
   max-width: 1200px;
-  padding: 40px 24px 24px;
+  margin: 0 auto;
+  padding: 16px 32px 24px;
+}
+
+footer .footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 footer .footer p {
   margin: 0;
 }
 
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
-  }
+footer .footer-top {
+  display: flex;
+  align-items: flex-start;
+  min-height: 69px;
+}
+
+/* brand */
+footer .footer-brand {
+  margin-top: 7px;
+}
+
+footer .footer-brand a:any-link,
+footer .footer-brand a:hover {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+footer .footer-brand img {
+  display: block;
+  width: 128px;
+  height: auto;
+}
+
+/* nav: the Home root link is hidden; its children render in a row */
+footer .footer-nav {
+  margin: 6px 0 0 66px;
+}
+
+footer .footer-nav-list ul {
+  display: flex;
+}
+
+footer .footer-nav a:any-link {
+  display: block;
+  padding: 15px 17px;
+  color: var(--rule-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 18px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+footer .footer-nav a:hover {
+  color: var(--rule-color);
+  text-decoration: underline;
+}
+
+footer .footer-nav .footer-nav-list > li > .footer-nav-root {
+  display: none;
+}
+
+/* social */
+footer .footer-social {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 36px 0 auto;
+}
+
+footer .footer-social h4 {
+  margin: 21px 14px 0 0;
+  color: var(--rule-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+footer .footer-social-links {
+  display: flex;
+}
+
+footer .footer-social-links a:any-link,
+footer .footer-social-links a:hover {
+  box-sizing: border-box;
+  display: block;
+  width: 48px;
+  height: 48px;
+  padding: 18px 0 0 14px;
+  background-color: var(--rule-color);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+footer .footer-social-links img {
+  display: block;
+  width: auto;
+  height: 17.5px;
+}
+
+/* legal copy */
+footer .footer-legal {
+  margin-top: 36px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+footer .footer .footer-legal p {
+  margin-bottom: 13.5px;
+}
+
+footer .footer-legal a:any-link,
+footer .footer-legal a:hover {
+  color: #f7f7f7;
+  text-decoration: underline;
 }
