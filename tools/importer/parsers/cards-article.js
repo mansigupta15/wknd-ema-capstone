@@ -5,7 +5,9 @@
  * Base block: cards. Source: https://wknd.site/us/en.html
  * Source DOM: AEM Core image list (ul.cmp-image-list > li.cmp-image-list__item >
  * article.cmp-image-list__item-content) with an image link, a title link and a
- * description span. Used twice on the homepage (4 cards each).
+ * description span. Used twice on the homepage (4 cards each) and on the magazine
+ * listing (5 cards). Members-only teasers (.teaser.cmp-teaser--secure) are parsed
+ * into the "locked" variant (see parseLockedTeasers).
  * Output: 2 columns, one row per card: [linked image] | [linked title (strong), description p].
  * Iteration is keyed on li.cmp-image-list__item (block-level wrapper), never on
  * the sibling <a> elements, so html2md inline-merging cannot collapse cards.
@@ -51,7 +53,63 @@ function resolveImage(container, document) {
   return out;
 }
 
+/**
+ * Members-only teasers (AEM Core teaser.cmp-teaser--secure): consecutive sibling
+ * teasers become ONE cards-article block with the "locked" option.
+ * Output row per teaser: [image] | [title (strong), description p, action label p].
+ * The action label ("Read More") is not a link on the source; it stays plain text.
+ */
+function parseLockedTeasers(element, document) {
+  const teasers = [element];
+  let next = element.nextElementSibling;
+  while (next && next.matches('.teaser.cmp-teaser--secure')) {
+    teasers.push(next);
+    next = next.nextElementSibling;
+  }
+
+  const cells = [];
+  teasers.forEach((teaser) => {
+    const title = teaser.querySelector('.cmp-teaser__title')?.textContent.trim() || '';
+    const img = resolveImage(teaser.querySelector('.cmp-teaser__image') || teaser, document);
+    if (img && !img.alt && title) img.alt = title;
+
+    const content = [];
+    if (title) {
+      const p = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = title;
+      p.append(strong);
+      content.push(p);
+    }
+    const desc = teaser.querySelector('.cmp-teaser__description')?.textContent.trim();
+    if (desc) {
+      const p = document.createElement('p');
+      p.textContent = desc;
+      content.push(p);
+    }
+    const action = teaser.querySelector('.cmp-teaser__action-container')?.textContent.trim();
+    if (action) {
+      const p = document.createElement('p');
+      p.textContent = action;
+      content.push(p);
+    }
+    if (img || content.length) cells.push([img || '', content.length ? content : '']);
+  });
+
+  teasers.slice(1).forEach((t) => t.remove());
+  if (!cells.length) {
+    element.remove();
+    return;
+  }
+  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (locked)', cells }));
+}
+
 export default function parse(element, { document }) {
+  if (element.matches('.teaser.cmp-teaser--secure')) {
+    parseLockedTeasers(element, document);
+    return;
+  }
+
   let items = [...element.querySelectorAll('li.cmp-image-list__item')];
   if (!items.length) items = [...element.querySelectorAll('article.cmp-image-list__item-content, .cmp-image-list > li')];
 

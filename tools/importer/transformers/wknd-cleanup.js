@@ -63,5 +63,46 @@ export default function transform(hookName, element, payload) {
       'script',
       'style',
     ]);
+
+    // Alt text: every image gets a meaningful, unique alt.
+    // - long captions (> 125 chars) are trimmed to their first sentence
+    // - empty alts fall back to the nearest preceding heading
+    // - duplicates get a position suffix
+    // Fallbacks are flagged with data-alt-review; the import script lists them in the
+    // report (altReview) and strips the attribute, so editors can refine them in DA.
+    const seen = new Map();
+    let context = '';
+    element.querySelectorAll('h1, h2, h3, h4, h5, h6, img').forEach((node) => {
+      if (node.tagName !== 'IMG') {
+        context = node.textContent.trim();
+        return;
+      }
+      let alt = (node.getAttribute('alt') || '').replace(/\s+/g, ' ').trim();
+      let review = '';
+      if (alt.length > 125) {
+        const sentence = alt.match(/^.{20,125}?[.!?](?=\s|$)/);
+        alt = sentence ? sentence[0] : `${alt.slice(0, 120).replace(/\s+\S*$/, '')}…`;
+      }
+      if (!alt && context) {
+        alt = context;
+        review = 'empty alt, used nearest heading';
+      }
+      const count = (seen.get(alt) || 0) + 1;
+      seen.set(alt, count);
+      if (alt && count > 1) {
+        alt = `${alt} (image ${count})`;
+        review = review || 'duplicate alt';
+      }
+      node.setAttribute('alt', alt);
+      if (review || !alt) node.setAttribute('data-alt-review', review || 'no alt and no heading context');
+    });
+
+    // Internal links: Edge Delivery pages are extensionless and site-relative.
+    // /us/en/magazine.html -> /us/en/magazine ; https://wknd.site/us/en.html#x -> /us/en#x
+    element.querySelectorAll('a[href]').forEach((a) => {
+      const href = a.getAttribute('href');
+      const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
+      if (m) a.setAttribute('href', `${m[1]}${m[2] || ''}`);
+    });
   }
 }

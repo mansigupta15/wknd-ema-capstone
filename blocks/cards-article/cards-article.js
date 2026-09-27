@@ -1,9 +1,10 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
  * Article listing cards: one row per card, [linked image | linked title, description].
  * Tolerates single-cell rows, missing images, and extra cells.
- * No option classes are defined for this block; unknown tokens are ignored.
+ * Option "locked": members-only teasers (text above a faded image, lock badge,
+ * trailing non-link action label). Unknown option tokens are ignored.
  */
 export default function decorate(block) {
   const ul = document.createElement('ul');
@@ -56,9 +57,13 @@ export default function decorate(block) {
       });
       title.classList.add('cards-article-card-title');
     }
-    body.querySelectorAll(':scope > p:not(.cards-article-card-title)').forEach((p) => {
-      p.classList.add('cards-article-card-description');
-    });
+    const details = [...body.querySelectorAll(':scope > p:not(.cards-article-card-title)')];
+    details.forEach((p) => p.classList.add('cards-article-card-description'));
+    // locked (members-only) cards end with a non-link action label, e.g. "Read More"
+    if (block.classList.contains('locked') && details.length > 1) {
+      const label = details[details.length - 1];
+      label.classList.replace('cards-article-card-description', 'cards-article-card-label');
+    }
 
     // image link duplicating the title link: keep it clickable but out of tab order / AT tree
     const mediaLink = media.querySelector('a[href]');
@@ -73,9 +78,7 @@ export default function decorate(block) {
     ul.append(li);
   });
 
-  ul.querySelectorAll('picture > img').forEach((img) => {
-    img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
-  });
+  ul.querySelectorAll('picture > img').forEach((img) => optimizePicture(img, [{ width: '750' }]));
 
   block.replaceChildren(ul);
 }

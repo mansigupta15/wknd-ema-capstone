@@ -10,6 +10,10 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  createOptimizedPicture,
+  readBlockConfig,
+  toClassName,
+  toCamelCase,
 } from './aem.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
@@ -143,6 +147,57 @@ function decorateButtons(main) {
 }
 
 /**
+ * Rebuilds an authored image as an optimized picture, keeping the LCP hints
+ * (loading / fetchpriority) that loadEager put on the page's first image.
+ * @param {HTMLImageElement} img The authored image (inside a picture)
+ * @param {Array} breakpoints createOptimizedPicture breakpoints
+ * @returns {Element} The new picture element
+ */
+export function optimizePicture(img, breakpoints) {
+  const eager = img.getAttribute('loading') === 'eager';
+  const picture = createOptimizedPicture(img.src, img.alt, eager, breakpoints);
+  const priority = img.getAttribute('fetchpriority');
+  if (priority) picture.querySelector('img').setAttribute('fetchpriority', priority);
+  (img.closest('picture') || img).replaceWith(picture);
+  return picture;
+}
+
+/**
+ * Marks the first image of the first section as the LCP candidate:
+ * eager with high fetch priority. Every other image stays lazy.
+ * @param {Element} main The main element
+ */
+function prioritizeLcpImage(main) {
+  const lcp = main.querySelector('.section')?.querySelector('img');
+  if (!lcp) return;
+  lcp.setAttribute('loading', 'eager');
+  lcp.setAttribute('fetchpriority', 'high');
+}
+
+/**
+ * Applies section-metadata tables: `style` values become section classes,
+ * other keys become data attributes. The metadata table itself is removed.
+ * @param {Element} main The main element
+ */
+function decorateSectionMetadata(main) {
+  main.querySelectorAll(':scope > .section > div > .section-metadata').forEach((meta) => {
+    const section = meta.closest('.section');
+    const config = readBlockConfig(meta);
+    Object.entries(config).forEach(([key, value]) => {
+      if (key === 'style') {
+        String(value).split(',').map(toClassName).filter(Boolean)
+          .forEach((style) => section.classList.add(style));
+      } else {
+        section.dataset[toCamelCase(key)] = value;
+      }
+    });
+    const wrapper = meta.parentElement;
+    meta.remove();
+    if (!wrapper.children.length) wrapper.remove();
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -151,6 +206,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionMetadata(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
@@ -165,6 +221,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    prioritizeLcpImage(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }

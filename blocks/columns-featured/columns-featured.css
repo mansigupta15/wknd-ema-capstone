@@ -76,8 +76,9 @@
   margin: 18px 0;
 }
 
-/* desktop: 2:1 flex split, image left, panel height drives the row, image covers it */
-@media (width >= 900px) {
+/* tablet and up (WKND switches at 768px): 2:1 flex split, image left,
+   panel height drives the row, image covers it */
+@media (width >= 768px) {
   .columns-featured .columns-featured-row {
     flex-direction: row;
     align-items: stretch;

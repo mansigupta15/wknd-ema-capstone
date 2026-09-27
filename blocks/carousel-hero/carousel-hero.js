@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { optimizePicture } from '../../scripts/scripts.js';
 
 // No option classes are defined for this block; unknown class tokens are ignored.
 let instanceCount = 0;
@@ -39,9 +39,9 @@ function buildSlide(row, index, carouselId) {
   });
 
   imageCell.querySelectorAll('picture > img').forEach((img) => {
-    img.closest('picture').replaceWith(
-      createOptimizedPicture(img.src, img.alt, index === 0, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]),
-    );
+    // slides after the first start hidden: keep them lazy and low priority
+    if (index > 0) img.setAttribute('fetchpriority', 'low');
+    optimizePicture(img, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]);
   });
 
   if (imageCell.querySelector('picture')) slide.append(imageCell);

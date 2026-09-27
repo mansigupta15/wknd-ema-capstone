@@ -31,7 +31,7 @@
   --body-font-size-xs: 14px;
 
   /* heading sizes (WKND uses the same scale on all viewports) */
-  --heading-font-size-xxl: 48px;
+  --heading-font-size-xxl: 40px;
   --heading-font-size-xl: 36px;
   --heading-font-size-l: 24px;
   --heading-font-size-m: 20px;
@@ -118,6 +118,11 @@ pre,
 blockquote {
   margin-top: 0;
   margin-bottom: 13.5px;
+}
+
+/* running text: WKND text components use a 2.5 line height (18px / 45px) */
+main .default-content-wrapper p:not(.button-wrapper) {
+  line-height: 2.5;
 }
 
 /* section titles: short accent underline (WKND .cmp-title--underline) */
@@ -319,14 +324,21 @@ main > .section > div {
   padding: 0 14px;
 }
 
-/* card grids close with a light rule, like the WKND separators */
-main > .section.cards-article-container::after {
+/* light rule closing a section, like the WKND separators:
+   - homepage card grids that end with a CTA button
+   - any section with the "divider" section-metadata style */
+main > .section.cards-article-container:has(.button-wrapper)::after,
+main > .section.divider::after {
   content: '';
   display: block;
   width: calc(100% - 28px);
   max-width: 1136px;
   margin: 64px auto 92px;
   border-top: 1px solid var(--rule-color);
+}
+
+main > .section.divider::after {
+  margin: 37px auto 50px;
 }
 
 main > .section:first-of-type {

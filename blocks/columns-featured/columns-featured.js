@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
  * Featured two-column layout: one media cell + one text cell per row.
@@ -22,9 +22,7 @@ export default function decorate(block) {
         mediaFound = true;
         cell.classList.add('columns-featured-media');
         cell.querySelectorAll('picture > img').forEach((img) => {
-          img.closest('picture').replaceWith(
-            createOptimizedPicture(img.src, img.alt, false, [{ media: '(min-width: 900px)', width: '1200' }, { width: '750' }]),
-          );
+          optimizePicture(img, [{ media: '(min-width: 900px)', width: '1200' }, { width: '750' }]);
         });
       } else if (cell.textContent.trim() === '' && !hasPicture) {
         cell.remove();

@@ -75,3 +75,92 @@
     padding-right: 14px;
   }
 }
+
+/* locked (members-only) variant: text above a faded image, yellow lock badge.
+   The source fades the whole card to 65%; here only the image is faded and the
+   text uses greys that keep WCAG AA contrast (4.5:1) on white. */
+.cards-article.locked .cards-article-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 28px;
+}
+
+.cards-article.locked .cards-article-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0;
+  padding: 29px 0 7px;
+}
+
+.cards-article.locked .cards-article-card::before,
+.cards-article.locked .cards-article-card::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cards-article.locked .cards-article-card::before {
+  top: 37px;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(to left top, transparent 50%, var(--accent-color) 50%);
+}
+
+.cards-article.locked .cards-article-card::after {
+  top: 49px;
+  left: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: #000;
+  mask: url('/icons/lock.svg') center / contain no-repeat;
+}
+
+.cards-article.locked .cards-article-card-image {
+  order: 2;
+  margin: 7px 0 0;
+  opacity: 0.65;
+}
+
+.cards-article.locked .cards-article-card-body > .cards-article-card-title {
+  margin: 9px 0;
+  color: #6e6e6e;
+}
+
+.cards-article.locked .cards-article-card-body > .cards-article-card-description {
+  margin: 0 0 27.5px;
+  color: #767676;
+  line-height: 24.5px;
+  white-space: normal;
+}
+
+.cards-article.locked .cards-article-card-label {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 7px 14px;
+  background-color: #f3f3f3;
+  color: #6b6b6b;
+  font-size: var(--body-font-size-xs);
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+@media (width >= 600px) {
+  .cards-article.locked .cards-article-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 768px) {
+  .cards-article.locked .cards-article-card {
+    padding-right: 0;
+  }
+}
+
+@media (width >= 1200px) {
+  .cards-article.locked .cards-article-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
