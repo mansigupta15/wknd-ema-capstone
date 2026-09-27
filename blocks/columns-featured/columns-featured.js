@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
  * Featured two-column layout: one media cell + one text cell per row.
@@ -22,9 +22,7 @@ export default function decorate(block) {
         mediaFound = true;
         cell.classList.add('columns-featured-media');
         cell.querySelectorAll('picture > img').forEach((img) => {
-          img.closest('picture').replaceWith(
-            createOptimizedPicture(img.src, img.alt, false, [{ media: '(min-width: 900px)', width: '1200' }, { width: '750' }]),
-          );
+          optimizePicture(img, [{ media: '(min-width: 900px)', width: '1200' }, { width: '750' }]);
         });
       } else if (cell.textContent.trim() === '' && !hasPicture) {
         cell.remove();
@@ -43,6 +41,14 @@ export default function decorate(block) {
           if (links.length === 1 && p.textContent.trim() === links[0].textContent.trim()
             && !links[0].querySelector('picture, img')) {
             p.classList.add('columns-featured-cta');
+            // generic CTA text ("Read More"): add hidden context so the link is descriptive
+            const label = links[0].textContent.trim();
+            if (heading && /^(read|learn|see|view)?\s*more$/i.test(label)) {
+              const context = document.createElement('span');
+              context.className = 'columns-featured-cta-context';
+              context.textContent = ` about ${heading.textContent.trim()}`;
+              links[0].append(context);
+            }
           }
         });
       }

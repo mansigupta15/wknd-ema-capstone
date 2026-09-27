@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
  * Teaser: full-bleed image with an overlapping content box.
@@ -42,9 +42,7 @@ export default function decorate(block) {
   });
 
   media.querySelectorAll('picture > img').forEach((img) => {
-    img.closest('picture').replaceWith(
-      createOptimizedPicture(img.src, img.alt, false, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]),
-    );
+    optimizePicture(img, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]);
   });
 
   const parts = [];

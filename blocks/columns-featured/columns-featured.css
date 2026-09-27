@@ -76,8 +76,9 @@
   margin: 18px 0;
 }
 
-/* desktop: 2:1 flex split, image left, panel height drives the row, image covers it */
-@media (width >= 900px) {
+/* tablet and up (WKND switches at 768px): 2:1 flex split, image left,
+   panel height drives the row, image covers it */
+@media (width >= 768px) {
   .columns-featured .columns-featured-row {
     flex-direction: row;
     align-items: stretch;
@@ -109,4 +110,14 @@
   .columns-featured .columns-featured-no-media .columns-featured-content {
     flex-basis: 100%;
   }
+}
+
+/* screen-reader-only context appended to generic CTA text */
+.columns-featured .columns-featured-cta-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

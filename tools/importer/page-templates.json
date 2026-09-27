@@ -104,6 +104,85 @@
           ]
         }
       ]
+    },
+    {
+      "name": "magazine",
+      "urls": [
+        "https://wknd.site/us/en/magazine.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/magazine.html",
+      "description": "WKND magazine listing: page title + featured article, article card grid, members-only locked teasers",
+      "urlPattern": "/us/en/magazine",
+      "blocks": [
+        {
+          "name": "columns-featured",
+          "instances": [
+            ".teaser.cmp-teaser--featured"
+          ]
+        },
+        {
+          "name": "cards-article",
+          "instances": [
+            ".image-list.list",
+            ".teaser.cmp-teaser--secure"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "page-title-featured",
+          "selector": [
+            "main .title:not(.cmp-title--underline)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-featured"
+          ],
+          "defaultContent": [
+            "main .title:not(.cmp-title--underline)"
+          ]
+        },
+        {
+          "id": "section-2",
+          "name": "all-articles",
+          "selector": [
+            ".teaser.cmp-teaser--featured + .title.cmp-title--underline"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            ".teaser.cmp-teaser--featured + .title.cmp-title--underline"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "members-only",
+          "selector": [
+            ".image-list.list + .title.cmp-title--underline"
+          ],
+          "style": "divider",
+          "blocks": [],
+          "defaultContent": [
+            ".image-list.list + .title.cmp-title--underline",
+            ".image-list.list + .title.cmp-title--underline + .text"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "members-only-teasers",
+          "selector": [
+            ".separator.cmp-separator--space-medium + .teaser.cmp-teaser--secure"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": []
+        }
+      ]
     }
   ],
   "metadata": {

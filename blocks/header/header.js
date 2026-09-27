@@ -10,8 +10,9 @@ const SECTION_NAMES = ['utility', 'brand', 'sections', 'search', 'signin'];
  * @returns {Promise<{html: string, base: string}|null>}
  */
 async function fetchNav() {
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) resp = await fetch('/nav.plain.html');
+  // local preview serves pages under /content; on DA/Edge Delivery the fragment is at the root
+  let resp = window.location.pathname.startsWith('/content/') ? await fetch('/content/nav.plain.html') : null;
+  if (!resp?.ok) resp = await fetch('/nav.plain.html');
   if (!resp.ok) return null;
   return { html: await resp.text(), base: resp.url };
 }
