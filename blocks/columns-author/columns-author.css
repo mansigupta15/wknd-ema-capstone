@@ -1,6 +1,6 @@
 /* WKND byline card: light rule above, round avatar, name + role, dark icon-only social buttons */
 .columns-author {
-  margin-top: 73px;
+  margin-top: 78px;
   padding-top: 65px;
   border-top: 1px solid var(--rule-color);
 }
@@ -46,6 +46,7 @@
 }
 
 .columns-author .columns-author-role {
+  margin-bottom: 13.5px;
   color: var(--dark-color);
   font-size: 12px;
   line-height: 30px;
@@ -90,6 +91,6 @@
 @media (width >= 900px) {
   .columns-author .columns-author-social {
     flex: 0 0 auto;
-    margin-left: 14px;
+    margin: 0 36px 0 14px;
   }
 }

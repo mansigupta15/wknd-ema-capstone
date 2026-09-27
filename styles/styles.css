@@ -370,14 +370,14 @@ main > .section:nth-child(n + 3) {
 /* quotes (default content blockquote): grey box, large serif quote with accent
    underline, then the attribution/definition paragraph(s) */
 main .default-content-wrapper blockquote {
-  margin: 0 0 13.5px;
+  margin: 18px 0;
   padding: 18px;
   background-color: var(--rule-color);
 }
 
 main .default-content-wrapper blockquote p:first-child {
   margin: 0 0 18px;
-  padding: 14px;
+  padding: 14px 14px 2px;
   font-family: var(--heading-font-family);
   font-size: var(--heading-font-size-xl);
   line-height: 54px;
@@ -387,7 +387,7 @@ main .default-content-wrapper blockquote p:first-child::after {
   content: '';
   display: block;
   width: 84px;
-  padding-top: 8px;
+  padding-top: 12px;
   border-bottom: 2px solid var(--accent-color);
 }
 
