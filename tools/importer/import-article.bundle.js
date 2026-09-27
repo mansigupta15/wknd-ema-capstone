@@ -275,6 +275,17 @@ var CustomImportScript = (() => {
       })();
       quote.replaceWith(...parts);
     });
+    element.querySelectorAll(".cmp-image__title").forEach((caption) => {
+      const text = caption.textContent.trim();
+      const image = caption.closest(".image, .cmp-image");
+      caption.remove();
+      if (!text || !image || image.closest("aside")) return;
+      const p = document.createElement("p");
+      const em = document.createElement("em");
+      em.textContent = text;
+      p.append(em);
+      image.after(p);
+    });
     const body = element.querySelector("main main");
     const bodyH2 = body ? [...body.querySelectorAll("h2")].filter((h) => !h.closest("aside, .byline")) : [];
     if (bodyH2.length && bodyH2.every((h) => !h.closest(".title"))) {

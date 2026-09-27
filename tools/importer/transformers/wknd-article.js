@@ -10,6 +10,7 @@
  * - quote: the definition paragraph after the <blockquote> ("noun") moves inside it
  * - sidebar heading ("Share this story", an h5) -> h2, for a valid heading order
  * - quotes inside plain text -> paragraphs (only the quote component is a boxed blockquote)
+ * - image captions -> an italic paragraph after the image
  * - body of rich-text h2s -> section style "plain-headings" (no underline, text width)
  * - download component -> default content (label h3, description, file details, button link)
  */
@@ -52,6 +53,20 @@ export default function transform(hookName, element, payload) {
       return [p];
     })();
     quote.replaceWith(...parts);
+  });
+
+  // image captions (the image component's title, shown under the image on WKND) -> an italic
+  // paragraph right after the image (styled as the caption in styles.css)
+  element.querySelectorAll('.cmp-image__title').forEach((caption) => {
+    const text = caption.textContent.trim();
+    const image = caption.closest('.image, .cmp-image');
+    caption.remove();
+    if (!text || !image || image.closest('aside')) return;
+    const p = document.createElement('p');
+    const em = document.createElement('em');
+    em.textContent = text;
+    p.append(em);
+    image.after(p);
   });
 
   // body headings that are part of the running text (san diego surf) have no underline and
