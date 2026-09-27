@@ -477,7 +477,12 @@ main .default-content-wrapper blockquote u {
 }
 
 .article main > .section:not(:first-child) .default-content-wrapper > p:has(> picture) + blockquote {
-  margin-top: 43px;
+  margin-top: 25px;
+}
+
+/* the author card's gap counts from the last paragraph; an image's own margin is part of it */
+.article main .default-content-wrapper:has(> p:last-child > picture) + .columns-author-wrapper .columns-author {
+  margin-top: 71px;
 }
 
 /* image caption (WKND image title): a lone italic paragraph right after an image, 11px under
@@ -495,7 +500,7 @@ main .default-content-wrapper blockquote u {
   font-style: normal;
 }
 
-.article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child) + h2 {
+.article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) + h2 {
   margin-top: 27px;
 }
 
