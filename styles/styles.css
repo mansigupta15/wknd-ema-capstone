@@ -126,8 +126,9 @@ main .default-content-wrapper p:not(.button-wrapper) {
 }
 
 /* section titles: short accent underline (WKND .cmp-title--underline);
-   plain labels in sidebar sections (e.g. "Share this story") have none */
-main > .section:not(.sidebar) .default-content-wrapper h2::after {
+   plain labels in sidebar sections (e.g. "Share this story") and headings that are part of
+   the running text ("plain-headings" sections) have none */
+main > .section:not(.sidebar, .plain-headings) .default-content-wrapper h2::after {
   content: '';
   display: block;
   width: 84px;
@@ -429,7 +430,7 @@ main .default-content-wrapper blockquote u {
 
 /* WKND sets the article title and running text 14px wider than the media column
    on each side (edge to edge on mobile) */
-.article main > .section:not(:first-child) .default-content-wrapper > :is(h1, p):not(:has(> picture)) {
+.article main > .section:not(:first-child, .sidebar) .default-content-wrapper > :is(h1, p):not(:has(> picture)) {
   margin-inline: -14px;
 }
 
@@ -454,6 +455,61 @@ main .default-content-wrapper blockquote u {
   font-weight: 600;
   line-height: 21px;
   text-transform: uppercase;
+}
+
+/* sidebar download (default content from the WKND download component): label, description,
+   file details, dark button with the download icon, spaced as the source components.
+   Before the label: the heading gap, WKND's 36px spacer and the label's 7px margin */
+.article main > .section.sidebar h2:not(:last-child) {
+  margin-bottom: 66.38px;
+}
+
+.article main > .section.sidebar h3 {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+.article main > .section.sidebar h3 + p:not(.button-wrapper) {
+  margin: 0 0 28px;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 16px;
+  text-align: left;
+}
+
+.article main > .section.sidebar h3 + p + p:not(.button-wrapper) {
+  margin: 0 0 18px;
+  color: var(--dark-color);
+  font-size: 12px;
+  line-height: 12px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.article main > .section.sidebar .button-wrapper {
+  margin-bottom: 50px;
+}
+
+.article main > .section.sidebar a.button {
+  gap: 10px;
+  font-weight: 400;
+}
+
+.article main > .section.sidebar a.button::before {
+  content: '';
+  flex: 0 0 17.6px;
+  height: 17.6px;
+  background-color: currentcolor;
+  mask: url('/icons/download.svg') center / contain no-repeat;
+}
+
+/* rich-text headings in the running text: text-wide, the text's own heading gap */
+.article main > .section.plain-headings .default-content-wrapper > h2 {
+  margin: 27px -14px 13.5px;
 }
 
 /* space before the footer, as on wknd.site */

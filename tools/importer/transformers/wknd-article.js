@@ -9,7 +9,9 @@
  * - byline title ("By Sofia Sjöberg", an h4) -> paragraph
  * - quote: the definition paragraph after the <blockquote> ("noun") moves inside it
  * - sidebar heading ("Share this story", an h5) -> h2, for a valid heading order
- * - download component -> default content (description, file details, button link)
+ * - quotes inside plain text -> paragraphs (only the quote component is a boxed blockquote)
+ * - body of rich-text h2s -> section style "plain-headings" (no underline, text width)
+ * - download component -> default content (label h3, description, file details, button link)
  */
 export default function transform(hookName, element, payload) {
   if (hookName !== 'beforeTransform') return;
@@ -40,13 +42,44 @@ export default function transform(hookName, element, payload) {
     [...text.querySelectorAll(':scope > p')].forEach((p) => quote.append(p));
   });
 
-  // download (sidebar PDF, e.g. LA skateparks) -> default content: description, file details
-  // and a bold link (the dark primary button). The title link repeats the button and is
-  // dropped, which also keeps the sidebar heading order. upload-to-da.mjs localizes the PDF.
+  // quotations inside ordinary text (arctic surfing) render as plain text on WKND; only the
+  // quote component (.cmp-text--quote) is the boxed pull quote, so unwrap the others
+  element.querySelectorAll('.cmp-text blockquote').forEach((quote) => {
+    if (quote.closest('.cmp-text--quote')) return;
+    const parts = quote.querySelector('p') ? [...quote.childNodes] : (() => {
+      const p = document.createElement('p');
+      p.append(...quote.childNodes);
+      return [p];
+    })();
+    quote.replaceWith(...parts);
+  });
+
+  // body headings that are part of the running text (san diego surf) have no underline and
+  // run text-wide on WKND, unlike title components (western australia): mark the body
+  // section "plain-headings" when all of its h2s are rich text
+  const body = element.querySelector('main main');
+  // (the byline name is an h2 on WKND too; the columns-author parser turns it into text)
+  const bodyH2 = body ? [...body.querySelectorAll('h2')].filter((h) => !h.closest('aside, .byline')) : [];
+  if (bodyH2.length && bodyH2.every((h) => !h.closest('.title'))) {
+    const meta = WebImporter.Blocks.createBlock(document, { name: 'Section Metadata', cells: { style: 'plain-headings' } });
+    const aside = body.querySelector('aside');
+    if (aside) aside.before(meta); else body.append(meta);
+  }
+
+  // download (sidebar PDF, e.g. LA skateparks) -> default content: a label heading, description,
+  // file details and a bold link (the dark primary button). The label is plain text so the
+  // PDF isn't linked twice. upload-to-da.mjs localizes the PDF.
   element.querySelectorAll('.cmp-download').forEach((download) => {
     const action = download.querySelector('.cmp-download__action, .cmp-download__title-link');
     if (!action || !action.getAttribute('href')) return;
-    const out = [...download.querySelectorAll('.cmp-download__description p')];
+    const out = [];
+    const title = download.querySelector('.cmp-download__title');
+    if (title && title.textContent.trim()) {
+      const h3 = document.createElement('h3');
+      h3.textContent = title.textContent.trim();
+      out.push(h3);
+    }
+    out.push(...download.querySelectorAll('.cmp-download__description p'));
     const props = [...download.querySelectorAll('.cmp-download__property-content')]
       .map((d) => d.textContent.trim()).filter(Boolean);
     if (props.length) {
