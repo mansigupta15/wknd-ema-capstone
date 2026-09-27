@@ -167,3 +167,15 @@ footer .footer-legal a:hover {
     margin: 21px 14px 0 0;
   }
 }
+
+/* the footer is always below the fold: defer its layout/paint work */
+footer .footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 578px;
+}
+
+@media (width >= 1200px) {
+  footer .footer {
+    contain-intrinsic-size: auto none auto 261px;
+  }
+}

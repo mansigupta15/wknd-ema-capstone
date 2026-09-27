@@ -358,3 +358,10 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* skip layout/paint of content that is always below the initial viewport
+   (third section onward); sizes are placeholders the browser then remembers */
+main > .section:nth-child(n + 3) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 600px;
+}
