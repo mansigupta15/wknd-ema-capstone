@@ -1,6 +1,6 @@
 /* WKND byline card: light rule above, round avatar, name + role, dark icon-only social buttons */
 .columns-author {
-  margin-top: 58px;
+  margin-top: 78px; /* WKND: 151px from the last paragraph to the avatar, rule 73px above it */
   padding-top: 65px;
   border-top: 1px solid var(--rule-color);
 }
