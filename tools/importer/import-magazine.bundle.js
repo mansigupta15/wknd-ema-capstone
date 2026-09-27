@@ -332,6 +332,12 @@ var CustomImportScript = (() => {
         const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
         if (m) a.setAttribute("href", `${m[1]}${m[2] || ""}`);
       });
+      const title = (payload && payload.document || document).title.trim();
+      if (!element.querySelector("h1") && title) {
+        const h1 = document.createElement("h1");
+        h1.textContent = title;
+        element.prepend(h1);
+      }
     }
   }
 

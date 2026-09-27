@@ -346,6 +346,17 @@ main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* page h1 authored right before a carousel-hero (the slide titles are the visible headings):
+   kept for assistive tech and search, visually hidden so the carousel stays at the top */
+main > .section > .default-content-wrapper:has(> h1:only-child):has(+ .carousel-hero-wrapper) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 @media (width >= 900px) {
   main > .section > div {
     padding: 0 32px;
