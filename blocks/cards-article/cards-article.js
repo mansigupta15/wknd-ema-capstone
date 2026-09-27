@@ -78,7 +78,7 @@ export default function decorate(block) {
     ul.append(li);
   });
 
-  ul.querySelectorAll('picture > img').forEach((img) => optimizePicture(img, [{ width: '750' }]));
+  ul.querySelectorAll('picture > img').forEach((img) => optimizePicture(img, [{ media: '(min-width: 600px)', width: '750' }, { width: '500' }]));
 
   block.replaceChildren(ul);
 }

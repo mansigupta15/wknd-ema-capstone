@@ -156,8 +156,13 @@ function decorateButtons(main) {
 export function optimizePicture(img, breakpoints) {
   const eager = img.getAttribute('loading') === 'eager';
   const picture = createOptimizedPicture(img.src, img.alt, eager, breakpoints);
+  const optimized = picture.querySelector('img');
   const priority = img.getAttribute('fetchpriority');
-  if (priority) picture.querySelector('img').setAttribute('fetchpriority', priority);
+  if (priority) optimized.setAttribute('fetchpriority', priority);
+  // keep intrinsic dimensions so the browser can reserve space (no layout shift)
+  ['width', 'height'].forEach((dim) => {
+    if (img.getAttribute(dim)) optimized.setAttribute(dim, img.getAttribute(dim));
+  });
   (img.closest('picture') || img).replaceWith(picture);
   return picture;
 }
