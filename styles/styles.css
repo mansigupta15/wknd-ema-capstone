@@ -457,6 +457,47 @@ main .default-content-wrapper blockquote u {
   text-transform: uppercase;
 }
 
+/* stylelint-disable no-descending-specificity --
+   body (plain-headings, captions) and sidebar rules below match disjoint elements */
+
+/* rich-text headings in the running text: text-wide (no underline, see above) */
+.article main > .section.plain-headings .default-content-wrapper > h2 {
+  margin-inline: -14px;
+}
+
+/* image caption (WKND image title): a lone italic paragraph right after an image,
+   11px under it, aligned with the image (addresses are italic + bold, not captions) */
+.article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
+  margin: -9.5px 0 0;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.article main > .section .default-content-wrapper > p:has(> picture) + p > em:only-child {
+  font-style: normal;
+}
+
+/* rich-text bodies: images sit in the text, separated only by their own 7px margins
+   (41px to a following heading, a caption 11px under the image, 27px from caption to heading) */
+.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) {
+  margin-bottom: 7px;
+}
+
+.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + h2 {
+  margin-top: 34px;
+}
+
+.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
+  margin-top: -3px;
+}
+
+.article main > .section.plain-headings .default-content-wrapper > p:has(> picture) + p:has(> em:only-child) + h2 {
+  margin-top: 27px;
+}
+
 /* sidebar download (default content from the WKND download component): label, description,
    file details, dark button with the download icon, spaced as the source components.
    Before the label: the heading gap, WKND's 36px spacer and the label's 7px margin */
@@ -507,25 +548,7 @@ main .default-content-wrapper blockquote u {
   mask: url('/icons/download.svg') center / contain no-repeat;
 }
 
-/* rich-text headings in the running text: text-wide (no underline, see above) */
-.article main > .section.plain-headings .default-content-wrapper > h2 {
-  margin-inline: -14px;
-}
-
-/* image caption (WKND image title): a lone italic paragraph right after an image,
-   11px under it, aligned with the image (addresses are italic + bold, not captions) */
-.article main > .section .default-content-wrapper > p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
-  margin: -9.5px 0 0;
-  font-size: var(--body-font-size-xs);
-  font-weight: 600;
-  line-height: 21px;
-  text-align: left;
-  text-transform: uppercase;
-}
-
-.article main > .section .default-content-wrapper > p:has(> picture) + p > em:only-child {
-  font-style: normal;
-}
+/* stylelint-enable no-descending-specificity */
 
 /* space before the footer, as on wknd.site */
 .article main {
