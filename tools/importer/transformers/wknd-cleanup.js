@@ -104,5 +104,16 @@ export default function transform(hookName, element, payload) {
       const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
       if (m) a.setAttribute('href', `${m[1]}${m[2] || ''}`);
     });
+
+    // Exactly one h1 per page. WKND pages led by a carousel (the homepage) have only h2s,
+    // and a slide title can't be the h1 because inactive slides are aria-hidden.
+    // Use the page title; placed right before the carousel it is visually hidden by
+    // styles.css, so the page looks unchanged. Runs after the alt pass so it isn't used as alt context.
+    const title = ((payload && payload.document) || document).title.trim();
+    if (!element.querySelector('h1') && title) {
+      const h1 = document.createElement('h1');
+      h1.textContent = title;
+      element.prepend(h1);
+    }
   }
 }
