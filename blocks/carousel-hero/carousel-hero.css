@@ -236,3 +236,8 @@
 .carousel-hero.mini .carousel-hero-arrows {
   margin-top: 7px;
 }
+
+/* a single slide has no controls, but WKND still shows its dot row: keep that space */
+.carousel-hero.mini.carousel-hero-single .carousel-hero-slides-container {
+  padding-bottom: 26px;
+}

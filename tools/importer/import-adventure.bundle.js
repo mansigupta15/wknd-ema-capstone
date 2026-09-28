@@ -360,6 +360,8 @@ var CustomImportScript = (() => {
   function transform2(hookName, element, payload) {
     if (hookName !== "beforeTransform") return;
     element.querySelectorAll(".breadcrumb, .cmp-contentfragment__title, .sharing").forEach((e) => e.remove());
+    const sidebar = element.querySelector(SIDEBAR);
+    if (sidebar && sidebar.querySelector(".aem-GridColumn")) sidebar.dataset.sectionStyle = "split";
     element.querySelectorAll(`${SIDEBAR} .title h1, ${SIDEBAR} .title h3, ${SIDEBAR} .title h4, ${SIDEBAR} .title h5, ${SIDEBAR} .title h6`).forEach((h) => {
       const h2 = document.createElement("h2");
       h2.textContent = h.textContent.trim();
@@ -369,6 +371,7 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/wknd-sections.js
   var SECTION_MARKER_ATTR = "data-excat-section-id";
+  var EXTRA_STYLE_ATTR = "data-excat-section-extra-style";
   function querySection(root, selectors) {
     const list = Array.isArray(selectors) ? selectors : [selectors];
     for (const sel of list) {
@@ -389,6 +392,7 @@ var CustomImportScript = (() => {
         if (!sectionEl) continue;
         const hr = document.createElement("hr");
         if (section.style) hr.setAttribute(SECTION_MARKER_ATTR, section.id);
+        if (section.style && sectionEl.dataset.sectionStyle) hr.setAttribute(EXTRA_STYLE_ATTR, sectionEl.dataset.sectionStyle);
         sectionEl.before(hr);
       }
     }
@@ -399,13 +403,15 @@ var CustomImportScript = (() => {
         const marker = element.querySelector(`[${SECTION_MARKER_ATTR}="${section.id}"]`);
         const anchor = marker || querySection(element, section.selector);
         if (!anchor) continue;
+        const extra = marker && marker.getAttribute(EXTRA_STYLE_ATTR);
         const metadataBlock = WebImporter.Blocks.createBlock(document, {
           name: "Section Metadata",
-          cells: { style: section.style }
+          cells: { style: extra ? `${section.style}, ${extra}` : section.style }
         });
         anchor.after(metadataBlock);
         if (marker) {
           marker.removeAttribute(SECTION_MARKER_ATTR);
+          marker.removeAttribute(EXTRA_STYLE_ATTR);
           if (i === 0) marker.remove();
         }
       }

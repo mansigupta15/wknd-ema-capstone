@@ -80,6 +80,7 @@ var CustomImportScript = (() => {
   function parse(element, { document: document2 }) {
     let items = [...element.querySelectorAll(".cmp-carousel__item")];
     if (!items.length) items = [...element.querySelectorAll(".cmp-teaser")];
+    const mini = element.matches(".cmp-carousel--mini") || !!element.closest(".cmp-carousel--mini");
     const cells = [];
     items.forEach((item) => {
       const teaser = item.matches(".cmp-teaser") ? item : item.querySelector(".cmp-teaser") || item;
@@ -117,13 +118,14 @@ var CustomImportScript = (() => {
         content.push(p);
       });
       if (!image && !content.length) return;
-      cells.push([image || "", content.length ? content : ""]);
+      cells.push(mini ? [image] : [image || "", content.length ? content : ""]);
     });
     if (!cells.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "carousel-hero", cells });
+    const name = mini ? "carousel-hero (mini)" : "carousel-hero";
+    const block = WebImporter.Blocks.createBlock(document2, { name, cells });
     element.replaceWith(block);
   }
 
@@ -523,6 +525,7 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/wknd-sections.js
   var SECTION_MARKER_ATTR = "data-excat-section-id";
+  var EXTRA_STYLE_ATTR = "data-excat-section-extra-style";
   function querySection(root, selectors) {
     const list = Array.isArray(selectors) ? selectors : [selectors];
     for (const sel of list) {
@@ -543,6 +546,7 @@ var CustomImportScript = (() => {
         if (!sectionEl) continue;
         const hr = document.createElement("hr");
         if (section.style) hr.setAttribute(SECTION_MARKER_ATTR, section.id);
+        if (section.style && sectionEl.dataset.sectionStyle) hr.setAttribute(EXTRA_STYLE_ATTR, sectionEl.dataset.sectionStyle);
         sectionEl.before(hr);
       }
     }
@@ -553,13 +557,15 @@ var CustomImportScript = (() => {
         const marker = element.querySelector(`[${SECTION_MARKER_ATTR}="${section.id}"]`);
         const anchor = marker || querySection(element, section.selector);
         if (!anchor) continue;
+        const extra = marker && marker.getAttribute(EXTRA_STYLE_ATTR);
         const metadataBlock = WebImporter.Blocks.createBlock(document, {
           name: "Section Metadata",
-          cells: { style: section.style }
+          cells: { style: extra ? `${section.style}, ${extra}` : section.style }
         });
         anchor.after(metadataBlock);
         if (marker) {
           marker.removeAttribute(SECTION_MARKER_ATTR);
+          marker.removeAttribute(EXTRA_STYLE_ATTR);
           if (i === 0) marker.remove();
         }
       }

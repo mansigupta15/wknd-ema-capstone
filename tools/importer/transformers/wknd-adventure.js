@@ -9,6 +9,8 @@
  *   hidden duplicate titles and the third-party share widgets (Facebook / Pinterest scripts,
  *   which render nothing on wknd.site)
  * - sidebar heading ("Share this Adventure", an h5) -> h2, for a valid heading order
+ * - a sidebar authored as grid columns (yosemite, tahoe, west coast cycling) gets the extra
+ *   section style "split": facts and share heading side by side below 1025px, as on WKND
  */
 const SIDEBAR = 'main[class*="aem-GridColumn--default--3"]';
 
@@ -16,6 +18,9 @@ export default function transform(hookName, element, payload) {
   if (hookName !== 'beforeTransform') return;
 
   element.querySelectorAll('.breadcrumb, .cmp-contentfragment__title, .sharing').forEach((e) => e.remove());
+
+  const sidebar = element.querySelector(SIDEBAR);
+  if (sidebar && sidebar.querySelector('.aem-GridColumn')) sidebar.dataset.sectionStyle = 'split';
 
   element.querySelectorAll(`${SIDEBAR} .title h1, ${SIDEBAR} .title h3, ${SIDEBAR} .title h4, ${SIDEBAR} .title h5, ${SIDEBAR} .title h6`).forEach((h) => {
     const h2 = document.createElement('h2');

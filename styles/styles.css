@@ -695,3 +695,52 @@ main .default-content-wrapper blockquote u {
     padding: 0 14px;
   }
 }
+
+/* split sidebar (authored as grid columns on WKND: yosemite, tahoe, west coast cycling): the
+   facts and "Share this Adventure" side by side below 1025px (7 / 5 columns on phones, 9 / 3 from
+   768px), 14px inside each; these pages set the title and tabs 14px from the edge, and on
+   desktop inset the breadcrumb and sidebar by 14px */
+.adventure main > .section.sidebar.split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: start;
+}
+
+.adventure main > .section.sidebar.split > div,
+.adventure main > .section.sidebar.split > div:first-child {
+  max-width: none;
+  padding: 0 14px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- article rules above: other template */
+.adventure main > .section.sidebar.split h2 {
+  margin-top: 23.38px;
+}
+
+.adventure:has(.sidebar.split) main > .section:nth-child(2) > div {
+  padding: 8px 14px 0;
+}
+
+.adventure:has(.sidebar.split) main > .section.sidebar + .section > div {
+  padding: 0 14px;
+}
+
+@media (width >= 768px) {
+  .adventure main > .section.sidebar.split {
+    grid-template-columns: minmax(0, 9fr) minmax(0, 3fr);
+  }
+}
+
+@media (width >= 1025px) {
+  .adventure main > .section.sidebar.split {
+    display: block;
+  }
+
+  .adventure main > .section.sidebar.split h2 {
+    margin-top: 41px;
+  }
+
+  .adventure:has(.sidebar.split) main > .section:first-child > .breadcrumb-wrapper {
+    padding: 0 14px;
+  }
+}
