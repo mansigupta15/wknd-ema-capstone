@@ -7,13 +7,16 @@
 }
 
 .cards-related .cards-related-list li {
+  display: flow-root;
   margin: 0 0 18px;
 }
 
+/* as on WKND, the card and its two lines float: each card is as wide as its title and date
+   side by side (capped at the column), with the lines then stacked full width */
 .cards-related .cards-related-card {
   box-sizing: border-box;
-  display: block;
-  max-width: 469px; /* WKND caps the cards on tablet, left-aligned */
+  float: left;
+  max-width: 100%;
   min-height: 136px;
   padding: 8px 16px;
   border-left: 5px solid var(--rule-color);
@@ -23,7 +26,9 @@
 
 .cards-related .cards-related-title,
 .cards-related .cards-related-date {
-  display: block;
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
   padding: 5px;
   text-transform: uppercase;
 }

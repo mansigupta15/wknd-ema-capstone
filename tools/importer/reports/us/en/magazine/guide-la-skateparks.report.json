@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/magazine/guide-la-skateparks.html",
+  "path": "us/en/magazine/guide-la-skateparks",
+  "timestamp": "2026-09-27T17:57:42.113Z",
+  "title": "Ultimate Guide to LA Skateparks",
+  "template": "article",
+  "blocks": [
+    "columns-author",
+    "cards-related"
+  ],
+  "altReview": [
+    "Venice Beach Skatepark — empty alt, used nearest heading"
+  ]
+}

@@ -66,10 +66,20 @@ export default function transform(hookName, element, payload) {
 
     // Alt text: every image gets a meaningful, unique alt.
     // - long captions (> 125 chars) are trimmed to their first sentence
-    // - empty alts fall back to the nearest preceding heading
+    // - empty alts fall back to the nearest preceding heading, then a descriptive file name
+    //   (surfer-wave-02.jpeg -> "Surfer wave"; stock IDs and one-word names are skipped),
+    //   then the page title (e.g. a hero image above the h1)
     // - duplicates get a position suffix
     // Fallbacks are flagged with data-alt-review; the import script lists them in the
     // report (altReview) and strips the attribute, so editors can refine them in DA.
+    const pageTitle = ((payload && payload.document) || document).title.trim();
+    const fileAlt = (src) => {
+      const file = decodeURIComponent((src || '').split(/[?#]/)[0].split('/').pop() || '').replace(/\.[a-z0-9]+$/i, '');
+      const words = file.split(/[-_\s]+/).filter((w) => w && !/^\d+$/.test(w));
+      if (words.length < 2 || words.some((w) => !/^[a-z]{2,}$/i.test(w)) || /adobestock|^(img|dsc|pxl)$/i.test(words[0])) return '';
+      const text = words.join(' ').toLowerCase();
+      return text[0].toUpperCase() + text.slice(1);
+    };
     const seen = new Map();
     let context = '';
     element.querySelectorAll('h1, h2, h3, h4, h5, h6, img').forEach((node) => {
@@ -86,6 +96,14 @@ export default function transform(hookName, element, payload) {
       if (!alt && context) {
         alt = context;
         review = 'empty alt, used nearest heading';
+      }
+      if (!alt) {
+        alt = fileAlt(node.getAttribute('src'));
+        if (alt) review = 'empty alt, used file name';
+      }
+      if (!alt && pageTitle) {
+        alt = pageTitle;
+        review = 'empty alt, used page title';
       }
       const count = (seen.get(alt) || 0) + 1;
       seen.set(alt, count);
@@ -109,10 +127,9 @@ export default function transform(hookName, element, payload) {
     // and a slide title can't be the h1 because inactive slides are aria-hidden.
     // Use the page title; placed right before the carousel it is visually hidden by
     // styles.css, so the page looks unchanged. Runs after the alt pass so it isn't used as alt context.
-    const title = ((payload && payload.document) || document).title.trim();
-    if (!element.querySelector('h1') && title) {
+    if (!element.querySelector('h1') && pageTitle) {
       const h1 = document.createElement('h1');
-      h1.textContent = title;
+      h1.textContent = pageTitle;
       element.prepend(h1);
     }
   }

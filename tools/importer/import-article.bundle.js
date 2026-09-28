@@ -187,6 +187,14 @@ var CustomImportScript = (() => {
         "script",
         "style"
       ]);
+      const pageTitle = (payload && payload.document || document).title.trim();
+      const fileAlt = (src) => {
+        const file = decodeURIComponent((src || "").split(/[?#]/)[0].split("/").pop() || "").replace(/\.[a-z0-9]+$/i, "");
+        const words = file.split(/[-_\s]+/).filter((w) => w && !/^\d+$/.test(w));
+        if (words.length < 2 || words.some((w) => !/^[a-z]{2,}$/i.test(w)) || /adobestock|^(img|dsc|pxl)$/i.test(words[0])) return "";
+        const text = words.join(" ").toLowerCase();
+        return text[0].toUpperCase() + text.slice(1);
+      };
       const seen = /* @__PURE__ */ new Map();
       let context = "";
       element.querySelectorAll("h1, h2, h3, h4, h5, h6, img").forEach((node) => {
@@ -204,6 +212,14 @@ var CustomImportScript = (() => {
           alt = context;
           review = "empty alt, used nearest heading";
         }
+        if (!alt) {
+          alt = fileAlt(node.getAttribute("src"));
+          if (alt) review = "empty alt, used file name";
+        }
+        if (!alt && pageTitle) {
+          alt = pageTitle;
+          review = "empty alt, used page title";
+        }
         const count = (seen.get(alt) || 0) + 1;
         seen.set(alt, count);
         if (alt && count > 1) {
@@ -218,10 +234,9 @@ var CustomImportScript = (() => {
         const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
         if (m) a.setAttribute("href", `${m[1]}${m[2] || ""}`);
       });
-      const title = (payload && payload.document || document).title.trim();
-      if (!element.querySelector("h1") && title) {
+      if (!element.querySelector("h1") && pageTitle) {
         const h1 = document.createElement("h1");
-        h1.textContent = title;
+        h1.textContent = pageTitle;
         element.prepend(h1);
       }
     }
@@ -250,6 +265,58 @@ var CustomImportScript = (() => {
         quote.append(p);
       }
       [...text.querySelectorAll(":scope > p")].forEach((p) => quote.append(p));
+    });
+    element.querySelectorAll(".cmp-text blockquote").forEach((quote) => {
+      if (quote.closest(".cmp-text--quote")) return;
+      const p = document.createElement("p");
+      p.textContent = quote.textContent.replace(/\s+/g, " ").trim();
+      quote.replaceChildren(p);
+    });
+    element.querySelectorAll(".cmp-image__title").forEach((caption) => {
+      const text = caption.textContent.trim();
+      const image = caption.closest(".image, .cmp-image");
+      caption.remove();
+      if (!text || !image || image.closest("aside")) return;
+      const p = document.createElement("p");
+      const em = document.createElement("em");
+      em.textContent = text;
+      p.append(em);
+      image.after(p);
+    });
+    const body = element.querySelector("main main");
+    const bodyH2 = body ? [...body.querySelectorAll("h2")].filter((h) => !h.closest("aside, .byline")) : [];
+    if (bodyH2.length && bodyH2.every((h) => !h.closest(".title"))) {
+      const meta = WebImporter.Blocks.createBlock(document, { name: "Section Metadata", cells: { style: "plain-headings" } });
+      const aside = body.querySelector("aside");
+      if (aside) aside.before(meta);
+      else body.append(meta);
+    }
+    element.querySelectorAll(".cmp-download").forEach((download) => {
+      const action = download.querySelector(".cmp-download__action, .cmp-download__title-link");
+      if (!action || !action.getAttribute("href")) return;
+      const out = [];
+      const title = download.querySelector(".cmp-download__title");
+      if (title && title.textContent.trim()) {
+        const h3 = document.createElement("h3");
+        h3.textContent = title.textContent.trim();
+        out.push(h3);
+      }
+      out.push(...download.querySelectorAll(".cmp-download__description p"));
+      const props = [...download.querySelectorAll(".cmp-download__property-content")].map((d) => d.textContent.trim()).filter(Boolean);
+      if (props.length) {
+        const p2 = document.createElement("p");
+        p2.textContent = props.join(" \xB7 ");
+        out.push(p2);
+      }
+      const a = document.createElement("a");
+      a.href = new URL(action.getAttribute("href"), "https://wknd.site").href;
+      a.textContent = action.textContent.trim() || "Download";
+      const strong = document.createElement("strong");
+      strong.append(a);
+      const p = document.createElement("p");
+      p.append(strong);
+      out.push(p);
+      download.replaceWith(...out);
     });
     element.querySelectorAll("aside .title h1, aside .title h2, aside .title h3, aside .title h4, aside .title h5, aside .title h6").forEach((h) => {
       if (h.tagName === "H2") return;
