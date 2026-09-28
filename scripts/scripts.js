@@ -222,6 +222,8 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateSectionMetadata(main);
+  // a trailing section break (before the page metadata) leaves an empty section behind
+  main.querySelectorAll(':scope > .section:empty').forEach((section) => section.remove());
   decorateBlocks(main);
   decorateButtons(main);
 }

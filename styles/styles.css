@@ -343,6 +343,22 @@ main > .section.divider::after {
   margin: 37px auto 50px;
 }
 
+/* the card-grid rule is 2px on WKND; the last one on the page sits 112px above the footer */
+main > .section.cards-article-container:has(.button-wrapper)::after {
+  border-top-width: 2px;
+}
+
+main > .section.cards-article-container:has(.button-wrapper):last-child::after {
+  margin-bottom: 112px;
+}
+
+/* on WKND the rule's bottom margin and the next section title's top margin collapse (92px
+   in all); content-visibility (below) keeps sections from collapsing margins, so a heading
+   that opens the section after a rule drops its own top margin */
+main > .section.cards-article-container:has(.button-wrapper) + .section > .default-content-wrapper:first-child > :is(h1, h2, h3):first-child {
+  margin-top: 0;
+}
+
 main > .section:first-of-type {
   margin-top: 0;
 }

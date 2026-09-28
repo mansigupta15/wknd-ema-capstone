@@ -50,8 +50,12 @@
   text-transform: uppercase;
 }
 
+/* a 24px-tall target (WCAG 2.5.8) that still fits the title's line, so nothing moves */
 .cards-article .cards-article-card-title a:any-link {
+  display: inline-block;
+  min-height: 24px;
   color: inherit;
+  vertical-align: top;
 }
 
 /* single-line truncated description */
