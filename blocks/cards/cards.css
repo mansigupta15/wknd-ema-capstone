@@ -25,3 +25,94 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+/* contributors (About Us): centred cards, one per row, two from 768px, four from 1025px; a
+   164px round photo, name, uppercase role and dark 48px icon-only social buttons */
+.cards.contributors > ul {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.cards.contributors > ul > li {
+  padding: 9px 14px 18px;
+  border: 0;
+  background: none;
+  text-align: center;
+}
+
+.cards.contributors .cards-card-image {
+  padding: 7px 0 14px;
+}
+
+.cards.contributors > ul > li img {
+  width: 164px;
+  height: 164px;
+  aspect-ratio: auto;
+  border-radius: 50%;
+}
+
+/* the text sits 14px further in than the photo, as in the WKND fragment */
+.cards.contributors .cards-card-body {
+  margin: 0;
+  padding: 0 14px;
+}
+
+.cards.contributors .cards-card-body > h3 {
+  margin: 0 0 6px;
+  line-height: 36px;
+}
+
+.cards.contributors .cards-card-body > p {
+  margin: 0 0 3.5px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+.cards.contributors .cards-social {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 18px 0 0;
+  list-style: none;
+}
+
+.cards.contributors .cards-social-link {
+  box-sizing: border-box;
+  display: block;
+  width: 48px;
+  height: 48px;
+  padding: 18px 0 0 14px;
+  background-color: var(--text-color);
+  color: var(--rule-color);
+}
+
+.cards.contributors .cards-social-link:hover {
+  color: var(--rule-color);
+}
+
+.cards.contributors .cards-social-link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.cards.contributors .cards-social-icon {
+  display: block;
+  width: 17.5px;
+  height: 17.5px;
+  background-color: currentcolor;
+  mask: var(--icon) left top / contain no-repeat;
+}
+
+@media (width >= 768px) {
+  .cards.contributors > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 1025px) {
+  .cards.contributors > ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

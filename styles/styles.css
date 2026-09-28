@@ -567,6 +567,7 @@ main .default-content-wrapper blockquote u {
   mask: url('/icons/download.svg') center / contain no-repeat;
 }
 
+
 /* stylelint-enable no-descending-specificity */
 
 /* space before the footer, as on wknd.site */
@@ -766,7 +767,7 @@ main .default-content-wrapper blockquote u {
 }
 
 /* stylelint-disable no-descending-specificity --
-   template-scoped (.faq) rules: they never match the article / adventure elements above */
+   template-scoped (.faq, .about) rules: they never match the article / adventure elements above */
 
 /* faq template (metadata Template: faq): underlined title, image, intro and accordion in the
    article column; "Need more help?" beside it from 1025px (below it, flush to the edge, before) */
@@ -855,6 +856,27 @@ main .default-content-wrapper blockquote u {
     grid-column: 3;
     grid-row: 1;
   }
+}
+
+/* about template (metadata Template: about): the contributor cards run edge to edge (up to the
+   1164px container); intros in small justified text; group titles 40.5px under the page title */
+.about main {
+  padding-bottom: 48px;
+}
+
+.about main > .section > .cards-wrapper {
+  max-width: 1164px;
+  padding: 0;
+}
+
+.about main > .section > .default-content-wrapper > h1 + h2 {
+  margin-top: 40.5px;
+}
+
+.about main > .section > .default-content-wrapper > p:not(.button-wrapper) {
+  font-size: var(--body-font-size-xs);
+  line-height: 35px;
+  text-align: justify;
 }
 
 /* stylelint-enable no-descending-specificity */
