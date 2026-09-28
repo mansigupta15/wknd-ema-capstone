@@ -49,6 +49,9 @@ async function rowsFromIndex(block) {
       link.href = page.path;
       const picture = document.createElement('picture');
       const img = document.createElement('img');
+      // lazy before src: this placeholder is swapped for an optimized picture below, and an
+      // eager detached img would download the full-size index image for every card
+      img.loading = 'lazy';
       img.src = page.image;
       img.alt = page.title || '';
       // the index has no image size: use the card's fixed 260 x 200 image box (no layout shift)
