@@ -2,8 +2,9 @@
 # This site uses the Edge Delivery configuration service, which is the source of truth; this
 # file is the same definition, kept in the repo for review. Apply changes to both:
 #   POST https://admin.hlx.page/config/mansigupta15/sites/wknd-ema-capstone/content/query.yaml
-# Used by the index-driven cards (blocks/cards-article, option "index"): home rails, magazine
-# grid, adventures listing. Pages are indexed when they are published.
+# Used by the index-driven cards (blocks/cards, option "article, index"): home rails, magazine
+# grid, adventures listing, and the search results page ("article, index, search").
+# Pages are indexed when they are published.
 version: 1
 indices:
   default:
@@ -13,6 +14,7 @@ indices:
       - /nav
       - /footer
       - /us/en/index
+      - /us/en/search
     target: /query-index.json
     properties:
       title:

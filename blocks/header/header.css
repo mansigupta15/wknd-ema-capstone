@@ -122,7 +122,7 @@ header .nav-locale-panel {
   width: 360px;
   max-width: calc(100vw - 16px);
   background-color: var(--text-color);
-  box-shadow: rgb(0 0 0 / 25%) 0 5px 10px 0;
+  box-shadow: var(--shadow-color) 0 5px 10px 0;
   color: var(--rule-color);
   transform: translateX(calc(-1 * var(--panel-shift, 0px)));
 }
@@ -198,7 +198,7 @@ header .nav-main {
 }
 
 header .nav-wrapper.is-scrolled .nav-main {
-  box-shadow: rgb(0 0 0 / 26%) 0 8px 20px 0;
+  box-shadow: var(--shadow-color) 0 8px 20px 0;
 }
 
 header .nav-main-inner {
@@ -278,7 +278,7 @@ header .nav-sections {
   overflow-y: auto;
   padding-top: 15px;
   background-color: var(--text-color);
-  box-shadow: rgb(0 0 0 / 35%) -3px 0 5px 0 inset;
+  box-shadow: var(--shadow-inset-color) -3px 0 5px 0 inset;
   visibility: hidden;
   transition: visibility 0s 0.5s;
 }
@@ -290,7 +290,7 @@ header nav.is-menu-open .nav-sections {
 
 header .nav-sections a:any-link {
   display: block;
-  border-top: 1px solid rgb(255 255 255 / 5%);
+  border-top: 1px solid var(--rule-inverse-color);
   padding: 0 14px;
   color: var(--rule-color);
   font-size: var(--body-font-size-xs);
@@ -326,7 +326,7 @@ header .nav-search input {
   border: 0;
   border-radius: 0;
   padding: 1px 32px;
-  background-color: rgb(235 235 235 / 54%);
+  background-color: var(--search-background-color);
   color: var(--text-color);
   font-family: Arial, sans-serif;
   font-size: 12px;

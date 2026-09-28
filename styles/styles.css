@@ -31,6 +31,10 @@
   --muted-text-color: #767676;
   --label-color: #6b6b6b;
   --label-background-color: #f3f3f3;
+  --search-background-color: rgb(235 235 235 / 54%);
+  --rule-inverse-color: rgb(255 255 255 / 5%); /* rules on dark (text-color) panels */
+  --shadow-color: rgb(0 0 0 / 25%);
+  --shadow-inset-color: rgb(0 0 0 / 35%);
 
   /* fonts */
   --body-font-family: 'source sans pro', source-sans-pro-fallback, sans-serif;

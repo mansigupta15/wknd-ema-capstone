@@ -16,27 +16,42 @@ import queryIndex from '../../scripts/query-index.js';
  * descending: title, -title, -date), Limit, Exclude (comma-separated paths). Each page's card
  * shows its index image, title and summary (else description), and with "filter" its
  * categories. Publishing a page adds it; no authoring on the listing.
+ * Option "search" (with "index"): the site search results page. A search form (the header's
+ * search submits here as ?q=) shows the cards whose title, description, summary or category
+ * contain every word of the query, title matches first.
  * Unknown option tokens are ignored.
  */
+
+/** Lowercase, accent-free text for matching ("Café" -> "cafe"). */
+const normalize = (text) => String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 /** Builds authored-style card rows from the query index (option "index"). */
 async function rowsFromIndex(block) {
   const config = readBlockConfig(block);
   const list = (value) => String(value || '').split(',').map((v) => v.trim()).filter(Boolean);
+  const search = block.classList.contains('search');
   const pages = await queryIndex({
     source: config.source || '/',
     sort: config.sort,
     limit: parseInt(config.limit, 10) || undefined,
-    exclude: list(config.exclude),
+    // the results page never lists itself
+    exclude: [...list(config.exclude), ...(search ? [window.location.pathname] : [])],
   });
   return pages.map((page) => {
     const row = document.createElement('div');
+    if (search) {
+      row.dataset.search = normalize([page.title, page.description, page.summary, page.category].join(' '));
+      row.dataset.searchTitle = normalize(page.title);
+    }
     const media = document.createElement('div');
     if (page.image) {
       const link = document.createElement('a');
       link.href = page.path;
       const picture = document.createElement('picture');
       const img = document.createElement('img');
+      // lazy before src: this placeholder is swapped for an optimized picture below, and an
+      // eager detached img would download the full-size index image for every card
+      img.loading = 'lazy';
       img.src = page.image;
       img.alt = page.title || '';
       // the index has no image size: use the card's fixed 260 x 200 image box (no layout shift)
@@ -105,6 +120,76 @@ function buildFilter(block, ul) {
   block.prepend(group, status);
 }
 
+function buildSearch(block, ul) {
+  const cards = [...ul.children];
+  cards.forEach((li) => {
+    // authored (non-index) cards: match their visible text
+    if (!li.dataset.search) li.dataset.search = normalize(li.textContent);
+    if (!li.dataset.searchTitle) li.dataset.searchTitle = normalize(li.querySelector('.cards-article-card-title')?.textContent);
+  });
+
+  const form = document.createElement('form');
+  form.className = 'cards-article-search';
+  form.setAttribute('role', 'search');
+  form.method = 'get';
+  form.action = window.location.pathname;
+  const label = document.createElement('label');
+  label.htmlFor = 'cards-article-search-input';
+  label.textContent = 'Search articles and adventures';
+  const input = document.createElement('input');
+  input.id = 'cards-article-search-input';
+  input.type = 'search';
+  input.name = 'q';
+  input.maxLength = 100;
+  input.enterKeyHint = 'search';
+  const button = document.createElement('button');
+  button.type = 'submit';
+  button.textContent = 'Search';
+  form.append(label, input, button);
+  const status = document.createElement('p');
+  status.className = 'cards-article-search-status';
+  status.setAttribute('role', 'status');
+
+  const apply = (value, first) => {
+    const query = String(value || '').trim().slice(0, 100);
+    input.value = query;
+    const terms = normalize(query).split(/\s+/).filter(Boolean);
+    const shown = cards.filter((li) => {
+      li.hidden = !terms.length || !terms.every((term) => li.dataset.search.includes(term));
+      return !li.hidden;
+    });
+    // title matches first; otherwise the index order (sort is stable)
+    const titleHits = (li) => terms.filter((term) => li.dataset.searchTitle.includes(term)).length;
+    const ranked = [...shown].sort((a, b) => titleHits(b) - titleHits(a));
+    ul.append(...ranked, ...cards.filter((li) => li.hidden));
+    if (!terms.length) status.textContent = 'Enter a word to search WKND articles and adventures.';
+    else if (!shown.length) status.textContent = `No results for “${query}”. Try a different word.`;
+    else status.textContent = `${shown.length} ${shown.length === 1 ? 'result' : 'results'} for “${query}”`;
+    // arriving with a query: the first result image is the likely LCP element
+    const lcp = first && ul.querySelector('.cards-article-card:not([hidden]) img');
+    if (lcp) {
+      lcp.loading = 'eager';
+      lcp.fetchPriority = 'high';
+    }
+  };
+  const fromUrl = () => new URLSearchParams(window.location.search).get('q') || '';
+
+  // new searches update the results in place; the URL stays shareable and back / forward work
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    const url = new URL(window.location.href);
+    if (query) url.searchParams.set('q', query);
+    else url.searchParams.delete('q');
+    window.history.pushState(null, '', url);
+    apply(query);
+  });
+  window.addEventListener('popstate', () => apply(fromUrl()));
+
+  block.prepend(form, status);
+  apply(fromUrl(), true);
+}
+
 export default async function decorate(block) {
   if (block.classList.contains('index')) block.replaceChildren(...await rowsFromIndex(block));
   const filter = block.classList.contains('filter');
@@ -116,6 +201,7 @@ export default async function decorate(block) {
 
     const li = document.createElement('li');
     li.className = 'cards-article-card';
+    Object.assign(li.dataset, row.dataset);
     const media = document.createElement('div');
     media.className = 'cards-article-card-image';
     const body = document.createElement('div');
@@ -191,4 +277,5 @@ export default async function decorate(block) {
 
   block.replaceChildren(ul);
   if (filter) buildFilter(block, ul);
+  if (block.classList.contains('search')) buildSearch(block, ul);
 }
