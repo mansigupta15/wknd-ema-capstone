@@ -358,6 +358,7 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/wknd-sections.js
   var SECTION_MARKER_ATTR = "data-excat-section-id";
+  var EXTRA_STYLE_ATTR = "data-excat-section-extra-style";
   function querySection(root, selectors) {
     const list = Array.isArray(selectors) ? selectors : [selectors];
     for (const sel of list) {
@@ -378,6 +379,7 @@ var CustomImportScript = (() => {
         if (!sectionEl) continue;
         const hr = document.createElement("hr");
         if (section.style) hr.setAttribute(SECTION_MARKER_ATTR, section.id);
+        if (section.style && sectionEl.dataset.sectionStyle) hr.setAttribute(EXTRA_STYLE_ATTR, sectionEl.dataset.sectionStyle);
         sectionEl.before(hr);
       }
     }
@@ -388,13 +390,15 @@ var CustomImportScript = (() => {
         const marker = element.querySelector(`[${SECTION_MARKER_ATTR}="${section.id}"]`);
         const anchor = marker || querySection(element, section.selector);
         if (!anchor) continue;
+        const extra = marker && marker.getAttribute(EXTRA_STYLE_ATTR);
         const metadataBlock = WebImporter.Blocks.createBlock(document, {
           name: "Section Metadata",
-          cells: { style: section.style }
+          cells: { style: extra ? `${section.style}, ${extra}` : section.style }
         });
         anchor.after(metadataBlock);
         if (marker) {
           marker.removeAttribute(SECTION_MARKER_ATTR);
+          marker.removeAttribute(EXTRA_STYLE_ATTR);
           if (i === 0) marker.remove();
         }
       }

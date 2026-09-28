@@ -35,10 +35,10 @@ var CustomImportScript = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // tools/importer/import-home.js
-  var import_home_exports = {};
-  __export(import_home_exports, {
-    default: () => import_home_default
+  // tools/importer/import-adventure.js
+  var import_adventure_exports = {};
+  __export(import_adventure_exports, {
+    default: () => import_adventure_default
   });
 
   // tools/importer/parsers/carousel-hero.js
@@ -129,295 +129,136 @@ var CustomImportScript = (() => {
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/columns-featured.js
-  function resolveImage2(container, document2) {
-    var _a;
-    if (!container) return null;
-    const img = container.querySelector("img");
-    const cmp = container.matches("[data-cmp-src]") ? container : container.querySelector("[data-cmp-src]");
-    const isReal = (u) => u && !/^data:/i.test(u) && !/^about:/i.test(u);
-    let src = img ? img.getAttribute("src") || "" : "";
-    if (!isReal(src) && img) {
-      const lazy = img.getAttribute("data-src") || img.getAttribute("data-lazy-src");
-      if (isReal(lazy)) src = lazy;
-    }
-    if (!isReal(src) && img && img.getAttribute("srcset")) {
-      const candidates = img.getAttribute("srcset").split(",").map((s) => s.trim().split(/\s+/)).filter(([u]) => isReal(u)).map(([u, w]) => ({ u, w: parseInt(w, 10) || 0 })).sort((a, b) => b.w - a.w);
-      if (candidates.length) src = candidates[0].u;
-    }
-    if (!isReal(src) && cmp) {
-      const tpl = cmp.getAttribute("data-cmp-src") || "";
-      if (tpl) src = tpl.replace("{.width}", ".1600");
-    }
-    if (!isReal(src)) return null;
-    const alt = img && (img.getAttribute("alt") || img.getAttribute("title")) || ((_a = cmp == null ? void 0 : cmp.querySelector('meta[itemprop="caption"]')) == null ? void 0 : _a.getAttribute("content")) || "";
-    const out = document2.createElement("img");
-    out.src = src;
-    out.alt = alt.trim();
-    return out;
-  }
-  function descriptionParagraphs2(desc, document2) {
-    if (!desc) return [];
-    const ps = [...desc.querySelectorAll(":scope > p")].filter((p2) => p2.textContent.trim());
-    if (ps.length) return ps;
-    if (!desc.textContent.trim()) return [];
-    const p = document2.createElement("p");
-    p.innerHTML = desc.innerHTML.trim();
-    return [p];
-  }
+  // tools/importer/parsers/cards-related.js
   function parse2(element, { document: document2 }) {
-    const teaser = element.matches(".cmp-teaser") ? element : element.querySelector(".cmp-teaser") || element;
-    const image = resolveImage2(teaser.querySelector(".cmp-teaser__image, .cmp-image") || teaser, document2);
-    const content = [];
-    const pretitle = teaser.querySelector(".cmp-teaser__pretitle");
-    if (pretitle && pretitle.textContent.trim()) {
-      const p = document2.createElement("p");
-      p.textContent = pretitle.textContent.trim();
-      content.push(p);
-    }
-    const titleEl = teaser.querySelector(".cmp-teaser__title, h1, h2, h3");
-    if (titleEl && titleEl.textContent.trim()) {
-      const h2 = document2.createElement("h2");
-      const titleLink = titleEl.querySelector("a");
-      if (titleLink) {
-        const a = document2.createElement("a");
-        a.href = titleLink.getAttribute("href");
-        a.textContent = titleEl.textContent.trim();
-        h2.append(a);
-      } else {
-        h2.textContent = titleEl.textContent.trim();
-      }
-      content.push(h2);
-    }
-    content.push(...descriptionParagraphs2(teaser.querySelector(".cmp-teaser__description"), document2));
-    const ctas = [...teaser.querySelectorAll(".cmp-teaser__action-container a, a.cmp-teaser__action-link")].filter((a, i, arr) => arr.indexOf(a) === i && a.textContent.trim());
-    ctas.forEach((a) => {
-      const link = document2.createElement("a");
-      link.href = a.getAttribute("href");
-      link.textContent = a.textContent.trim();
-      const strong = document2.createElement("strong");
-      const em = document2.createElement("em");
-      em.append(link);
-      strong.append(em);
-      const p = document2.createElement("p");
-      p.append(strong);
-      content.push(p);
-    });
-    if (!image && !content.length) {
-      element.replaceWith(...element.childNodes);
+    const cells = [];
+    const facts = [...element.querySelectorAll(".cmp-contentfragment__element")];
+    if (facts.length) {
+      facts.forEach((fact) => {
+        var _a, _b;
+        const label = (_a = fact.querySelector(".cmp-contentfragment__element-title")) == null ? void 0 : _a.textContent.trim();
+        const value = (_b = fact.querySelector(".cmp-contentfragment__element-value")) == null ? void 0 : _b.textContent.trim();
+        if (!label || !value) return;
+        const l = document2.createElement("p");
+        l.textContent = label;
+        const v = document2.createElement("p");
+        v.textContent = value;
+        cells.push([[l, v]]);
+      });
+      if (!cells.length) element.remove();
+      else element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-related (facts)", cells }));
       return;
     }
-    const cells = [[image || "", content.length ? content : ""]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-featured", cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/cards-article.js
-  function resolveImage3(container, document2) {
-    var _a;
-    if (!container) return null;
-    const img = container.querySelector("img");
-    const cmp = container.matches("[data-cmp-src]") ? container : container.querySelector("[data-cmp-src]");
-    const isReal = (u) => u && !/^data:/i.test(u) && !/^about:/i.test(u);
-    let src = img ? img.getAttribute("src") || "" : "";
-    if (!isReal(src) && img) {
-      const lazy = img.getAttribute("data-src") || img.getAttribute("data-lazy-src");
-      if (isReal(lazy)) src = lazy;
-    }
-    if (!isReal(src) && img && img.getAttribute("srcset")) {
-      const candidates = img.getAttribute("srcset").split(",").map((s) => s.trim().split(/\s+/)).filter(([u]) => isReal(u)).map(([u, w]) => ({ u, w: parseInt(w, 10) || 0 })).sort((a, b) => b.w - a.w);
-      if (candidates.length) src = candidates[0].u;
-    }
-    if (!isReal(src) && cmp) {
-      const tpl = cmp.getAttribute("data-cmp-src") || "";
-      if (tpl) src = tpl.replace("{.width}", ".1600");
-    }
-    if (!isReal(src)) return null;
-    const alt = img && (img.getAttribute("alt") || img.getAttribute("title")) || ((_a = cmp == null ? void 0 : cmp.querySelector('meta[itemprop="caption"]')) == null ? void 0 : _a.getAttribute("content")) || "";
-    const out = document2.createElement("img");
-    out.src = src;
-    out.alt = alt.trim();
-    return out;
-  }
-  function parseLockedTeasers(element, document2) {
-    const teasers = [element];
-    let next = element.nextElementSibling;
-    while (next && next.matches(".teaser.cmp-teaser--secure")) {
-      teasers.push(next);
-      next = next.nextElementSibling;
-    }
-    const cells = [];
-    teasers.forEach((teaser) => {
-      var _a, _b, _c;
-      const title = ((_a = teaser.querySelector(".cmp-teaser__title")) == null ? void 0 : _a.textContent.trim()) || "";
-      const img = resolveImage3(teaser.querySelector(".cmp-teaser__image") || teaser, document2);
-      if (img && !img.alt && title) img.alt = title;
+    element.querySelectorAll("li.cmp-list__item").forEach((item) => {
+      var _a, _b;
+      const link = item.querySelector("a.cmp-list__item-link, a");
+      const title = ((_a = item.querySelector(".cmp-list__item-title")) == null ? void 0 : _a.textContent.trim()) || (link == null ? void 0 : link.textContent.trim()) || "";
+      if (!title) return;
       const content = [];
-      if (title) {
-        const p = document2.createElement("p");
-        const strong = document2.createElement("strong");
+      const p = document2.createElement("p");
+      const strong = document2.createElement("strong");
+      if (link == null ? void 0 : link.getAttribute("href")) {
+        const a = document2.createElement("a");
+        a.href = link.getAttribute("href");
+        a.textContent = title;
+        strong.append(a);
+      } else {
         strong.textContent = title;
-        p.append(strong);
-        content.push(p);
       }
-      const desc = (_b = teaser.querySelector(".cmp-teaser__description")) == null ? void 0 : _b.textContent.trim();
-      if (desc) {
-        const p = document2.createElement("p");
-        p.textContent = desc;
-        content.push(p);
+      p.append(strong);
+      content.push(p);
+      const date = (_b = item.querySelector(".cmp-list__item-date")) == null ? void 0 : _b.textContent.trim();
+      if (date) {
+        const d = document2.createElement("p");
+        d.textContent = date;
+        content.push(d);
       }
-      const action = (_c = teaser.querySelector(".cmp-teaser__action-container")) == null ? void 0 : _c.textContent.trim();
-      if (action) {
-        const p = document2.createElement("p");
-        p.textContent = action;
-        content.push(p);
-      }
-      if (img || content.length) cells.push([img || "", content.length ? content : ""]);
+      cells.push([content]);
     });
-    teasers.slice(1).forEach((t) => t.remove());
     if (!cells.length) {
       element.remove();
       return;
     }
-    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (locked)", cells }));
-  }
-  function parse3(element, { document: document2 }) {
-    if (element.matches(".teaser.cmp-teaser--secure")) {
-      parseLockedTeasers(element, document2);
-      return;
-    }
-    let items = [...element.querySelectorAll("li.cmp-image-list__item")];
-    if (!items.length) items = [...element.querySelectorAll("article.cmp-image-list__item-content, .cmp-image-list > li")];
-    const cells = [];
-    items.forEach((item) => {
-      var _a;
-      const imageLink = item.querySelector("a.cmp-image-list__item-image-link");
-      const titleLink = item.querySelector("a.cmp-image-list__item-title-link");
-      const titleText = ((_a = item.querySelector(".cmp-image-list__item-title") || titleLink) == null ? void 0 : _a.textContent.trim()) || "";
-      const href = (titleLink == null ? void 0 : titleLink.getAttribute("href")) || (imageLink == null ? void 0 : imageLink.getAttribute("href")) || "";
-      const img = resolveImage3(item.querySelector(".cmp-image-list__item-image, .cmp-image") || item, document2);
-      let imageCell = "";
-      if (img) {
-        if (!img.alt && titleText) img.alt = titleText;
-        const imgHref = (imageLink == null ? void 0 : imageLink.getAttribute("href")) || href;
-        if (imgHref) {
-          const a = document2.createElement("a");
-          a.href = imgHref;
-          a.append(img);
-          imageCell = a;
-        } else {
-          imageCell = img;
-        }
-      }
-      const content = [];
-      if (titleText) {
-        const p = document2.createElement("p");
-        const strong = document2.createElement("strong");
-        if (href) {
-          const a = document2.createElement("a");
-          a.href = href;
-          a.textContent = titleText;
-          strong.append(a);
-        } else {
-          strong.textContent = titleText;
-        }
-        p.append(strong);
-        content.push(p);
-      }
-      const desc = item.querySelector(".cmp-image-list__item-description");
-      if (desc && desc.textContent.trim()) {
-        const p = document2.createElement("p");
-        p.textContent = desc.textContent.trim();
-        content.push(p);
-      }
-      if (!imageCell && !content.length) return;
-      cells.push([imageCell, content.length ? content : ""]);
-    });
-    if (!cells.length) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-article", cells });
-    element.replaceWith(block);
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-related", cells }));
   }
 
-  // tools/importer/parsers/hero-teaser.js
-  function resolveImage4(container, document2) {
-    var _a;
-    if (!container) return null;
+  // tools/importer/parsers/tabs.js
+  function resolveImage2(container, document2) {
     const img = container.querySelector("img");
     const cmp = container.matches("[data-cmp-src]") ? container : container.querySelector("[data-cmp-src]");
     const isReal = (u) => u && !/^data:/i.test(u) && !/^about:/i.test(u);
     let src = img ? img.getAttribute("src") || "" : "";
-    if (!isReal(src) && img) {
-      const lazy = img.getAttribute("data-src") || img.getAttribute("data-lazy-src");
-      if (isReal(lazy)) src = lazy;
-    }
     if (!isReal(src) && img && img.getAttribute("srcset")) {
-      const candidates = img.getAttribute("srcset").split(",").map((s) => s.trim().split(/\s+/)).filter(([u]) => isReal(u)).map(([u, w]) => ({ u, w: parseInt(w, 10) || 0 })).sort((a, b) => b.w - a.w);
-      if (candidates.length) src = candidates[0].u;
+      const best = img.getAttribute("srcset").split(",").map((s) => s.trim().split(/\s+/)).filter(([u]) => isReal(u)).map(([u, w]) => ({ u, w: parseInt(w, 10) || 0 })).sort((a, b) => b.w - a.w)[0];
+      if (best) src = best.u;
     }
-    if (!isReal(src) && cmp) {
-      const tpl = cmp.getAttribute("data-cmp-src") || "";
-      if (tpl) src = tpl.replace("{.width}", ".1600");
-    }
+    if (!isReal(src) && cmp && cmp.getAttribute("data-cmp-src")) src = cmp.getAttribute("data-cmp-src").replace("{.width}", ".1600");
     if (!isReal(src)) return null;
-    const alt = img && (img.getAttribute("alt") || img.getAttribute("title")) || ((_a = cmp == null ? void 0 : cmp.querySelector('meta[itemprop="caption"]')) == null ? void 0 : _a.getAttribute("content")) || "";
     const out = document2.createElement("img");
     out.src = src;
-    out.alt = alt.trim();
+    out.alt = (img && (img.getAttribute("alt") || img.getAttribute("title")) || "").trim();
     return out;
   }
-  function descriptionParagraphs3(desc, document2) {
-    if (!desc) return [];
-    const ps = [...desc.querySelectorAll(":scope > p")].filter((p2) => p2.textContent.trim());
-    if (ps.length) return ps;
-    if (!desc.textContent.trim()) return [];
-    const p = document2.createElement("p");
-    p.innerHTML = desc.innerHTML.trim();
-    return [p];
+  function panelContent(panel, label, document2) {
+    const root = panel.querySelector(".cmp-contentfragment__elements") || panel;
+    const out = [];
+    const walk = (node) => {
+      [...node.children].forEach((el) => {
+        var _a;
+        if (el.matches(".cmp-contentfragment__title, script, style, meta, noscript")) return;
+        if (el.matches(".image, .cmp-image")) {
+          const img = resolveImage2(el, document2);
+          if (img) {
+            if (!img.alt) {
+              img.alt = label;
+              img.setAttribute("data-alt-review", "empty alt, used tab label");
+            }
+            out.push(img);
+            const caption = (_a = el.querySelector(".cmp-image__title")) == null ? void 0 : _a.textContent.trim();
+            if (caption) {
+              const p = document2.createElement("p");
+              const em = document2.createElement("em");
+              em.textContent = caption;
+              p.append(em);
+              out.push(p);
+            }
+          }
+          return;
+        }
+        if (/^H[1-6]$/.test(el.tagName)) {
+          const text = el.textContent.replace(/\s+/g, " ").trim();
+          if (!text) return;
+          const h = document2.createElement(el.tagName === "H1" || el.tagName === "H2" ? "h2" : "h3");
+          h.textContent = text;
+          out.push(h);
+          return;
+        }
+        if (el.matches("p, ul, ol, blockquote, table")) {
+          if (el.textContent.replace(/ /g, " ").trim()) out.push(el);
+          return;
+        }
+        walk(el);
+      });
+    };
+    walk(root);
+    return out;
   }
-  function parse4(element, { document: document2 }) {
-    const teaser = element.matches(".cmp-teaser") ? element : element.querySelector(".cmp-teaser") || element;
-    const image = resolveImage4(teaser.querySelector(".cmp-teaser__image, .cmp-image") || teaser, document2);
-    const content = [];
-    const titleEl = teaser.querySelector(".cmp-teaser__title, h1, h2, h3");
-    if (titleEl && titleEl.textContent.trim()) {
-      const h2 = document2.createElement("h2");
-      const titleLink = titleEl.querySelector("a");
-      if (titleLink) {
-        const a = document2.createElement("a");
-        a.href = titleLink.getAttribute("href");
-        a.textContent = titleEl.textContent.trim();
-        h2.append(a);
-      } else {
-        h2.textContent = titleEl.textContent.trim();
-      }
-      content.push(h2);
-    }
-    content.push(...descriptionParagraphs3(teaser.querySelector(".cmp-teaser__description"), document2));
-    const ctas = [...teaser.querySelectorAll(".cmp-teaser__action-container a, a.cmp-teaser__action-link")].filter((a, i, arr) => arr.indexOf(a) === i && a.textContent.trim());
-    ctas.forEach((a) => {
-      const link = document2.createElement("a");
-      link.href = a.getAttribute("href");
-      link.textContent = a.textContent.trim();
-      const strong = document2.createElement("strong");
-      const em = document2.createElement("em");
-      em.append(link);
-      strong.append(em);
-      const p = document2.createElement("p");
-      p.append(strong);
-      content.push(p);
+  function parse3(element, { document: document2 }) {
+    const tabs = [...element.querySelectorAll(".cmp-tabs__tab")];
+    const panels = [...element.querySelectorAll(".cmp-tabs__tabpanel")];
+    const cells = [];
+    tabs.forEach((tab, i) => {
+      const label = tab.textContent.replace(/\s+/g, " ").trim();
+      const panel = panels[i];
+      if (!label || !panel) return;
+      const content = panelContent(panel, label, document2);
+      if (content.length) cells.push([label, content]);
     });
-    if (!image && !content.length) {
-      element.replaceWith(...element.childNodes);
+    if (!cells.length) {
+      element.remove();
       return;
     }
-    const cells = [];
-    if (image) cells.push([image]);
-    if (content.length) cells.push([content]);
-    const block = WebImporter.Blocks.createBlock(document2, { name: "hero-teaser", cells });
-    element.replaceWith(block);
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "tabs", cells }));
   }
 
   // tools/importer/transformers/wknd-cleanup.js
@@ -523,6 +364,20 @@ var CustomImportScript = (() => {
     }
   }
 
+  // tools/importer/transformers/wknd-adventure.js
+  var SIDEBAR = 'main[class*="aem-GridColumn--default--3"]';
+  function transform2(hookName, element, payload) {
+    if (hookName !== "beforeTransform") return;
+    element.querySelectorAll(".breadcrumb, .cmp-contentfragment__title, .sharing").forEach((e) => e.remove());
+    const sidebar = element.querySelector(SIDEBAR);
+    if (sidebar && sidebar.querySelector(".aem-GridColumn")) sidebar.dataset.sectionStyle = "split";
+    element.querySelectorAll(`${SIDEBAR} .title h1, ${SIDEBAR} .title h3, ${SIDEBAR} .title h4, ${SIDEBAR} .title h5, ${SIDEBAR} .title h6`).forEach((h) => {
+      const h2 = document.createElement("h2");
+      h2.textContent = h.textContent.trim();
+      h.replaceWith(h2);
+    });
+  }
+
   // tools/importer/transformers/wknd-sections.js
   var SECTION_MARKER_ATTR = "data-excat-section-id";
   var EXTRA_STYLE_ATTR = "data-excat-section-extra-style";
@@ -535,7 +390,7 @@ var CustomImportScript = (() => {
     }
     return null;
   }
-  function transform2(hookName, element, payload) {
+  function transform3(hookName, element, payload) {
     const sections = payload && payload.template && payload.template.sections || [];
     if (sections.length < 2) return;
     if (hookName === "beforeTransform") {
@@ -572,51 +427,52 @@ var CustomImportScript = (() => {
     }
   }
 
-  // tools/importer/import-home.js
+  // tools/importer/import-adventure.js
   var parsers = {
     "carousel-hero": parse,
-    "columns-featured": parse2,
-    "cards-article": parse3,
-    "hero-teaser": parse4
+    "cards-related": parse2,
+    tabs: parse3
   };
   var PAGE_TEMPLATE = {
-    "name": "home",
-    "description": "WKND homepage: hero carousel, featured article, article/adventure card grids and a hero teaser",
+    "name": "adventure",
+    "description": "WKND adventure detail: image slider, title, facts sidebar (activity, length, price...), Overview / Itinerary / What to Bring tabs",
     "urls": [
-      "https://wknd.site/us/en.html"
+      "https://wknd.site/us/en/adventures/climbing-new-zealand.html",
+      "https://wknd.site/us/en/adventures/downhill-skiing-wyoming.html",
+      "https://wknd.site/us/en/adventures/tahoe-skiing.html",
+      "https://wknd.site/us/en/adventures/west-coast-cycling.html",
+      "https://wknd.site/us/en/adventures/whistler-mountain-biking.html",
+      "https://wknd.site/us/en/adventures/yosemite-backpacking.html"
     ],
+    "metadata": {
+      "Template": "adventure"
+    },
     "blocks": [
       {
         "name": "carousel-hero",
         "instances": [
-          ".carousel.cmp-carousel--hero"
+          ".carousel.cmp-carousel--mini"
         ]
       },
       {
-        "name": "columns-featured",
+        "name": "cards-related",
         "instances": [
-          ".teaser.cmp-teaser--featured"
+          ".contentfragment.cmp-contentfragment--elements"
         ]
       },
       {
-        "name": "cards-article",
+        "name": "tabs",
         "instances": [
-          ".image-list.list"
-        ]
-      },
-      {
-        "name": "hero-teaser",
-        "instances": [
-          ".teaser.cmp-teaser--hero.cmp-teaser--imagebottom"
+          ".tabs.panelcontainer"
         ]
       }
     ],
     "sections": [
       {
         "id": "section-1",
-        "name": "hero-carousel",
+        "name": "slider",
         "selector": [
-          ".carousel.cmp-carousel--hero"
+          ".carousel.cmp-carousel--mini"
         ],
         "style": null,
         "blocks": [
@@ -626,65 +482,48 @@ var CustomImportScript = (() => {
       },
       {
         "id": "section-2",
-        "name": "featured-article",
+        "name": "title",
         "selector": [
-          ".teaser.cmp-teaser--featured"
+          ".cmp-layout-container--fixed .title.cmp-title--underline"
         ],
         "style": null,
-        "blocks": [
-          "columns-featured"
-        ],
-        "defaultContent": []
+        "blocks": [],
+        "defaultContent": [
+          ".title.cmp-title--underline"
+        ]
       },
       {
         "id": "section-3",
-        "name": "recent-articles",
+        "name": "sidebar",
         "selector": [
-          ".teaser.cmp-teaser--featured + .title.cmp-title--underline"
+          'main[class*="aem-GridColumn--default--3"]'
         ],
-        "style": null,
+        "style": "sidebar",
         "blocks": [
-          "cards-article"
+          "cards-related"
         ],
         "defaultContent": [
-          ".teaser.cmp-teaser--featured + .title.cmp-title--underline",
-          ".teaser.cmp-teaser--featured ~ .button.cmp-button--primary"
+          'main[class*="aem-GridColumn--default--3"] .title'
         ]
       },
       {
         "id": "section-4",
-        "name": "next-adventures",
+        "name": "details",
         "selector": [
-          ".cmp-layout-container--fixed .separator + .title.cmp-title--underline"
+          ".tabs.panelcontainer"
         ],
         "style": null,
         "blocks": [
-          "hero-teaser"
+          "tabs"
         ],
-        "defaultContent": [
-          ".cmp-layout-container--fixed .separator + .title.cmp-title--underline"
-        ]
-      },
-      {
-        "id": "section-5",
-        "name": "where-to-go",
-        "selector": [
-          ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed"
-        ],
-        "style": null,
-        "blocks": [
-          "cards-article"
-        ],
-        "defaultContent": [
-          ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed .title",
-          ".teaser.cmp-teaser--hero + .cmp-layout-container--fixed .button.cmp-button--primary"
-        ]
+        "defaultContent": []
       }
     ]
   };
   var transformers = [
     transform,
-    ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform2] : []
+    transform2,
+    ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform3] : []
   ];
   function executeTransformers(hookName, element, payload) {
     const enhancedPayload = __spreadProps(__spreadValues({}, payload), { template: PAGE_TEMPLATE });
@@ -717,7 +556,7 @@ var CustomImportScript = (() => {
     console.log(`Found ${pageBlocks.length} block instances on page`);
     return pageBlocks;
   }
-  var import_home_default = {
+  var import_adventure_default = {
     transform: (payload) => {
       const { document: document2, url, params } = payload;
       const main = document2.body;
@@ -739,21 +578,29 @@ var CustomImportScript = (() => {
       executeTransformers("afterTransform", main, payload);
       const hr = document2.createElement("hr");
       main.appendChild(hr);
-      WebImporter.rules.createMetadata(main, document2);
+      const meta = WebImporter.Blocks.getMetadata(document2) || {};
+      Object.assign(meta, PAGE_TEMPLATE.metadata || {});
+      main.append(WebImporter.Blocks.getMetadataBlock(document2, meta));
       WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
       const path = WebImporter.FileUtils.sanitizePath(rawPath === "" ? "/index" : rawPath);
+      const altReview = [...main.querySelectorAll("img[data-alt-review]")].map((img) => {
+        const entry = `${img.getAttribute("alt") || "(empty)"} \u2014 ${img.getAttribute("data-alt-review")}`;
+        img.removeAttribute("data-alt-review");
+        return entry;
+      });
       return [{
         element: main,
         path,
         report: {
           title: document2.title,
           template: PAGE_TEMPLATE.name,
-          blocks: pageBlocks.map((b) => b.name)
+          blocks: pageBlocks.map((b) => b.name),
+          altReview
         }
       }];
     }
   };
-  return __toCommonJS(import_home_exports);
+  return __toCommonJS(import_adventure_exports);
 })();

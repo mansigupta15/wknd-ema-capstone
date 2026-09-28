@@ -1,0 +1,103 @@
+/* WKND tabs: uppercase labels, the selected one dark; panels hold running text, headings,
+   images and triangle-bullet lists */
+.tabs .tabs-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+
+.tabs .tabs-tab {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  padding: 8px 16px;
+  background: none;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 400;
+  line-height: 21px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tabs .tabs-tab[aria-selected='true'] {
+  background-color: var(--text-color);
+  color: var(--background-color);
+  cursor: default;
+}
+
+/* the panel keeps its first heading's margin inside (18px below the tabs, 27px above it) */
+.tabs .tabs-panel {
+  display: flow-root;
+}
+
+.tabs .tabs-tab:focus-visible,
+.tabs .tabs-panel:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.tabs .tabs-panel[hidden] {
+  display: none;
+}
+
+.tabs .tabs-panel > div > :is(h2, h3):first-child {
+  margin-top: 27px;
+}
+
+.tabs .tabs-panel p {
+  margin: 0 0 13.5px;
+  line-height: 2.5;
+  text-align: justify;
+}
+
+/* images: 7px margins that don't collapse with the text (14px to the next paragraph) */
+.tabs .tabs-panel p:has(> picture) {
+  margin-bottom: 7px;
+  padding: 7px 0;
+  line-height: 0;
+}
+
+.tabs .tabs-panel picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* image caption (WKND image title): a lone italic paragraph right after an image, 11px under
+   it, with the text straight below */
+.tabs .tabs-panel p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
+  margin: -3px 0 0;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabs .tabs-panel p:has(> picture) + p > em:only-child {
+  font-style: normal;
+}
+
+.tabs .tabs-panel ul {
+  margin: 18px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tabs .tabs-panel li {
+  padding-left: 12px;
+  line-height: 36px;
+}
+
+.tabs .tabs-panel li::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 2.5px 0 -7.5px;
+  background-color: currentcolor;
+  mask: url('/icons/bullet.svg') center / contain no-repeat;
+}

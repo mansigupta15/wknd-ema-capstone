@@ -604,3 +604,149 @@ main .default-content-wrapper blockquote u {
     padding: 0 14px;
   }
 }
+
+/* adventure template (metadata Template: adventure): breadcrumb and a full-width image slider,
+   the underlined title, then the facts sidebar and the tabs; 48px before the footer */
+.adventure main {
+  padding-bottom: 48px;
+}
+
+.adventure main .breadcrumb {
+  margin-top: 5px;
+}
+
+.adventure main .breadcrumb nav ol {
+  padding-top: 0;
+}
+
+.adventure main > .section:nth-child(2) h1 {
+  margin: 27px 0 13.5px;
+}
+
+.adventure main > .section:nth-child(2) h1::after {
+  content: '';
+  display: block;
+  width: 84px;
+  padding-top: 8px;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.adventure main > .section:nth-child(2) > div {
+  padding: 8px 28px 0;
+}
+
+.adventure main > .section.sidebar > div:first-child {
+  padding-top: 23px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- article rules above: other template */
+.adventure main > .section.sidebar h2 {
+  margin: 18px 0 23.38px;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+.adventure main > .section.sidebar + .section > div {
+  padding: 0 28px;
+}
+
+/* from 1025px, as on wknd.site: a 1164px (fluid below that) 12-column container, the facts in
+   columns 1-3 and the tabs in 4-12 with 14px inside; the slider stays full width */
+@media (width >= 1025px) {
+  .adventure main {
+    display: grid;
+    grid-template-columns: 1fr min(291px, 25%) min(873px, 75%) 1fr;
+    align-items: start;
+  }
+
+  .adventure main > .section {
+    grid-column: 2 / 4;
+  }
+
+  .adventure main > .section:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .adventure main > .section > div {
+    max-width: none;
+    padding: 0;
+  }
+
+  .adventure main > .section:first-child > .breadcrumb-wrapper {
+    max-width: 1164px;
+  }
+
+  .adventure main > .section:nth-child(2) > div {
+    padding: 8px 14px 0;
+  }
+
+  .adventure main > .section.sidebar {
+    grid-column: 2;
+  }
+
+  .adventure main > .section.sidebar > div:first-child {
+    padding-top: 23px;
+  }
+
+  .adventure main > .section.sidebar + .section {
+    grid-column: 3;
+  }
+
+  .adventure main > .section.sidebar + .section > div {
+    padding: 0 14px;
+  }
+}
+
+/* split sidebar (authored as grid columns on WKND: yosemite, tahoe, west coast cycling): the
+   facts and "Share this Adventure" side by side below 1025px (7 / 5 columns on phones, 9 / 3 from
+   768px), 14px inside each; these pages set the title and tabs 14px from the edge, and on
+   desktop inset the breadcrumb and sidebar by 14px */
+.adventure main > .section.sidebar.split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: start;
+}
+
+/* margin 0: the global section margin: auto would centre the grid items */
+.adventure main > .section.sidebar.split > div,
+.adventure main > .section.sidebar.split > div:first-child {
+  max-width: none;
+  margin: 0;
+  padding: 0 14px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- article rules above: other template */
+.adventure main > .section.sidebar.split h2 {
+  margin-top: 23.38px;
+}
+
+.adventure:has(.sidebar.split) main > .section:nth-child(2) > div {
+  padding: 8px 14px 0;
+}
+
+.adventure:has(.sidebar.split) main > .section.sidebar + .section > div {
+  padding: 0 14px;
+}
+
+@media (width >= 768px) {
+  .adventure main > .section.sidebar.split {
+    grid-template-columns: minmax(0, 9fr) minmax(0, 3fr);
+  }
+}
+
+@media (width >= 1025px) {
+  .adventure main > .section.sidebar.split {
+    display: block;
+  }
+
+  .adventure main > .section.sidebar.split h2 {
+    margin-top: 41px;
+  }
+
+  .adventure:has(.sidebar.split) main > .section:first-child > .breadcrumb-wrapper {
+    padding: 0 14px;
+  }
+}

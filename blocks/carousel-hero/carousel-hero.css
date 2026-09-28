@@ -205,3 +205,39 @@
     margin-top: 0;
   }
 }
+
+/* mini (adventure pages): image-only slider, a 400px image at every width with 7px above and
+   below, dots centered 16px under it and the arrows on the right (controls always in flow) */
+.carousel-hero.mini {
+  margin-bottom: 0;
+}
+
+.carousel-hero.mini .carousel-hero-slide-image {
+  height: 414px;
+  max-height: none;
+  padding: 7px 0;
+}
+
+.carousel-hero.mini .carousel-hero-slide-image img {
+  height: 400px;
+  max-height: none;
+}
+
+.carousel-hero.mini .carousel-hero-controls {
+  position: static;
+}
+
+.carousel-hero.mini .carousel-hero-indicators {
+  justify-content: center;
+  margin-top: 16px;
+  padding: 0;
+}
+
+.carousel-hero.mini .carousel-hero-arrows {
+  margin-top: 7px;
+}
+
+/* a single slide has no controls, but WKND still shows its dot row: keep that space */
+.carousel-hero.mini.carousel-hero-single .carousel-hero-slides-container {
+  padding-bottom: 26px;
+}

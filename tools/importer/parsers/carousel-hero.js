@@ -7,6 +7,8 @@
  * each wrap a Core teaser (.cmp-teaser) with title, description, CTA and a
  * lazy-loaded Core image (.cmp-image, imageV3).
  * Output: 2 columns, one row per slide: [image] | [h2, p, CTA link].
+ * The mini carousel (adventure pages, .cmp-carousel--mini) has image-only items:
+ * "carousel-hero (mini)", one column, one row per slide: [image].
  * Generated: 2026-09-25
  */
 
@@ -65,6 +67,7 @@ export default function parse(element, { document }) {
   // Iterate the carousel items (block-level wrappers, not anchors).
   let items = [...element.querySelectorAll('.cmp-carousel__item')];
   if (!items.length) items = [...element.querySelectorAll('.cmp-teaser')];
+  const mini = element.matches('.cmp-carousel--mini') || !!element.closest('.cmp-carousel--mini');
 
   const cells = [];
   items.forEach((item) => {
@@ -110,7 +113,7 @@ export default function parse(element, { document }) {
     });
 
     if (!image && !content.length) return;
-    cells.push([image || '', content.length ? content : '']);
+    cells.push(mini ? [image] : [image || '', content.length ? content : '']);
   });
 
   if (!cells.length) {
@@ -118,6 +121,7 @@ export default function parse(element, { document }) {
     return;
   }
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'carousel-hero', cells });
+  const name = mini ? 'carousel-hero (mini)' : 'carousel-hero';
+  const block = WebImporter.Blocks.createBlock(document, { name, cells });
   element.replaceWith(block);
 }

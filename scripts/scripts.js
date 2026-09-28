@@ -101,9 +101,13 @@ function buildAutoBlocks(main) {
       });
     }
     buildWidgetAutoBlocks(main);
-    // article pages: breadcrumb generated from the URL, closing the first (hero) section
+    // breadcrumb generated from the URL: closing the first (hero) section on articles,
+    // opening it (above the image slider) on adventure pages
+    const firstSection = main.querySelector(':scope > div');
     if (document.body.classList.contains('article')) {
-      main.querySelector(':scope > div')?.append(buildBlock('breadcrumb', ''));
+      firstSection?.append(buildBlock('breadcrumb', ''));
+    } else if (document.body.classList.contains('adventure')) {
+      firstSection?.prepend(buildBlock('breadcrumb', ''));
     }
   } catch (error) {
     // eslint-disable-next-line no-console
