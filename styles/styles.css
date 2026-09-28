@@ -706,9 +706,11 @@ main .default-content-wrapper blockquote u {
   align-items: start;
 }
 
+/* margin 0: the global section margin: auto would centre the grid items */
 .adventure main > .section.sidebar.split > div,
 .adventure main > .section.sidebar.split > div:first-child {
   max-width: none;
+  margin: 0;
   padding: 0 14px;
 }
 
