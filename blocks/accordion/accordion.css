@@ -1,0 +1,54 @@
+/* WKND accordion: uppercase semibold questions on a 2px light rule with a plus / minus icon
+   (WKND icon font glyphs); the answer in small justified text */
+.accordion .accordion-item-label {
+  position: relative;
+  padding: 13.333px 46px 13.333px 21.333px;
+  border-bottom: 2px solid var(--rule-color);
+  color: rgb(0 0 0);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.accordion .accordion-item-label::-webkit-details-marker {
+  display: none;
+}
+
+.accordion .accordion-item-label::after {
+  content: '';
+  position: absolute;
+  top: 13.333px;
+  right: 13.333px;
+  width: 20px;
+  height: 20px;
+  background-color: currentcolor;
+  mask: url('/icons/plus.svg') center / contain no-repeat;
+}
+
+.accordion .accordion-item-label:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+}
+
+.accordion .accordion-item[open] > .accordion-item-label {
+  border-bottom-color: transparent;
+}
+
+.accordion .accordion-item[open] > .accordion-item-label::after {
+  mask-image: url('/icons/minus.svg');
+}
+
+.accordion .accordion-item-body {
+  padding: 7px 0 0 7px;
+  font-size: var(--body-font-size-xs);
+  line-height: 24.5px;
+  text-align: justify;
+}
+
+.accordion .accordion-item-body p {
+  margin: 0 0 13.5px;
+}

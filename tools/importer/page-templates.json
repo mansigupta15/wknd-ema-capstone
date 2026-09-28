@@ -407,6 +407,57 @@
           ]
         }
       ]
+    },
+    {
+      "name": "faq",
+      "urls": [
+        "https://wknd.site/us/en/faqs.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/faqs.html",
+      "description": "WKND FAQs: underlined title, image, intro text, question accordion; \"Need more help?\" sidebar",
+      "urlPattern": "/us/en/faqs",
+      "metadata": {
+        "Template": "faq"
+      },
+      "blocks": [
+        {
+          "name": "accordion",
+          "instances": [
+            ".accordion.panelcontainer"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "faqs",
+          "selector": [
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--8\"]"
+          ],
+          "style": null,
+          "blocks": [
+            "accordion"
+          ],
+          "defaultContent": [
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--8\"] .title",
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--8\"] .image",
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--8\"] > .cmp-container > .aem-Grid > .text"
+          ]
+        },
+        {
+          "id": "section-2",
+          "name": "help",
+          "selector": [
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--3\"]"
+          ],
+          "style": "sidebar",
+          "blocks": [],
+          "defaultContent": [
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--3\"] .title",
+            ".cmp-layout-container--fixed .container[class*=\"aem-GridColumn--default--3\"] .text"
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
