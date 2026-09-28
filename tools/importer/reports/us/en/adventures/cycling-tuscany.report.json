@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/adventures/cycling-tuscany.html",
+  "path": "us/en/adventures/cycling-tuscany",
+  "timestamp": "2026-09-28T09:43:13.414Z",
+  "title": "Cycling Tuscany",
+  "template": "adventure",
+  "blocks": [
+    "carousel-hero",
+    "cards-related",
+    "tabs"
+  ],
+  "altReview": [
+    "Action shot of cyclists riding hard. (image 2) — duplicate alt"
+  ]
+}

@@ -1,4 +1,6 @@
+import { readBlockConfig } from '../../scripts/aem.js';
 import { optimizePicture } from '../../scripts/scripts.js';
+import queryIndex from '../../scripts/query-index.js';
 
 /**
  * Article listing cards: one row per card, [linked image | linked title, description].
@@ -7,8 +9,64 @@ import { optimizePicture } from '../../scripts/scripts.js';
  * trailing non-link action label).
  * Option "filter": a third cell lists each card's categories (comma-separated, may be empty);
  * the block adds "All" + one toggle button per category (alphabetical) that shows only the
- * matching cards. Unknown option tokens are ignored.
+ * matching cards.
+ * Option "index": the cards come from the query index instead of authored rows. The block is
+ * a key / value table: Source (path prefix, e.g. /us/en/magazine/), Sort (index field, "-" for
+ * descending: title, -title, -date), Limit, Exclude (comma-separated paths). Each page's card
+ * shows its index image, title and summary (else description), and with "filter" its
+ * categories. Publishing a page adds it; no authoring on the listing.
+ * Unknown option tokens are ignored.
  */
+
+/** Builds authored-style card rows from the query index (option "index"). */
+async function rowsFromIndex(block) {
+  const config = readBlockConfig(block);
+  const list = (value) => String(value || '').split(',').map((v) => v.trim()).filter(Boolean);
+  const pages = await queryIndex({
+    source: config.source || '/',
+    sort: config.sort,
+    limit: parseInt(config.limit, 10) || undefined,
+    exclude: list(config.exclude),
+  });
+  return pages.map((page) => {
+    const row = document.createElement('div');
+    const media = document.createElement('div');
+    if (page.image) {
+      const link = document.createElement('a');
+      link.href = page.path;
+      const picture = document.createElement('picture');
+      const img = document.createElement('img');
+      img.src = page.image;
+      img.alt = page.title || '';
+      picture.append(img);
+      link.append(picture);
+      media.append(link);
+    }
+    const body = document.createElement('div');
+    const title = document.createElement('p');
+    const strong = document.createElement('strong');
+    const a = document.createElement('a');
+    a.href = page.path;
+    a.textContent = page.title || page.path;
+    strong.append(a);
+    title.append(strong);
+    body.append(title);
+    const text = page.summary || page.description;
+    if (text) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      body.append(p);
+    }
+    row.append(media, body);
+    if (block.classList.contains('filter')) {
+      const categories = document.createElement('div');
+      categories.textContent = page.category || '';
+      row.append(categories);
+    }
+    return row;
+  });
+}
+
 function buildFilter(block, ul) {
   const cards = [...ul.children];
   const names = [...new Set(cards.flatMap((li) => li.dataset.categories.split('|').filter(Boolean)))]
@@ -43,7 +101,8 @@ function buildFilter(block, ul) {
   block.prepend(group, status);
 }
 
-export default function decorate(block) {
+export default async function decorate(block) {
+  if (block.classList.contains('index')) block.replaceChildren(...await rowsFromIndex(block));
   const filter = block.classList.contains('filter');
   const ul = document.createElement('ul');
   ul.className = 'cards-article-list';

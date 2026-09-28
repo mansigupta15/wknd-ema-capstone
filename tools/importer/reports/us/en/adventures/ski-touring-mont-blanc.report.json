@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/adventures/ski-touring-mont-blanc.html",
+  "path": "us/en/adventures/ski-touring-mont-blanc",
+  "timestamp": "2026-09-28T09:43:31.365Z",
+  "title": "Ski Touring Mont Blanc",
+  "template": "adventure",
+  "blocks": [
+    "carousel-hero",
+    "cards-related",
+    "tabs"
+  ],
+  "altReview": [
+    "Alpiniste sur l'ascension du Mont-Blanc (4810m) au niveau du dôme du Goûter, Alpiniste sur l'ascension du Mont-Blanc… (image 2) — duplicate alt",
+    "Itinerary — empty alt, used tab label"
+  ]
+}

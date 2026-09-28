@@ -185,18 +185,65 @@ function parseFilterTabs(element, document) {
   element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (filter)', cells }));
 }
 
-export default function parse(element, { document }) {
+/**
+ * Index-driven listings: an image list of pages that all live under one folder becomes a
+ * "cards-article (index)" config table (Source, Sort, Limit, Exclude); the block renders the
+ * cards from /query-index.json, so publishing a page adds its card with no authoring.
+ * - Sort is read from the source order: A-Z titles "title", Z-A "-title", else newest
+ *   first "-date" (article Publication Date)
+ * - Limit is the number of cards shown, except on the folder's own listing page (all pages)
+ * - Exclude: a featured article on the same page that the list leaves out (home page)
+ * Returns null (static rows are used instead) when the items don't share one folder.
+ */
+function indexConfig(items, element, document, pageUrl) {
+  const toPath = (href) => new URL(href, 'https://wknd.site').pathname.replace(/\.html?$/, '');
+  const links = items.map((item) => item.querySelector('a[href]')?.getAttribute('href')).filter(Boolean);
+  if (!links.length || links.length !== items.length) return null;
+  const paths = links.map(toPath);
+  const folder = paths[0].replace(/[^/]+$/, '');
+  if (folder.split('/').length < 4 || !paths.every((p) => p.startsWith(folder))) return null;
+  const titles = items.map((item) => (item.querySelector('.cmp-image-list__item-title')?.textContent || '').trim());
+  const sorted = [...titles].sort((x, y) => x.localeCompare(y));
+  let sort = '-date';
+  if (titles.every((t, i) => t === sorted[i])) sort = 'title';
+  else if (titles.every((t, i) => t === sorted[sorted.length - 1 - i])) sort = '-title';
+  const config = { Source: folder, Sort: sort };
+  const pagePath = pageUrl ? new URL(pageUrl).pathname.replace(/\.html?$/, '') : '';
+  if (`${pagePath}/` !== folder) config.Limit = String(paths.length);
+  const featuredLinks = JSON.parse(document.documentElement.getAttribute('data-featured-links') || '[]');
+  const featured = featuredLinks.map(toPath)
+    .filter((p) => p.startsWith(folder) && !paths.includes(p));
+  if (featured.length) config.Exclude = [...new Set(featured)].join(', ');
+  return config;
+}
+
+export default function parse(element, { document, params }) {
+  const pageUrl = params && params.originalURL;
+
   if (element.matches('.teaser.cmp-teaser--secure')) {
     parseLockedTeasers(element, document);
     return;
   }
   if (element.querySelector('.cmp-tabs__tabpanel .cmp-image-list')) {
+    // category tabs of pages (adventures listing): the "All" panel, index-driven with filter
+    const all = [...element.querySelectorAll('.cmp-tabs__tabpanel')][0];
+    const config = all && indexConfig([...all.querySelectorAll('li.cmp-image-list__item')], element, document, pageUrl);
+    if (config) {
+      element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (index, filter)', cells: config }));
+      return;
+    }
     parseFilterTabs(element, document);
     return;
   }
 
   let items = [...element.querySelectorAll('li.cmp-image-list__item')];
   if (!items.length) items = [...element.querySelectorAll('article.cmp-image-list__item-content, .cmp-image-list > li')];
+
+  const config = indexConfig(items, element, document, pageUrl);
+  if (config) {
+    element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (index)', cells: config }));
+    return;
+  }
 
   const cells = items.map((item) => parseItem(item, document)).filter(Boolean);
 

@@ -259,17 +259,54 @@ var CustomImportScript = (() => {
     }
     element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (filter)", cells }));
   }
-  function parse2(element, { document: document2 }) {
+  function indexConfig(items, element, document2, pageUrl) {
+    const toPath = (href) => new URL(href, "https://wknd.site").pathname.replace(/\.html?$/, "");
+    const links = items.map((item) => {
+      var _a;
+      return (_a = item.querySelector("a[href]")) == null ? void 0 : _a.getAttribute("href");
+    }).filter(Boolean);
+    if (!links.length || links.length !== items.length) return null;
+    const paths = links.map(toPath);
+    const folder = paths[0].replace(/[^/]+$/, "");
+    if (folder.split("/").length < 4 || !paths.every((p) => p.startsWith(folder))) return null;
+    const titles = items.map((item) => {
+      var _a;
+      return (((_a = item.querySelector(".cmp-image-list__item-title")) == null ? void 0 : _a.textContent) || "").trim();
+    });
+    const sorted = [...titles].sort((x, y) => x.localeCompare(y));
+    let sort = "-date";
+    if (titles.every((t, i) => t === sorted[i])) sort = "title";
+    else if (titles.every((t, i) => t === sorted[sorted.length - 1 - i])) sort = "-title";
+    const config = { Source: folder, Sort: sort };
+    const pagePath = pageUrl ? new URL(pageUrl).pathname.replace(/\.html?$/, "") : "";
+    if (`${pagePath}/` !== folder) config.Limit = String(paths.length);
+    const featured = [...document2.querySelectorAll(".cmp-teaser--featured a[href]")].map((a) => toPath(a.getAttribute("href"))).filter((p) => p.startsWith(folder) && !paths.includes(p));
+    if (featured.length) config.Exclude = [...new Set(featured)].join(", ");
+    return config;
+  }
+  function parse2(element, { document: document2, params }) {
+    const pageUrl = params && params.originalURL;
     if (element.matches(".teaser.cmp-teaser--secure")) {
       parseLockedTeasers(element, document2);
       return;
     }
     if (element.querySelector(".cmp-tabs__tabpanel .cmp-image-list")) {
+      const all = [...element.querySelectorAll(".cmp-tabs__tabpanel")][0];
+      const config2 = all && indexConfig([...all.querySelectorAll("li.cmp-image-list__item")], element, document2, pageUrl);
+      if (config2) {
+        element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (index, filter)", cells: config2 }));
+        return;
+      }
       parseFilterTabs(element, document2);
       return;
     }
     let items = [...element.querySelectorAll("li.cmp-image-list__item")];
     if (!items.length) items = [...element.querySelectorAll("article.cmp-image-list__item-content, .cmp-image-list > li")];
+    const config = indexConfig(items, element, document2, pageUrl);
+    if (config) {
+      element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (index)", cells: config }));
+      return;
+    }
     const cells = items.map((item) => parseItem(item, document2)).filter(Boolean);
     if (!cells.length) {
       element.replaceWith(...element.childNodes);

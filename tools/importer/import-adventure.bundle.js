@@ -399,6 +399,69 @@ var CustomImportScript = (() => {
     });
   }
 
+  // tools/importer/transformers/wknd-listing-card.js
+  var LISTINGS = {
+    "/us/en/magazine/": "/us/en/magazine.html",
+    "/us/en/adventures/": "/us/en/adventures.html"
+  };
+  function fetchListing(path) {
+    const cache = window.wkndListingCache = window.wkndListingCache || {};
+    if (!(path in cache)) {
+      cache[path] = null;
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", new URL(path, "https://wknd.site").href, false);
+        xhr.send();
+        if (xhr.status === 200) cache[path] = new DOMParser().parseFromString(xhr.responseText, "text/html");
+      } catch (e) {
+        console.warn("listing lookup failed", path, e);
+      }
+    }
+    return cache[path];
+  }
+  function transform3(hookName, element, payload) {
+    var _a, _b, _c, _d, _e;
+    if (hookName !== "beforeTransform") return;
+    let url;
+    try {
+      url = new URL(payload && (((_a = payload.params) == null ? void 0 : _a.originalURL) || payload.url) || window.location.href);
+    } catch (e) {
+      return;
+    }
+    const pagePath = url.pathname;
+    const prefix = Object.keys(LISTINGS).find((p) => pagePath.startsWith(p));
+    const meta = {};
+    const cf = document.querySelector(".cmp-contentfragment[data-cmp-data-layer]");
+    if (cf && prefix === "/us/en/magazine/") {
+      try {
+        const layer = Object.values(JSON.parse(cf.getAttribute("data-cmp-data-layer")))[0];
+        if (layer && layer["repo:modifyDate"]) meta["Publication Date"] = layer["repo:modifyDate"];
+      } catch (e) {
+      }
+    }
+    const listing = prefix && fetchListing(LISTINGS[prefix]);
+    if (listing) {
+      const matches = (a) => a && new URL(a.getAttribute("href"), url).pathname === pagePath;
+      const items = [...listing.querySelectorAll(".cmp-image-list__item")].filter((i) => matches(i.querySelector("a[href]")));
+      const item = items[0];
+      if (item) {
+        const img = item.querySelector("img");
+        const src = img && (img.getAttribute("src") || img.getAttribute("data-src"));
+        if (src && !src.startsWith("data:")) meta.Image = { src: new URL(src, "https://wknd.site").href, alt: ((_b = item.querySelector(".cmp-image-list__item-title")) == null ? void 0 : _b.textContent.trim()) || "" };
+        const summary = (_c = item.querySelector(".cmp-image-list__item-description")) == null ? void 0 : _c.textContent.trim();
+        const description = (_e = (_d = document.querySelector('meta[name="description"]')) == null ? void 0 : _d.getAttribute("content")) == null ? void 0 : _e.trim();
+        if (summary && summary !== description) meta.Summary = summary;
+      }
+      const tabs = [...listing.querySelectorAll(".cmp-tabs__tab")].map((t) => t.textContent.trim());
+      const panels = [...listing.querySelectorAll(".cmp-tabs__tabpanel")];
+      if (prefix === "/us/en/adventures/" && panels.length > 1) {
+        const cats = panels.slice(1).map((panel, i) => [...panel.querySelectorAll("a[href]")].some(matches) ? tabs[i + 1] : null).filter(Boolean);
+        meta.Category = [...new Set(cats)].join(", ");
+      }
+    }
+    document.documentElement.setAttribute("data-import-meta", JSON.stringify(meta));
+  }
+
   // tools/importer/transformers/wknd-sections.js
   var SECTION_MARKER_ATTR = "data-excat-section-id";
   var EXTRA_STYLE_ATTR = "data-excat-section-extra-style";
@@ -411,7 +474,7 @@ var CustomImportScript = (() => {
     }
     return null;
   }
-  function transform3(hookName, element, payload) {
+  function transform4(hookName, element, payload) {
     const sections = payload && payload.template && payload.template.sections || [];
     if (sections.length < 2) return;
     if (hookName === "beforeTransform") {
@@ -543,8 +606,9 @@ var CustomImportScript = (() => {
   };
   var transformers = [
     transform,
+    transform3,
     transform2,
-    ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform3] : []
+    ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform4] : []
   ];
   function executeTransformers(hookName, element, payload) {
     const enhancedPayload = __spreadProps(__spreadValues({}, payload), { template: PAGE_TEMPLATE });
@@ -601,6 +665,14 @@ var CustomImportScript = (() => {
       main.appendChild(hr);
       const meta = WebImporter.Blocks.getMetadata(document2) || {};
       Object.assign(meta, PAGE_TEMPLATE.metadata || {});
+      const card = JSON.parse(document2.documentElement.getAttribute("data-import-meta") || "{}");
+      if (card.Image) {
+        const img = document2.createElement("img");
+        img.src = card.Image.src;
+        img.alt = card.Image.alt;
+        card.Image = img;
+      }
+      Object.assign(meta, card);
       main.append(WebImporter.Blocks.getMetadataBlock(document2, meta));
       WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);

@@ -8,6 +8,7 @@ import cardsRelatedParser from './parsers/cards-related.js';
 // TRANSFORMER IMPORTS
 import wkndCleanupTransformer from './transformers/wknd-cleanup.js';
 import wkndArticleTransformer from './transformers/wknd-article.js';
+import wkndListingCardTransformer from './transformers/wknd-listing-card.js';
 import wkndSectionsTransformer from './transformers/wknd-sections.js';
 
 // PARSER REGISTRY
@@ -88,6 +89,7 @@ const PAGE_TEMPLATE = {
 // TRANSFORMER REGISTRY - cleanup must run before sections
 const transformers = [
   wkndCleanupTransformer,
+  wkndListingCardTransformer,
   wkndArticleTransformer,
   ...(PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [wkndSectionsTransformer] : []),
 ];
@@ -172,6 +174,15 @@ export default {
     // page metadata from the source head, plus template-level fields (e.g. Template: article)
     const meta = WebImporter.Blocks.getMetadata(document) || {};
     Object.assign(meta, PAGE_TEMPLATE.metadata || {});
+    // listing-card metadata from wknd-listing-card (card image, summary, category, date)
+    const card = JSON.parse(document.documentElement.getAttribute('data-import-meta') || '{}');
+    if (card.Image) {
+      const img = document.createElement('img');
+      img.src = card.Image.src;
+      img.alt = card.Image.alt;
+      card.Image = img;
+    }
+    Object.assign(meta, card);
     main.append(WebImporter.Blocks.getMetadataBlock(document, meta));
     WebImporter.rules.transformBackgroundImages(main, document);
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);

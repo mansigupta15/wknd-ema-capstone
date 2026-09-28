@@ -1,0 +1,45 @@
+# Query index for the WKND site (served as /query-index.json).
+# This site uses the Edge Delivery configuration service, which is the source of truth; this
+# file is the same definition, kept in the repo for review. Apply changes to both:
+#   POST https://admin.hlx.page/config/mansigupta15/sites/wknd-ema-capstone/content/query.yaml
+# Used by the index-driven cards (blocks/cards-article, option "index"): home rails, magazine
+# grid, adventures listing. Pages are indexed when they are published.
+version: 1
+indices:
+  default:
+    include:
+      - /us/en/**
+    exclude:
+      - /nav
+      - /footer
+      - /us/en/index
+    target: /query-index.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      # card teaser line when it differs from the page description (metadata "Summary")
+      summary:
+        select: head > meta[name="summary"]
+        value: attribute(el, "content")
+      # the page's card image (metadata "Image"; else the first image of the page)
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https?://[^/]+(/.*)")
+      template:
+        select: head > meta[name="template"]
+        value: attribute(el, "content")
+      # adventure categories, comma-separated (metadata "Category")
+      category:
+        select: head > meta[name="category"]
+        value: attribute(el, "content")
+      # article publication date, ISO 8601 (metadata "Publication Date")
+      date:
+        select: head > meta[name="publication-date"]
+        value: attribute(el, "content")
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
