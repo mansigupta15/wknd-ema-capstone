@@ -229,6 +229,10 @@ function buildSearch(section) {
   input.name = 'q';
   input.placeholder = labelText;
   input.setAttribute('aria-label', labelText);
+  // on the results page, the field shows the current search
+  if (new URL(form.action).pathname === window.location.pathname) {
+    input.value = new URLSearchParams(window.location.search).get('q') || '';
+  }
   form.append(input);
   return form;
 }
