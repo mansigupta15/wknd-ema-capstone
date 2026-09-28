@@ -606,7 +606,11 @@ main .default-content-wrapper blockquote u {
 }
 
 /* adventure template (metadata Template: adventure): breadcrumb and a full-width image slider,
-   the underlined title, then the facts sidebar and the tabs */
+   the underlined title, then the facts sidebar and the tabs; 48px before the footer */
+.adventure main {
+  padding-bottom: 48px;
+}
+
 .adventure main .breadcrumb {
   margin-top: 5px;
 }

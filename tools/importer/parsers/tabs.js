@@ -8,8 +8,9 @@
  * fragment whose rich-text elements contain headings (h2 > b), images (.image > .cmp-image),
  * paragraphs and lists, nested in layout divs.
  * Output (Block Collection tabs): 2 columns, one row per tab: [tab label] | [tab content].
- * Panel headings become h2 (h3 below that); an image without alt text gets the tab label,
- * flagged for review in the import report.
+ * Panel headings become h2 (h3 below that); an image caption becomes an italic paragraph
+ * after the image; an image without alt text gets the tab label, flagged for review in the
+ * import report.
  * Generated: 2026-09-28
  */
 
@@ -48,6 +49,15 @@ function panelContent(panel, label, document) {
             img.setAttribute('data-alt-review', 'empty alt, used tab label');
           }
           out.push(img);
+          // caption (the image title, shown under the image on WKND) -> italic paragraph
+          const caption = el.querySelector('.cmp-image__title')?.textContent.trim();
+          if (caption) {
+            const p = document.createElement('p');
+            const em = document.createElement('em');
+            em.textContent = caption;
+            p.append(em);
+            out.push(p);
+          }
         }
         return;
       }

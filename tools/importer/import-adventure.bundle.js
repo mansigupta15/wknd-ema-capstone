@@ -204,6 +204,7 @@ var CustomImportScript = (() => {
     const out = [];
     const walk = (node) => {
       [...node.children].forEach((el) => {
+        var _a;
         if (el.matches(".cmp-contentfragment__title, script, style, meta, noscript")) return;
         if (el.matches(".image, .cmp-image")) {
           const img = resolveImage2(el, document2);
@@ -213,6 +214,14 @@ var CustomImportScript = (() => {
               img.setAttribute("data-alt-review", "empty alt, used tab label");
             }
             out.push(img);
+            const caption = (_a = el.querySelector(".cmp-image__title")) == null ? void 0 : _a.textContent.trim();
+            if (caption) {
+              const p = document2.createElement("p");
+              const em = document2.createElement("em");
+              em.textContent = caption;
+              p.append(em);
+              out.push(p);
+            }
           }
           return;
         }

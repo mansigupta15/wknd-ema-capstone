@@ -60,15 +60,25 @@
   line-height: 0;
 }
 
-/* an image opening the panel is its own element on WKND: 31px to the text below */
-.tabs .tabs-panel > div > p:first-child:has(> picture) {
-  margin-bottom: 24px;
-}
-
 .tabs .tabs-panel picture img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* image caption (WKND image title): a lone italic paragraph right after an image, 11px under
+   it, with the text straight below */
+.tabs .tabs-panel p:has(> picture) + p:has(> em:only-child):not(:has(strong)) {
+  margin: -3px 0 0;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabs .tabs-panel p:has(> picture) + p > em:only-child {
+  font-style: normal;
 }
 
 .tabs .tabs-panel ul {
