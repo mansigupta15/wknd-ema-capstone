@@ -39,6 +39,9 @@ async function rowsFromIndex(block) {
       const img = document.createElement('img');
       img.src = page.image;
       img.alt = page.title || '';
+      // the index has no image size: use the card's fixed 260 x 200 image box (no layout shift)
+      img.width = 260;
+      img.height = 200;
       picture.append(img);
       link.append(picture);
       media.append(link);
