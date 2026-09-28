@@ -53,7 +53,9 @@
   text-align: justify;
 }
 
+/* images: 7px margins that don't collapse with the text (14px to the next paragraph) */
 .tabs .tabs-panel p:has(> picture) {
+  margin-bottom: 7px;
   padding: 7px 0;
   line-height: 0;
 }
