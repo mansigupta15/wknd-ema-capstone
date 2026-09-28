@@ -77,7 +77,7 @@
   text-transform: uppercase;
 }
 
-.tabs .tabs-panel p:has(> picture) + p > em:only-child {
+.tabs .tabs-panel p:has(> picture) + p:not(:has(strong)) > em:only-child {
   font-style: normal;
 }
 

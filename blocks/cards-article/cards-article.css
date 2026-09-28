@@ -94,7 +94,7 @@
   flex-direction: column;
   position: relative;
   margin: 0;
-  padding: 29px 0 7px;
+  padding: 29px 0 14px;
 }
 
 .cards-article.locked .cards-article-card::before,

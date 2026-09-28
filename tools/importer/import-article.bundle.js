@@ -160,6 +160,22 @@ var CustomImportScript = (() => {
   var TransformHook = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
   function transform(hookName, element, payload) {
     if (hookName === TransformHook.beforeTransform) {
+      if (payload && typeof payload.html === "string" && /&nbsp;|\u00a0/.test(payload.html)) {
+        const raw = new DOMParser().parseFromString(payload.html, "text/html");
+        const withNbsp = /* @__PURE__ */ new Map();
+        const rawWalker = raw.createTreeWalker(raw.body, NodeFilter.SHOW_TEXT);
+        while (rawWalker.nextNode()) {
+          const text = rawWalker.currentNode.nodeValue;
+          if (text.includes("\xA0")) withNbsp.set(text.replace(/\u00a0/g, " "), text);
+        }
+        if (withNbsp.size) {
+          const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            const restored = withNbsp.get(walker.currentNode.nodeValue);
+            if (restored) walker.currentNode.nodeValue = restored;
+          }
+        }
+      }
       WebImporter.DOMUtils.remove(element, [
         "header.experiencefragment",
         "footer.experiencefragment",
@@ -251,6 +267,11 @@ var CustomImportScript = (() => {
         const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
         if (m) a.setAttribute("href", `${m[1]}${m[2] || ""}`);
       });
+      const nbspWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      while (nbspWalker.nextNode()) {
+        const node = nbspWalker.currentNode;
+        if (node.nodeValue.includes("\xA0")) node.nodeValue = node.nodeValue.replace(/\u00a0/g, "\u202F");
+      }
       if (!element.querySelector("h1") && pageTitle) {
         const h1 = document.createElement("h1");
         h1.textContent = pageTitle;
@@ -304,8 +325,8 @@ var CustomImportScript = (() => {
     const bodyH2 = body ? [...body.querySelectorAll("h2")].filter((h) => !h.closest("aside, .byline")) : [];
     if (bodyH2.length && bodyH2.every((h) => !h.closest(".title"))) {
       const meta = WebImporter.Blocks.createBlock(document, { name: "Section Metadata", cells: { style: "plain-headings" } });
-      const aside = body.querySelector("aside");
-      if (aside) aside.before(meta);
+      const aside2 = body.querySelector("aside");
+      if (aside2) aside2.before(meta);
       else body.append(meta);
     }
     element.querySelectorAll(".cmp-download").forEach((download) => {
@@ -335,6 +356,8 @@ var CustomImportScript = (() => {
       out.push(p);
       download.replaceWith(...out);
     });
+    const aside = element.querySelector("aside.cmp-layoutcontainer--sidebar");
+    if (aside && !aside.querySelector(".cmp-separator--hidden")) aside.dataset.sectionStyle = "compact";
     element.querySelectorAll("aside .title h1, aside .title h2, aside .title h3, aside .title h4, aside .title h5, aside .title h6").forEach((h) => {
       if (h.tagName === "H2") return;
       const h2 = document.createElement("h2");

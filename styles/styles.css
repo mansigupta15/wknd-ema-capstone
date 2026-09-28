@@ -436,6 +436,11 @@ main .default-content-wrapper blockquote u {
   text-decoration: none;
 }
 
+/* magazine listing (metadata Template: magazine): 48px before the footer, as on wknd.site */
+.magazine main {
+  padding-bottom: 48px;
+}
+
 /* article template (metadata Template: article) */
 .article main .default-content-wrapper img {
   display: block;
@@ -525,7 +530,7 @@ main .default-content-wrapper blockquote u {
   text-transform: uppercase;
 }
 
-.article main > .section .default-content-wrapper > p:has(> picture) + p > em:only-child {
+.article main > .section .default-content-wrapper > p:has(> picture) + p:not(:has(strong)) > em:only-child {
   font-style: normal;
 }
 
@@ -538,6 +543,15 @@ main .default-content-wrapper blockquote u {
    Before the label: the heading gap, WKND's 36px spacer and the label's 7px margin */
 .article main > .section.sidebar h2:not(:last-child) {
   margin-bottom: 66.38px;
+}
+
+/* compact sidebar (no WKND spacer under the heading, e.g. arctic surfing): 36px less */
+.article main > .section.sidebar.compact h2 {
+  margin-bottom: 74px;
+}
+
+.article main > .section.sidebar.compact h2:not(:last-child) {
+  margin-bottom: 30.38px;
 }
 
 .article main > .section.sidebar h3 {

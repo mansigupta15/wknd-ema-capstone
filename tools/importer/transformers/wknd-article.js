@@ -112,6 +112,11 @@ export default function transform(hookName, element, payload) {
     download.replaceWith(...out);
   });
 
+  // most WKND sidebars have a hidden 36px spacer under "Share this story"; those without it
+  // (arctic surfing, ski touring) get the extra section style "compact"
+  const aside = element.querySelector('aside.cmp-layoutcontainer--sidebar');
+  if (aside && !aside.querySelector('.cmp-separator--hidden')) aside.dataset.sectionStyle = 'compact';
+
   element.querySelectorAll('aside .title h1, aside .title h2, aside .title h3, aside .title h4, aside .title h5, aside .title h6').forEach((h) => {
     if (h.tagName === 'H2') return;
     const h2 = document.createElement('h2');

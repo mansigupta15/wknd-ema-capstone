@@ -6,7 +6,8 @@
  *   1. every external <img src> is downloaded and uploaded once to /assets/<path>/<file>
  *      (DA assets are ingested as optimized media_<hash> images on preview)
  *   2. every external linked PDF is uploaded (and previewed) the same way, linked as /assets/<path>/<file>
- *   3. the page is wrapped as a DA document with the rewritten image and file URLs
+ *   3. the page is wrapped as a DA document with the rewritten image and file URLs (and
+ *      non-breaking spaces, carried as U+202F by the importer, written back as &nbsp;)
  *   4. the document is uploaded to /<path>.html and previewed (not published)
  *
  * Usage:
@@ -86,6 +87,9 @@ function main() {
       console.log(`  file   ${assetPath}`);
     });
     files.forEach((local, href) => { html = html.split(href).join(local); });
+
+    // the importer carries WKND's non-breaking spaces as U+202F (the markdown step drops U+00A0)
+    html = html.replace(/\u202f/g, '&nbsp;');
 
     const doc = path.join(tmp, `${path.basename(page)}.html`);
     fs.writeFileSync(doc, `<body><header></header><main>${html}</main><footer></footer></body>\n`);

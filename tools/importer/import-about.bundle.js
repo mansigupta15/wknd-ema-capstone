@@ -107,6 +107,22 @@ var CustomImportScript = (() => {
   var TransformHook = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
   function transform(hookName, element, payload) {
     if (hookName === TransformHook.beforeTransform) {
+      if (payload && typeof payload.html === "string" && /&nbsp;|\u00a0/.test(payload.html)) {
+        const raw = new DOMParser().parseFromString(payload.html, "text/html");
+        const withNbsp = /* @__PURE__ */ new Map();
+        const rawWalker = raw.createTreeWalker(raw.body, NodeFilter.SHOW_TEXT);
+        while (rawWalker.nextNode()) {
+          const text = rawWalker.currentNode.nodeValue;
+          if (text.includes("\xA0")) withNbsp.set(text.replace(/\u00a0/g, " "), text);
+        }
+        if (withNbsp.size) {
+          const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            const restored = withNbsp.get(walker.currentNode.nodeValue);
+            if (restored) walker.currentNode.nodeValue = restored;
+          }
+        }
+      }
       WebImporter.DOMUtils.remove(element, [
         "header.experiencefragment",
         "footer.experiencefragment",
@@ -198,6 +214,11 @@ var CustomImportScript = (() => {
         const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
         if (m) a.setAttribute("href", `${m[1]}${m[2] || ""}`);
       });
+      const nbspWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      while (nbspWalker.nextNode()) {
+        const node = nbspWalker.currentNode;
+        if (node.nodeValue.includes("\xA0")) node.nodeValue = node.nodeValue.replace(/\u00a0/g, "\u202F");
+      }
       if (!element.querySelector("h1") && pageTitle) {
         const h1 = document.createElement("h1");
         h1.textContent = pageTitle;
