@@ -166,11 +166,12 @@
 }
 
 /* filter (adventures listing): WKND tab-style toggle buttons above the cards, the pressed one
-   dark; 18px above and below */
+   dark; 31.5px under the section title (the source's title and tab margins add up), 18px above
+   the cards */
 .cards-article.filter .cards-article-filter {
   display: flex;
   flex-wrap: wrap;
-  margin: 18px 0;
+  margin: 31.5px 0 18px;
 }
 
 .cards-article.filter .cards-article-filter-button {

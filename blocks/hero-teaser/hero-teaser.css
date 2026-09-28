@@ -87,6 +87,12 @@
   object-position: center center;
 }
 
+@media (width >= 1165px) {
+  .hero-teaser.centered .hero-teaser-content {
+    min-height: 180px;
+  }
+}
+
 @media (width < 1165px) {
   .hero-teaser.centered .hero-teaser-content {
     box-sizing: border-box;
