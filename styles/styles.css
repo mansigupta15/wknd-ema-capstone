@@ -530,7 +530,7 @@ main .default-content-wrapper blockquote u {
   text-transform: uppercase;
 }
 
-.article main > .section .default-content-wrapper > p:has(> picture) + p > em:only-child {
+.article main > .section .default-content-wrapper > p:has(> picture) + p:not(:has(strong)) > em:only-child {
   font-style: normal;
 }
 
