@@ -18,6 +18,9 @@ const parsers = {
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
 const PAGE_TEMPLATE = {
   "name": "magazine",
+  "metadata": {
+    "Template": "magazine"
+  },
   "description": "WKND magazine listing: page title + featured article, article card grid, members-only locked teasers",
   "urls": [
     "https://wknd.site/us/en/magazine.html"
@@ -177,7 +180,10 @@ export default {
     // 5. Built-in rules
     const hr = document.createElement('hr');
     main.appendChild(hr);
-    WebImporter.rules.createMetadata(main, document);
+    // page metadata from the source head, plus template-level fields (Template: magazine)
+    const meta = WebImporter.Blocks.getMetadata(document) || {};
+    Object.assign(meta, PAGE_TEMPLATE.metadata || {});
+    main.append(WebImporter.Blocks.getMetadataBlock(document, meta));
     WebImporter.rules.transformBackgroundImages(main, document);
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
 

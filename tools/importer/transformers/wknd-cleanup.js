@@ -9,6 +9,24 @@ const TransformHook = { beforeTransform: 'beforeTransform', afterTransform: 'aft
 
 export default function transform(hookName, element, payload) {
   if (hookName === TransformHook.beforeTransform) {
+    // Non-breaking spaces: the importer's DOM has lost them (the raw HTML still has them), so
+    // put them back in the matching text nodes; afterTransform carries them through markdown
+    if (payload && typeof payload.html === 'string' && /&nbsp;|\u00a0/.test(payload.html)) {
+      const raw = new DOMParser().parseFromString(payload.html, 'text/html');
+      const withNbsp = new Map();
+      const rawWalker = raw.createTreeWalker(raw.body, NodeFilter.SHOW_TEXT);
+      while (rawWalker.nextNode()) {
+        const text = rawWalker.currentNode.nodeValue;
+        if (text.includes('\u00a0')) withNbsp.set(text.replace(/\u00a0/g, ' '), text);
+      }
+      if (withNbsp.size) {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const restored = withNbsp.get(walker.currentNode.nodeValue);
+          if (restored) walker.currentNode.nodeValue = restored;
+        }
+      }
+    }
     // Global chrome, migrated separately (header/footer experience fragments).
     // <header class="experiencefragment cmp-experiencefragment--header ...">
     // <footer class="experiencefragment cmp-experiencefragment--footer ...">
@@ -122,6 +140,15 @@ export default function transform(hookName, element, payload) {
       const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
       if (m) a.setAttribute('href', `${m[1]}${m[2] || ''}`);
     });
+
+    // Non-breaking spaces decide where WKND's lines wrap ("the&nbsp;quintessential"), but the
+    // markdown step turns them into plain spaces. Carry them as U+202F (narrow no-break space),
+    // which survives; upload-to-da.mjs writes them back as &nbsp;.
+    const nbspWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    while (nbspWalker.nextNode()) {
+      const node = nbspWalker.currentNode;
+      if (node.nodeValue.includes('\u00a0')) node.nodeValue = node.nodeValue.replace(/\u00a0/g, '\u202f');
+    }
 
     // Exactly one h1 per page. WKND pages led by a carousel (the homepage) have only h2s,
     // and a slide title can't be the h1 because inactive slides are aria-hidden.

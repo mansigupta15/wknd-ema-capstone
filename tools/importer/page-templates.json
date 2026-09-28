@@ -113,6 +113,9 @@
       "representativeUrl": "https://wknd.site/us/en/magazine.html",
       "description": "WKND magazine listing: page title + featured article, article card grid, members-only locked teasers",
       "urlPattern": "/us/en/magazine",
+      "metadata": {
+        "Template": "magazine"
+      },
       "blocks": [
         {
           "name": "columns-featured",

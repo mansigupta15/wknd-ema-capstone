@@ -193,58 +193,87 @@ var CustomImportScript = (() => {
     }
     element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (locked)", cells }));
   }
+  function parseItem(item, document2) {
+    var _a;
+    const imageLink = item.querySelector("a.cmp-image-list__item-image-link");
+    const titleLink = item.querySelector("a.cmp-image-list__item-title-link");
+    const titleText = ((_a = item.querySelector(".cmp-image-list__item-title") || titleLink) == null ? void 0 : _a.textContent.trim()) || "";
+    const href = (titleLink == null ? void 0 : titleLink.getAttribute("href")) || (imageLink == null ? void 0 : imageLink.getAttribute("href")) || "";
+    const img = resolveImage2(item.querySelector(".cmp-image-list__item-image, .cmp-image") || item, document2);
+    let imageCell = "";
+    if (img) {
+      if (!img.alt && titleText) img.alt = titleText;
+      const imgHref = (imageLink == null ? void 0 : imageLink.getAttribute("href")) || href;
+      if (imgHref) {
+        const a = document2.createElement("a");
+        a.href = imgHref;
+        a.append(img);
+        imageCell = a;
+      } else {
+        imageCell = img;
+      }
+    }
+    const content = [];
+    if (titleText) {
+      const p = document2.createElement("p");
+      const strong = document2.createElement("strong");
+      if (href) {
+        const a = document2.createElement("a");
+        a.href = href;
+        a.textContent = titleText;
+        strong.append(a);
+      } else {
+        strong.textContent = titleText;
+      }
+      p.append(strong);
+      content.push(p);
+    }
+    const desc = item.querySelector(".cmp-image-list__item-description");
+    if (desc && desc.textContent.trim()) {
+      const p = document2.createElement("p");
+      p.textContent = desc.textContent.trim();
+      content.push(p);
+    }
+    if (!imageCell && !content.length) return null;
+    return [imageCell, content.length ? content : ""];
+  }
+  function parseFilterTabs(element, document2) {
+    const labels = [...element.querySelectorAll(".cmp-tabs__tab")].map((t) => t.textContent.trim());
+    const panels = [...element.querySelectorAll(".cmp-tabs__tabpanel")];
+    const key = (item) => {
+      var _a, _b;
+      return ((_a = item.querySelector("a[href]")) == null ? void 0 : _a.getAttribute("href")) || ((_b = item.querySelector(".cmp-image-list__item-title")) == null ? void 0 : _b.textContent.trim()) || "";
+    };
+    const categories = /* @__PURE__ */ new Map();
+    panels.slice(1).forEach((panel, i) => {
+      panel.querySelectorAll("li.cmp-image-list__item").forEach((item) => {
+        const k = key(item);
+        if (!categories.has(k)) categories.set(k, []);
+        if (labels[i + 1]) categories.get(k).push(labels[i + 1]);
+      });
+    });
+    const cells = [...panels[0].querySelectorAll("li.cmp-image-list__item")].map((item) => {
+      const card = parseItem(item, document2);
+      return card && [...card, (categories.get(key(item)) || []).join(", ")];
+    }).filter(Boolean);
+    if (!cells.length) {
+      element.remove();
+      return;
+    }
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (filter)", cells }));
+  }
   function parse2(element, { document: document2 }) {
     if (element.matches(".teaser.cmp-teaser--secure")) {
       parseLockedTeasers(element, document2);
       return;
     }
+    if (element.querySelector(".cmp-tabs__tabpanel .cmp-image-list")) {
+      parseFilterTabs(element, document2);
+      return;
+    }
     let items = [...element.querySelectorAll("li.cmp-image-list__item")];
     if (!items.length) items = [...element.querySelectorAll("article.cmp-image-list__item-content, .cmp-image-list > li")];
-    const cells = [];
-    items.forEach((item) => {
-      var _a;
-      const imageLink = item.querySelector("a.cmp-image-list__item-image-link");
-      const titleLink = item.querySelector("a.cmp-image-list__item-title-link");
-      const titleText = ((_a = item.querySelector(".cmp-image-list__item-title") || titleLink) == null ? void 0 : _a.textContent.trim()) || "";
-      const href = (titleLink == null ? void 0 : titleLink.getAttribute("href")) || (imageLink == null ? void 0 : imageLink.getAttribute("href")) || "";
-      const img = resolveImage2(item.querySelector(".cmp-image-list__item-image, .cmp-image") || item, document2);
-      let imageCell = "";
-      if (img) {
-        if (!img.alt && titleText) img.alt = titleText;
-        const imgHref = (imageLink == null ? void 0 : imageLink.getAttribute("href")) || href;
-        if (imgHref) {
-          const a = document2.createElement("a");
-          a.href = imgHref;
-          a.append(img);
-          imageCell = a;
-        } else {
-          imageCell = img;
-        }
-      }
-      const content = [];
-      if (titleText) {
-        const p = document2.createElement("p");
-        const strong = document2.createElement("strong");
-        if (href) {
-          const a = document2.createElement("a");
-          a.href = href;
-          a.textContent = titleText;
-          strong.append(a);
-        } else {
-          strong.textContent = titleText;
-        }
-        p.append(strong);
-        content.push(p);
-      }
-      const desc = item.querySelector(".cmp-image-list__item-description");
-      if (desc && desc.textContent.trim()) {
-        const p = document2.createElement("p");
-        p.textContent = desc.textContent.trim();
-        content.push(p);
-      }
-      if (!imageCell && !content.length) return;
-      cells.push([imageCell, content.length ? content : ""]);
-    });
+    const cells = items.map((item) => parseItem(item, document2)).filter(Boolean);
     if (!cells.length) {
       element.replaceWith(...element.childNodes);
       return;
@@ -257,6 +286,22 @@ var CustomImportScript = (() => {
   var TransformHook = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
   function transform(hookName, element, payload) {
     if (hookName === TransformHook.beforeTransform) {
+      if (payload && typeof payload.html === "string" && /&nbsp;|\u00a0/.test(payload.html)) {
+        const raw = new DOMParser().parseFromString(payload.html, "text/html");
+        const withNbsp = /* @__PURE__ */ new Map();
+        const rawWalker = raw.createTreeWalker(raw.body, NodeFilter.SHOW_TEXT);
+        while (rawWalker.nextNode()) {
+          const text = rawWalker.currentNode.nodeValue;
+          if (text.includes("\xA0")) withNbsp.set(text.replace(/\u00a0/g, " "), text);
+        }
+        if (withNbsp.size) {
+          const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            const restored = withNbsp.get(walker.currentNode.nodeValue);
+            if (restored) walker.currentNode.nodeValue = restored;
+          }
+        }
+      }
       WebImporter.DOMUtils.remove(element, [
         "header.experiencefragment",
         "footer.experiencefragment",
@@ -348,6 +393,11 @@ var CustomImportScript = (() => {
         const m = href.match(/^(?:https?:\/\/(?:www\.)?wknd\.site)?(\/[^?#]*?)\.html?([?#].*)?$/i);
         if (m) a.setAttribute("href", `${m[1]}${m[2] || ""}`);
       });
+      const nbspWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      while (nbspWalker.nextNode()) {
+        const node = nbspWalker.currentNode;
+        if (node.nodeValue.includes("\xA0")) node.nodeValue = node.nodeValue.replace(/\u00a0/g, "\u202F");
+      }
       if (!element.querySelector("h1") && pageTitle) {
         const h1 = document.createElement("h1");
         h1.textContent = pageTitle;
@@ -412,6 +462,9 @@ var CustomImportScript = (() => {
   };
   var PAGE_TEMPLATE = {
     "name": "magazine",
+    "metadata": {
+      "Template": "magazine"
+    },
     "description": "WKND magazine listing: page title + featured article, article card grid, members-only locked teasers",
     "urls": [
       "https://wknd.site/us/en/magazine.html"
@@ -544,7 +597,9 @@ var CustomImportScript = (() => {
       executeTransformers("afterTransform", main, payload);
       const hr = document2.createElement("hr");
       main.appendChild(hr);
-      WebImporter.rules.createMetadata(main, document2);
+      const meta = WebImporter.Blocks.getMetadata(document2) || {};
+      Object.assign(meta, PAGE_TEMPLATE.metadata || {});
+      main.append(WebImporter.Blocks.getMetadataBlock(document2, meta));
       WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
