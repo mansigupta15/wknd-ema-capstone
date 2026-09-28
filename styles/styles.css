@@ -631,13 +631,13 @@ main .default-content-wrapper blockquote u {
   padding: 8px 28px 0;
 }
 
-.adventure main > .section.sidebar > div {
+.adventure main > .section.sidebar > div:first-child {
   padding-top: 23px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity -- article rules above: other template */
 .adventure main > .section.sidebar h2 {
-  margin: 23.38px 0;
+  margin: 18px 0 23.38px;
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-xs);
   font-weight: 600;
@@ -683,7 +683,7 @@ main .default-content-wrapper blockquote u {
     grid-column: 2;
   }
 
-  .adventure main > .section.sidebar > div {
+  .adventure main > .section.sidebar > div:first-child {
     padding-top: 23px;
   }
 

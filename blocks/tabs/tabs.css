@@ -8,7 +8,8 @@
 
 .tabs .tabs-tab {
   margin: 0;
-  border: 1px solid transparent;
+  border: 0;
+  border-bottom: 1px solid transparent;
   border-radius: 0;
   padding: 8px 16px;
   background: none;
@@ -25,6 +26,11 @@
   background-color: var(--text-color);
   color: var(--background-color);
   cursor: default;
+}
+
+/* the panel keeps its first heading's margin inside (18px below the tabs, 27px above it) */
+.tabs .tabs-panel {
+  display: flow-root;
 }
 
 .tabs .tabs-tab:focus-visible,
