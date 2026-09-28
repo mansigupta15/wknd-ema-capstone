@@ -14,6 +14,12 @@
   list-style: none;
 }
 
+/* the backend may wrap the question in a paragraph */
+.accordion .accordion-item-label > p {
+  display: inline;
+  margin: 0;
+}
+
 .accordion .accordion-item-label::-webkit-details-marker {
   display: none;
 }
