@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/adventures/riverside-camping-australia.html",
+  "path": "us/en/adventures/riverside-camping-australia",
+  "timestamp": "2026-09-28T09:43:26.143Z",
+  "title": "Riverside Camping",
+  "template": "adventure",
+  "blocks": [
+    "carousel-hero",
+    "cards-related",
+    "tabs"
+  ],
+  "altReview": [
+    "Adobe waadobe wa mg — empty alt, used file name",
+    "What to Bring — empty alt, used tab label"
+  ]
+}

@@ -27,6 +27,12 @@ export default function transform(hookName, element, payload) {
         }
       }
     }
+    // Featured-article links, recorded before the columns-featured parser replaces the teaser:
+    // the cards-article parser leaves them out of index-driven lists on the same page
+    document.documentElement.setAttribute('data-featured-links', JSON.stringify(
+      [...element.querySelectorAll('.cmp-teaser--featured a[href]')].map((a) => a.getAttribute('href')),
+    ));
+
     // Global chrome, migrated separately (header/footer experience fragments).
     // <header class="experiencefragment cmp-experiencefragment--header ...">
     // <footer class="experiencefragment cmp-experiencefragment--footer ...">
