@@ -45,10 +45,43 @@
 }
 
 /* WKND hover: yellow card with a dark rule */
-.cards-related .cards-related-card:hover,
-.cards-related .cards-related-card:focus-visible {
+.cards-related a.cards-related-card:hover,
+.cards-related a.cards-related-card:focus-visible {
   border-left-color: var(--text-color);
   background-color: var(--accent-color);
   color: var(--text-color);
   text-decoration: none;
+}
+
+/* facts (adventure sidebar): label over a semibold value; side by side below 1025px,
+   stacked full width in the desktop sidebar */
+.cards-related.facts .cards-related-card {
+  min-height: 84px;
+  margin: 0 0 22.5px;
+  padding: 0 18px;
+}
+
+/* the lines stack (the card is as wide as its longest line) */
+.cards-related.facts .cards-related-title,
+.cards-related.facts .cards-related-date {
+  float: none;
+  width: auto;
+}
+
+.cards-related.facts .cards-related-date {
+  padding: 12px 0 0;
+}
+
+.cards-related.facts .cards-related-title {
+  margin: 0;
+  padding: 7px 0 0;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+}
+
+@media (width >= 1025px) {
+  .cards-related.facts .cards-related-card {
+    width: 100%;
+  }
 }

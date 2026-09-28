@@ -604,3 +604,94 @@ main .default-content-wrapper blockquote u {
     padding: 0 14px;
   }
 }
+
+/* adventure template (metadata Template: adventure): breadcrumb and a full-width image slider,
+   the underlined title, then the facts sidebar and the tabs */
+.adventure main .breadcrumb {
+  margin-top: 5px;
+}
+
+.adventure main .breadcrumb nav ol {
+  padding-top: 0;
+}
+
+.adventure main > .section:nth-child(2) h1 {
+  margin: 27px 0 13.5px;
+}
+
+.adventure main > .section:nth-child(2) h1::after {
+  content: '';
+  display: block;
+  width: 84px;
+  padding-top: 8px;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.adventure main > .section:nth-child(2) > div {
+  padding: 8px 28px 0;
+}
+
+.adventure main > .section.sidebar > div {
+  padding-top: 23px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- article rules above: other template */
+.adventure main > .section.sidebar h2 {
+  margin: 23.38px 0;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+
+.adventure main > .section.sidebar + .section > div {
+  padding: 0 28px;
+}
+
+/* from 1025px, as on wknd.site: a 1164px (fluid below that) 12-column container, the facts in
+   columns 1-3 and the tabs in 4-12 with 14px inside; the slider stays full width */
+@media (width >= 1025px) {
+  .adventure main {
+    display: grid;
+    grid-template-columns: 1fr min(291px, 25%) min(873px, 75%) 1fr;
+    align-items: start;
+  }
+
+  .adventure main > .section {
+    grid-column: 2 / 4;
+  }
+
+  .adventure main > .section:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .adventure main > .section > div {
+    max-width: none;
+    padding: 0;
+  }
+
+  .adventure main > .section:first-child > .breadcrumb-wrapper {
+    max-width: 1164px;
+  }
+
+  .adventure main > .section:nth-child(2) > div {
+    padding: 8px 14px 0;
+  }
+
+  .adventure main > .section.sidebar {
+    grid-column: 2;
+  }
+
+  .adventure main > .section.sidebar > div {
+    padding-top: 23px;
+  }
+
+  .adventure main > .section.sidebar + .section {
+    grid-column: 3;
+  }
+
+  .adventure main > .section.sidebar + .section > div {
+    padding: 0 14px;
+  }
+}

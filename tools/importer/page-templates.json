@@ -252,6 +252,95 @@
           ]
         }
       ]
+    },
+    {
+      "name": "adventure",
+      "urls": [
+        "https://wknd.site/us/en/adventures/climbing-new-zealand.html",
+        "https://wknd.site/us/en/adventures/downhill-skiing-wyoming.html",
+        "https://wknd.site/us/en/adventures/tahoe-skiing.html",
+        "https://wknd.site/us/en/adventures/west-coast-cycling.html",
+        "https://wknd.site/us/en/adventures/whistler-mountain-biking.html",
+        "https://wknd.site/us/en/adventures/yosemite-backpacking.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/adventures/climbing-new-zealand.html",
+      "description": "WKND adventure detail: image slider, title, facts sidebar (activity, length, price...), Overview / Itinerary / What to Bring tabs",
+      "urlPattern": "/us/en/adventures/*",
+      "metadata": {
+        "Template": "adventure"
+      },
+      "blocks": [
+        {
+          "name": "carousel-hero",
+          "instances": [
+            ".carousel.cmp-carousel--mini"
+          ]
+        },
+        {
+          "name": "cards-related",
+          "instances": [
+            ".contentfragment.cmp-contentfragment--elements"
+          ]
+        },
+        {
+          "name": "tabs",
+          "instances": [
+            ".tabs.panelcontainer"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "slider",
+          "selector": [
+            ".carousel.cmp-carousel--mini"
+          ],
+          "style": null,
+          "blocks": [
+            "carousel-hero"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "title",
+          "selector": [
+            ".cmp-layout-container--fixed .title.cmp-title--underline"
+          ],
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".title.cmp-title--underline"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "sidebar",
+          "selector": [
+            "main[class*=\"aem-GridColumn--default--3\"]"
+          ],
+          "style": "sidebar",
+          "blocks": [
+            "cards-related"
+          ],
+          "defaultContent": [
+            "main[class*=\"aem-GridColumn--default--3\"] .title"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "details",
+          "selector": [
+            ".tabs.panelcontainer"
+          ],
+          "style": null,
+          "blocks": [
+            "tabs"
+          ],
+          "defaultContent": []
+        }
+      ]
     }
   ],
   "metadata": {
