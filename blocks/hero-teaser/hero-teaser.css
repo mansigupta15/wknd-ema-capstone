@@ -29,9 +29,14 @@
 .hero-teaser .hero-teaser-media img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1293 / 862;
   object-fit: cover;
   object-position: center bottom;
+}
+
+/* the homepage teaser crops to its source ratio; centered teasers keep the image's own
+   (reserved from its width / height attributes) */
+.hero-teaser:not(.centered) .hero-teaser-media img {
+  aspect-ratio: 1293 / 862;
 }
 
 /* content stacks under the image on smaller viewports */
@@ -83,7 +88,6 @@
 /* centered (adventures listing): the image keeps its own proportions and is centred when
    cropped; below 1165px the text box is as wide as its text and centred */
 .hero-teaser.centered .hero-teaser-media img {
-  aspect-ratio: auto;
   object-position: center center;
 }
 

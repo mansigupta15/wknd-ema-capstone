@@ -176,12 +176,14 @@ export function optimizePicture(img, breakpoints) {
 }
 
 /**
- * Marks the first image of the first section as the LCP candidate:
+ * Marks the first image of the page's first two sections as the LCP candidate:
  * eager with high fetch priority. Every other image stays lazy.
  * @param {Element} main The main element
  */
 function prioritizeLcpImage(main) {
-  const lcp = main.querySelector('.section')?.querySelector('img');
+  // a page may open with a title-only section (adventures listing)
+  const lcp = [...main.querySelectorAll(':scope > .section')].slice(0, 2)
+    .map((section) => section.querySelector('img')).find(Boolean);
   if (!lcp) return;
   lcp.setAttribute('loading', 'eager');
   lcp.setAttribute('fetchpriority', 'high');
