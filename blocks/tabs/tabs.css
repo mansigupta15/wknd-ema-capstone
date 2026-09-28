@@ -60,6 +60,11 @@
   line-height: 0;
 }
 
+/* an image opening the panel is its own element on WKND: 31px to the text below */
+.tabs .tabs-panel > div > p:first-child:has(> picture) {
+  margin-bottom: 24px;
+}
+
 .tabs .tabs-panel picture img {
   display: block;
   width: 100%;
