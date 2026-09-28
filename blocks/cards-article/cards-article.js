@@ -4,9 +4,47 @@ import { optimizePicture } from '../../scripts/scripts.js';
  * Article listing cards: one row per card, [linked image | linked title, description].
  * Tolerates single-cell rows, missing images, and extra cells.
  * Option "locked": members-only teasers (text above a faded image, lock badge,
- * trailing non-link action label). Unknown option tokens are ignored.
+ * trailing non-link action label).
+ * Option "filter": a third cell lists each card's categories (comma-separated, may be empty);
+ * the block adds "All" + one toggle button per category (alphabetical) that shows only the
+ * matching cards. Unknown option tokens are ignored.
  */
+function buildFilter(block, ul) {
+  const cards = [...ul.children];
+  const names = [...new Set(cards.flatMap((li) => li.dataset.categories.split('|').filter(Boolean)))]
+    .sort((a, b) => a.localeCompare(b));
+  if (!names.length) return;
+
+  const group = document.createElement('div');
+  group.className = 'cards-article-filter';
+  group.setAttribute('role', 'group');
+  group.setAttribute('aria-label', 'Filter by category');
+  const status = document.createElement('p');
+  status.className = 'cards-article-filter-status';
+  status.setAttribute('aria-live', 'polite');
+
+  ['All', ...names].forEach((name, i) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'cards-article-filter-button';
+    button.textContent = name;
+    button.setAttribute('aria-pressed', i === 0);
+    button.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b === button));
+      let shown = 0;
+      cards.forEach((li) => {
+        li.hidden = i > 0 && !li.dataset.categories.split('|').includes(name);
+        if (!li.hidden) shown += 1;
+      });
+      status.textContent = `${shown} of ${cards.length} shown`;
+    });
+    group.append(button);
+  });
+  block.prepend(group, status);
+}
+
 export default function decorate(block) {
+  const filter = block.classList.contains('filter');
   const ul = document.createElement('ul');
   ul.className = 'cards-article-list';
 
@@ -20,7 +58,15 @@ export default function decorate(block) {
     const body = document.createElement('div');
     body.className = 'cards-article-card-body';
 
-    [...row.children].forEach((cell) => {
+    const cells = [...row.children];
+    if (filter) {
+      // categories: the third cell ("Cycling, Travel"); absent or empty = only under "All"
+      const categoryCell = cells.length > 2 ? cells.pop() : null;
+      li.dataset.categories = (categoryCell?.textContent || '').split(',')
+        .map((c) => c.trim()).filter(Boolean).join('|');
+    }
+
+    cells.forEach((cell) => {
       const pic = cell.querySelector('picture');
       if (pic && !media.children.length && cell.textContent.trim() === '') {
         // keep the link around the image if the author linked it
@@ -81,4 +127,5 @@ export default function decorate(block) {
   ul.querySelectorAll('picture > img').forEach((img) => optimizePicture(img, [{ media: '(min-width: 600px)', width: '750' }, { width: '500' }]));
 
   block.replaceChildren(ul);
+  if (filter) buildFilter(block, ul);
 }

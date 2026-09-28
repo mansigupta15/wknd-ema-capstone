@@ -29,9 +29,14 @@
 .hero-teaser .hero-teaser-media img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1293 / 862;
   object-fit: cover;
   object-position: center bottom;
+}
+
+/* the homepage teaser crops to its source ratio; centered teasers keep the image's own
+   (reserved from its width / height attributes) */
+.hero-teaser:not(.centered) .hero-teaser-media img {
+  aspect-ratio: 1293 / 862;
 }
 
 /* content stacks under the image on smaller viewports */
@@ -77,5 +82,26 @@
 
   .hero-teaser.hero-teaser-no-media .hero-teaser-content {
     margin-top: 0;
+  }
+}
+
+/* centered (adventures listing): the image keeps its own proportions and is centred when
+   cropped; below 1165px the text box is as wide as its text and centred */
+.hero-teaser.centered .hero-teaser-media img {
+  object-position: center center;
+}
+
+@media (width >= 1165px) {
+  .hero-teaser.centered .hero-teaser-content {
+    min-height: 180px;
+  }
+}
+
+@media (width < 1165px) {
+  .hero-teaser.centered .hero-teaser-content {
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
   }
 }
