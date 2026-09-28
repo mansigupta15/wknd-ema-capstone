@@ -750,3 +750,17 @@ main .default-content-wrapper blockquote u {
     padding: 0 14px;
   }
 }
+
+/* adventure listing template (metadata Template: adventure-listing): the page title sits flush in
+   the 1164px container (at the screen edge below that); the cards section ends with a 2px rule,
+   64px under the cards and 112px above the footer */
+/* stylelint-disable-next-line no-descending-specificity -- adventure rules above: other template */
+.adventure-listing main > .section:first-child > div {
+  max-width: 1164px;
+  padding: 0;
+}
+
+.adventure-listing main > .section.divider::after {
+  margin: 64px auto 112px;
+  border-top-width: 2px;
+}
