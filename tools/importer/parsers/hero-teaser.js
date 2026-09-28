@@ -5,7 +5,8 @@
  * Base block: hero. Source: https://wknd.site/us/en.html
  * Source DOM: AEM Core teaser (.cmp-teaser--hero.cmp-teaser--imagebottom) with
  * .cmp-teaser__content (title, description, CTA) and a lazy-loaded Core image.
- * Output: 1 column: row 1 = image; row 2 = [h2, p, CTA link].
+ * Output: 1 column: row 1 = image; row 2 = [h2, p, CTA link]. A teaser without the
+ * imagebottom modifier (adventures listing) is "hero-teaser (centered)".
  * Generated: 2026-09-25
  */
 
@@ -107,6 +108,9 @@ export default function parse(element, { document }) {
   if (image) cells.push([image]);
   if (content.length) cells.push([content]); // 1-column block: all content in one cell
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'hero-teaser', cells });
+  // the homepage teaser keeps its image aligned to the bottom (.cmp-teaser--imagebottom);
+  // others (adventures listing) centre the image: the "centered" option
+  const bottom = element.matches('.cmp-teaser--imagebottom') || !!element.querySelector('.cmp-teaser--imagebottom');
+  const block = WebImporter.Blocks.createBlock(document, { name: bottom ? 'hero-teaser' : 'hero-teaser (centered)', cells });
   element.replaceWith(block);
 }

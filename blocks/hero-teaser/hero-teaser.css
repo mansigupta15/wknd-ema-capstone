@@ -79,3 +79,19 @@
     margin-top: 0;
   }
 }
+
+/* centered (adventures listing): the image keeps its own proportions and is centred when
+   cropped; below 1165px the text box is as wide as its text and centred */
+.hero-teaser.centered .hero-teaser-media img {
+  aspect-ratio: auto;
+  object-position: center center;
+}
+
+@media (width < 1165px) {
+  .hero-teaser.centered .hero-teaser-content {
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+}
