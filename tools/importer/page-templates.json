@@ -458,6 +458,43 @@
           ]
         }
       ]
+    },
+    {
+      "name": "about",
+      "urls": [
+        "https://wknd.site/us/en/about-us.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/about-us.html",
+      "description": "WKND About Us: title, \"Our Contributors\" and \"WKND Guides\" groups of contributor cards (photo, name, role, social links)",
+      "urlPattern": "/us/en/about-us",
+      "metadata": {
+        "Template": "about"
+      },
+      "blocks": [
+        {
+          "name": "cards",
+          "instances": [
+            ".cmp-experience-fragment--contributor"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "about",
+          "selector": [
+            "main .cmp-layout-container--fixed"
+          ],
+          "style": null,
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": [
+            "main .title",
+            "main .text"
+          ]
+        }
+      ]
     }
   ],
   "metadata": {

@@ -1,7 +1,5 @@
 import { optimizePicture } from '../../scripts/scripts.js';
-
-// networks with an icon in /icons, matched in the link text or URL ("Facebook Social Media")
-const NETWORKS = ['facebook', 'twitter', 'instagram'];
+import buildSocialList from '../../scripts/social-links.js';
 
 /**
  * Author card (Columns variant): one row, cells [avatar] | [name, role] | [social links].
@@ -26,26 +24,7 @@ export default function decorate(block) {
       cell.querySelectorAll('picture > img').forEach((img) => optimizePicture(img, [{ width: '120' }]));
     } else if (isSocial) {
       cell.classList.add('columns-author-social');
-      const list = document.createElement('ul');
-      links.forEach((a) => {
-        const label = a.textContent.trim();
-        const haystack = `${label} ${a.getAttribute('href')}`.toLowerCase();
-        const network = NETWORKS.find((n) => haystack.includes(n))
-          || label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        // undo global button decoration: these are icon buttons
-        a.className = 'columns-author-social-link';
-        a.closest('p')?.classList.remove('button-wrapper');
-        a.setAttribute('aria-label', label);
-        a.title = label;
-        const icon = document.createElement('span');
-        icon.className = 'columns-author-social-icon';
-        icon.setAttribute('aria-hidden', 'true');
-        icon.style.setProperty('--icon', `url('${window.hlx.codeBasePath}/icons/${network}.svg')`);
-        a.replaceChildren(icon);
-        const li = document.createElement('li');
-        li.append(a);
-        list.append(li);
-      });
+      const list = buildSocialList(links, 'columns-author');
       cell.replaceChildren(list);
     } else if (cell.textContent.trim() === '' && !cell.querySelector('picture')) {
       cell.remove();
