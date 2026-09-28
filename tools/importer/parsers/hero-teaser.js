@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 /**
- * Parser for hero-teaser.
+ * Parser for hero-teaser (emits hero (teaser)).
  * Base block: hero. Source: https://wknd.site/us/en.html
  * Source DOM: AEM Core teaser (.cmp-teaser--hero.cmp-teaser--imagebottom) with
  * .cmp-teaser__content (title, description, CTA) and a lazy-loaded Core image.
@@ -111,6 +111,6 @@ export default function parse(element, { document }) {
   // the homepage teaser keeps its image aligned to the bottom (.cmp-teaser--imagebottom);
   // others (adventures listing) centre the image: the "centered" option
   const bottom = element.matches('.cmp-teaser--imagebottom') || !!element.querySelector('.cmp-teaser--imagebottom');
-  const block = WebImporter.Blocks.createBlock(document, { name: bottom ? 'hero-teaser' : 'hero-teaser (centered)', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: bottom ? 'hero (teaser)' : 'hero (teaser, centered)', cells });
   element.replaceWith(block);
 }

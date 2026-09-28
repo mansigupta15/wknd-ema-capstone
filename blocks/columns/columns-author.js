@@ -2,7 +2,7 @@ import { optimizePicture } from '../../scripts/scripts.js';
 import buildSocialList from '../../scripts/social-links.js';
 
 /**
- * Author card (Columns variant): one row, cells [avatar] | [name, role] | [social links].
+ * Columns option "author" (columns (author)): one row, [avatar] | [name, role] | [social links].
  * Social links are authored as text links naming the network ("Facebook"); the link text
  * becomes the accessible name and /icons/<network>.svg is drawn as the button icon.
  * Tolerates missing cells, extra cells and cells in a different order.

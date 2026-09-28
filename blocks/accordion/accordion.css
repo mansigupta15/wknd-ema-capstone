@@ -4,7 +4,7 @@
   position: relative;
   padding: 13.333px 46px 13.333px 21.333px;
   border-bottom: 2px solid var(--rule-color);
-  color: rgb(0 0 0);
+  color: var(--black-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-s);
   font-weight: 600;

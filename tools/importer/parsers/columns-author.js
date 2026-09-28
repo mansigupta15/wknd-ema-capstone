@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 /**
- * Parser for columns-author.
+ * Parser for columns-author (emits columns (author)).
  * Base block: columns. Source: https://wknd.site/us/en/magazine/western-australia.html
  * Source DOM: AEM Core byline (div.byline > .cmp-byline with __image, __name, __occupations)
  * followed by sibling icon-only buttons (div.button.cmp-button--icononly > a.cmp-button[aria-label]).
@@ -75,7 +75,7 @@ export default function parse(element, { document }) {
     return;
   }
   const block = WebImporter.Blocks.createBlock(document, {
-    name: 'columns-author',
+    name: 'columns (author)',
     cells: [[avatar || '', text.length ? text : '', socialCell]],
   });
   element.replaceWith(block);

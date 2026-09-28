@@ -1,5 +1,6 @@
 /**
- * Related articles (Cards, no images): one row per card, [linked title, date].
+ * Cards option "related" (cards (related), Cards without images): one row per card,
+ * [linked title, date].
  * Each card renders as a single link (title + date) with a left rule, like WKND's "up next" list.
  * Tolerates cards without a date or link, and extra paragraphs (kept as details).
  *

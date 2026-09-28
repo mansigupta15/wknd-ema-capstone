@@ -1,4 +1,22 @@
+import decorateFeatured from './columns-featured.js';
+import decorateAuthor from './columns-author.js';
+
+/**
+ * Columns (Block Collection): one row, one cell per column.
+ * Options (variants of this one block, logic in the modules next to this file):
+ * - "featured" (columns-featured.js): image + text teaser (featured article)
+ * - "author" (columns-author.js): author card, [avatar] | [name, role] | [social links]
+ */
 export default function decorate(block) {
+  if (block.classList.contains('featured')) {
+    decorateFeatured(block);
+    return;
+  }
+  if (block.classList.contains('author')) {
+    decorateAuthor(block);
+    return;
+  }
+
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 

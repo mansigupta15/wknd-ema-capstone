@@ -1,9 +1,8 @@
 import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
- * Featured two-column layout: one media cell + one text cell per row.
+ * Columns option "featured" (columns (featured)): one media cell + one text cell per row.
  * Tolerates reversed cell order, missing image, empty and extra cells.
- * No option classes are defined for this block; unknown tokens are ignored.
  */
 export default function decorate(block) {
   [...block.children].forEach((row) => {

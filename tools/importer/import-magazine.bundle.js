@@ -120,7 +120,7 @@ var CustomImportScript = (() => {
       return;
     }
     const cells = [[image || "", content.length ? content : ""]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-featured", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "columns (featured)", cells });
     element.replaceWith(block);
   }
 
@@ -191,7 +191,7 @@ var CustomImportScript = (() => {
       element.remove();
       return;
     }
-    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (locked)", cells }));
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (article, locked)", cells }));
   }
   function parseItem(item, document2) {
     var _a;
@@ -260,7 +260,7 @@ var CustomImportScript = (() => {
       element.remove();
       return;
     }
-    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (filter)", cells }));
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (article, filter)", cells }));
   }
   function indexConfig(items, element, document2, pageUrl) {
     const toPath = (href) => new URL(href, "https://wknd.site").pathname.replace(/\.html?$/, "");
@@ -298,7 +298,7 @@ var CustomImportScript = (() => {
       const all = [...element.querySelectorAll(".cmp-tabs__tabpanel")][0];
       const config2 = all && indexConfig([...all.querySelectorAll("li.cmp-image-list__item")], element, document2, pageUrl);
       if (config2) {
-        element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (index, filter)", cells: config2 }));
+        element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (article, index, filter)", cells: config2 }));
         return;
       }
       parseFilterTabs(element, document2);
@@ -308,7 +308,7 @@ var CustomImportScript = (() => {
     if (!items.length) items = [...element.querySelectorAll("article.cmp-image-list__item-content, .cmp-image-list > li")];
     const config = indexConfig(items, element, document2, pageUrl);
     if (config) {
-      element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-article (index)", cells: config }));
+      element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (article, index)", cells: config }));
       return;
     }
     const cells = items.map((item) => parseItem(item, document2)).filter(Boolean);
@@ -316,7 +316,7 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-article", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards (article)", cells });
     element.replaceWith(block);
   }
 

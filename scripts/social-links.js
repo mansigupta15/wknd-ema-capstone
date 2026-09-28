@@ -5,7 +5,7 @@ const NETWORKS = ['facebook', 'twitter', 'instagram'];
  * Turns authored text links naming a social network ("Facebook") into icon-only buttons in a
  * list: the link text stays the accessible name (aria-label + title) and
  * /icons/<network>.svg is drawn on a span through the --icon custom property.
- * Used by the author card (columns-author) and the contributor cards (cards).
+ * Used by the author card (columns (author)) and the contributor cards (cards (contributors)).
  * @param {HTMLAnchorElement[]} links The authored links
  * @param {string} prefix Class prefix: `${prefix}-social-link`, `${prefix}-social-icon`
  * @returns {HTMLUListElement} The list of icon links

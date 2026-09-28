@@ -1,10 +1,10 @@
 import { optimizePicture } from '../../scripts/scripts.js';
 
 /**
- * Teaser: full-bleed image with an overlapping content box.
+ * Hero option "teaser" (hero (teaser)): full-bleed image with an overlapping content box;
+ * with "centered" the image is centred when cropped.
  * Authored as Row 1 = image, Row 2 = heading/text/CTA, but any arrangement of
  * rows/cells is accepted: the first picture becomes the media, everything else content.
- * No option classes are defined for this block; unknown tokens are ignored.
  */
 export default function decorate(block) {
   const media = document.createElement('div');

@@ -21,6 +21,17 @@
   --accent-color: #ffea00;
   --rule-color: #ebebeb;
 
+  /* additional colours (block states and muted text) */
+  --black-color: #000;
+  --border-color: #dadada;
+  --placeholder-color: #757575;
+  --indicator-color: rgb(175 175 175);
+  --indicator-active-color: rgb(0 0 0 / 80%);
+  --muted-title-color: #6e6e6e;
+  --muted-text-color: #767676;
+  --label-color: #6b6b6b;
+  --label-background-color: #f3f3f3;
+
   /* fonts */
   --body-font-family: 'source sans pro', source-sans-pro-fallback, sans-serif;
   --heading-font-family: asar, asar-fallback, georgia, 'times new roman', serif;
@@ -329,7 +340,7 @@ main > .section > div {
 /* light rule closing a section, like the WKND separators:
    - homepage card grids that end with a CTA button
    - any section with the "divider" section-metadata style */
-main > .section.cards-article-container:has(.button-wrapper)::after,
+main > .section:has(> .cards-wrapper > .cards.article):has(.button-wrapper)::after,
 main > .section.divider::after {
   content: '';
   display: block;
@@ -344,18 +355,18 @@ main > .section.divider::after {
 }
 
 /* the card-grid rule is 2px on WKND; the last one on the page sits 112px above the footer */
-main > .section.cards-article-container:has(.button-wrapper)::after {
+main > .section:has(> .cards-wrapper > .cards.article):has(.button-wrapper)::after {
   border-top-width: 2px;
 }
 
-main > .section.cards-article-container:has(.button-wrapper):last-child::after {
+main > .section:has(> .cards-wrapper > .cards.article):has(.button-wrapper):last-child::after {
   margin-bottom: 112px;
 }
 
 /* on WKND the rule's bottom margin and the next section title's top margin collapse (92px
    in all); content-visibility (below) keeps sections from collapsing margins, so a heading
    that opens the section after a rule drops its own top margin */
-main > .section.cards-article-container:has(.button-wrapper) + .section > .default-content-wrapper:first-child > :is(h1, h2, h3):first-child {
+main > .section:has(> .cards-wrapper > .cards.article):has(.button-wrapper) + .section > .default-content-wrapper:first-child > :is(h1, h2, h3):first-child {
   margin-top: 0;
 }
 
@@ -515,7 +526,7 @@ main .default-content-wrapper blockquote u {
 }
 
 /* the author card's gap counts from the last paragraph; an image's own margin is part of it */
-.article main .default-content-wrapper:has(> p:last-child > picture) + .columns-author-wrapper .columns-author {
+.article main .default-content-wrapper:has(> p:last-child > picture) + .columns-wrapper .columns.author {
   margin-top: 71px;
 }
 

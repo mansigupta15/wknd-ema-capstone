@@ -146,7 +146,7 @@ var CustomImportScript = (() => {
         cells.push([[l, v]]);
       });
       if (!cells.length) element.remove();
-      else element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-related (facts)", cells }));
+      else element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (related, facts)", cells }));
       return;
     }
     element.querySelectorAll("li.cmp-list__item").forEach((item) => {
@@ -179,7 +179,7 @@ var CustomImportScript = (() => {
       element.remove();
       return;
     }
-    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards-related", cells }));
+    element.replaceWith(WebImporter.Blocks.createBlock(document2, { name: "cards (related)", cells }));
   }
 
   // tools/importer/parsers/tabs.js
@@ -281,6 +281,9 @@ var CustomImportScript = (() => {
           }
         }
       }
+      document.documentElement.setAttribute("data-featured-links", JSON.stringify(
+        [...element.querySelectorAll(".cmp-teaser--featured a[href]")].map((a) => a.getAttribute("href"))
+      ));
       WebImporter.DOMUtils.remove(element, [
         "header.experiencefragment",
         "footer.experiencefragment",
