@@ -123,6 +123,9 @@ var CustomImportScript = (() => {
           }
         }
       }
+      document.documentElement.setAttribute("data-featured-links", JSON.stringify(
+        [...element.querySelectorAll(".cmp-teaser--featured a[href]")].map((a) => a.getAttribute("href"))
+      ));
       WebImporter.DOMUtils.remove(element, [
         "header.experiencefragment",
         "footer.experiencefragment",

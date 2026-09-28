@@ -1,22 +1,22 @@
-.hero-container .hero-wrapper {
+.hero-container .hero-wrapper:has(> .hero:where(:not(.teaser))) {
   max-width: unset;
   padding: 0;
 }
 
-.hero {
+.hero:where(:not(.teaser)) {
   position: relative;
   padding: 40px 24px;
   min-height: 300px;
 }
 
-.hero h1 {
+.hero:where(:not(.teaser)) h1 {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   color: var(--background-color);
 }
 
-.hero picture {
+.hero:where(:not(.teaser)) picture {
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -24,14 +24,124 @@
   box-sizing: border-box;
 }
 
-.hero img {
+.hero:where(:not(.teaser)) img {
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
 @media (width >= 900px) {
-  .hero {
+  .hero:where(:not(.teaser)) {
     padding: 40px 32px;
+  }
+}
+
+/* ===== option "teaser" (full-bleed image with an overlapping box; centered) ===== */
+
+/* hero-teaser: full-bleed photo with an overlapping white content box (WKND .cmp-teaser--hero) */
+
+/* full-bleed: release the block wrapper from the 1200px section column (source caps at 1680px) */
+.hero-container .hero-wrapper:has(> .hero.teaser) {
+  max-width: 1680px;
+  padding: 0;
+}
+
+.hero.teaser {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* image keeps its 1293:862 ratio, clipped to 400px tall; the source's 7px inline-img
+   baseline gap is reproduced as explicit padding so it is identical in quirks and standards mode */
+.hero.teaser .hero-teaser-media {
+  box-sizing: border-box;
+  max-height: 400px;
+  padding-bottom: 7px;
+  overflow: hidden;
+}
+
+.hero.teaser .hero-teaser-media picture,
+.hero.teaser .hero-teaser-media img {
+  display: block;
+}
+
+.hero.teaser .hero-teaser-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+/* the homepage teaser crops to its source ratio; centered teasers keep the image's own
+   (reserved from its width / height attributes) */
+.hero.teaser:not(.centered) .hero-teaser-media img {
+  aspect-ratio: 1293 / 862;
+}
+
+/* content stacks under the image on smaller viewports */
+.hero.teaser .hero-teaser-content {
+  padding: 0 14px;
+}
+
+.hero.teaser .hero-teaser-content h2 {
+  margin: 18px 0 0;
+}
+
+.hero.teaser .hero-teaser-content p:not(.hero-teaser-cta) {
+  margin: 0;
+  line-height: 31.5px;
+}
+
+.hero.teaser .hero-teaser-content .hero-teaser-cta {
+  margin: 18px 0;
+}
+
+/* desktop: 640px photo with the content box overlapping its lower edge */
+@media (width >= 1165px) {
+  .hero.teaser .hero-teaser-media {
+    height: 640px;
+    max-height: 640px;
+    padding-bottom: 0;
+  }
+
+  .hero.teaser .hero-teaser-media picture,
+  .hero.teaser .hero-teaser-media img {
+    height: 100%;
+  }
+
+  .hero.teaser .hero-teaser-content {
+    position: relative;
+    box-sizing: border-box;
+    width: 1192px;
+    max-width: 100%;
+    margin: -180px auto 0;
+    padding: 0 28px;
+    background-color: var(--background-color);
+  }
+
+  .hero.teaser.hero-teaser-no-media .hero-teaser-content {
+    margin-top: 0;
+  }
+}
+
+/* centered (adventures listing): the image keeps its own proportions and is centred when
+   cropped; below 1165px the text box is as wide as its text and centred */
+.hero.teaser.centered .hero-teaser-media img {
+  object-position: center center;
+}
+
+@media (width >= 1165px) {
+  .hero.teaser.centered .hero-teaser-content {
+    min-height: 180px;
+  }
+}
+
+@media (width < 1165px) {
+  .hero.teaser.centered .hero-teaser-content {
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
   }
 }

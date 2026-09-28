@@ -1,33 +1,274 @@
-.columns > div {
+.columns:where(:not(.featured, .author)) > div {
   display: flex;
   flex-direction: column;
 }
 
-.columns img {
+.columns:where(:not(.featured, .author)) img {
   width: 100%;
 }
 
-.columns > div > div {
+.columns:where(:not(.featured, .author)) > div > div {
   order: 1;
 }
 
-.columns > div > .columns-img-col {
+.columns:where(:not(.featured, .author)) > div > .columns-img-col {
   order: 0;
 }
 
-.columns > div > .columns-img-col img {
+.columns:where(:not(.featured, .author)) > div > .columns-img-col img {
   display: block;
 }
 
 @media (width >= 900px) {
-  .columns > div {
+  .columns:where(:not(.featured, .author)) > div {
     align-items: center;
     flex-direction: unset;
     gap: 24px;
   }
 
-  .columns > div > div {
+  .columns:where(:not(.featured, .author)) > div > div {
     flex: 1;
     order: unset;
   }
 }
+
+
+/* ===== option "featured" (image + text teaser) ===== */
+
+/* WKND featured teaser: large image + grey text panel (values from source computed styles) */
+.columns.featured {
+  display: flow-root; /* keep the row's bottom margin inside the block box, as on the source */
+  max-width: 1136px;
+  margin: 0 auto;
+  color: var(--text-color);
+}
+
+/* source .cmp-teaser margin-bottom: 1em (18px) */
+.columns.featured .columns-featured-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+/* mobile: text panel stacks above the image, as on the source */
+.columns.featured .columns-featured-media {
+  order: 1;
+  padding-bottom: 7px; /* source inline-image baseline gap: wrapper 202px vs image 195px @375 */
+  line-height: 0;
+}
+
+.columns.featured .columns-featured-media picture,
+.columns.featured .columns-featured-media img {
+  display: block;
+  width: 100%;
+}
+
+.columns.featured .columns-featured-media img {
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.columns.featured .columns-featured-content {
+  order: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-top: -18px; /* source mobile .cmp-teaser__content margin-top: -1em */
+  padding: 63px 36px 36px;
+  background-color: var(--rule-color);
+}
+
+.columns.featured .columns-featured-content > :first-child {
+  margin-top: 0;
+}
+
+.columns.featured .columns-featured-eyebrow {
+  margin: 0 0 13.5px;
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  line-height: 45px;
+  text-align: justify;
+}
+
+.columns.featured .columns-featured-content h2 {
+  margin: 18px 0;
+  font-size: var(--heading-font-size-xl);
+  line-height: 54px;
+}
+
+/* description copy */
+.columns.featured .columns-featured-content > p:not(.columns-featured-eyebrow, .columns-featured-cta) {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+  line-height: 24.5px;
+}
+
+.columns.featured .columns-featured-content > p:not(.columns-featured-eyebrow, .columns-featured-cta)
+  + p:not(.columns-featured-eyebrow, .columns-featured-cta) {
+  margin-top: 13.5px;
+}
+
+.columns.featured .columns-featured-cta {
+  margin: 18px 0;
+}
+
+/* tablet and up (WKND switches at 768px): 2:1 flex split, image left,
+   panel height drives the row, image covers it */
+@media (width >= 768px) {
+  .columns.featured .columns-featured-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .columns.featured .columns-featured-media {
+    order: 0;
+    position: relative;
+    padding-bottom: 0;
+    flex: 2 1 0%;
+    overflow: hidden;
+  }
+
+  .columns.featured .columns-featured-media picture {
+    position: absolute;
+    inset: 0;
+  }
+
+  .columns.featured .columns-featured-media img {
+    height: 100%;
+  }
+
+  .columns.featured .columns-featured-content {
+    order: 1;
+    flex: 1 1 0%;
+    margin-top: 0;
+  }
+
+  .columns.featured .columns-featured-no-media .columns-featured-content {
+    flex-basis: 100%;
+  }
+}
+
+/* screen-reader-only context appended to generic CTA text */
+.columns.featured .columns-featured-cta-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ===== option "author" (author card) ===== */
+
+/* stylelint-disable no-descending-specificity -- "featured" and "author" never apply to the same block */
+
+/* WKND byline card: light rule above, round avatar, name + role, dark icon-only social buttons */
+.columns.author {
+  margin-top: 78px; /* WKND: 151px from the last paragraph to the avatar, rule 73px above it */
+  padding-top: 65px;
+  border-top: 1px solid var(--rule-color);
+}
+
+.columns.author .columns-author-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.columns.author .columns-author-avatar {
+  flex: 0 0 60px;
+  margin: 7px 25px 0 0;
+}
+
+.columns.author .columns-author-avatar img {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.columns.author .columns-author-text {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.columns.author .columns-author-text p {
+  margin: 0;
+}
+
+.columns.author .columns-author-text .columns-author-name {
+  margin: 0 0 4px;
+  padding-top: 8px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  line-height: 36px;
+}
+
+.columns.author .columns-author-name strong {
+  font-weight: 400;
+}
+
+.columns.author .columns-author-text .columns-author-role {
+  margin-bottom: 13.5px;
+  color: var(--dark-color);
+  font-size: 12px;
+  line-height: 30px;
+  text-transform: uppercase;
+}
+
+.columns.author .columns-author-social {
+  flex: 1 0 100%;
+  margin-top: 0;
+}
+
+.columns.author .columns-author-social ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.columns.author .columns-author-social-link {
+  box-sizing: border-box;
+  display: block;
+  width: 48px;
+  height: 48px;
+  padding: 18px 0 0 14px;
+  background-color: var(--text-color);
+  color: var(--rule-color);
+}
+
+.columns.author .columns-author-social-icon {
+  display: block;
+  width: 17.5px;
+  height: 17.5px;
+  background-color: currentcolor;
+  mask: var(--icon) left top / contain no-repeat;
+}
+
+/* no hover change on the source; keep a visible keyboard focus ring */
+.columns.author .columns-author-social-link:hover {
+  color: var(--rule-color);
+}
+
+.columns.author .columns-author-social-link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* social buttons beside the name from 1025px; as on WKND the avatar + name take
+   9 of the column's 12 grid columns (14px gutters), so the name is 75% - 92px */
+@media (width >= 1025px) {
+  .columns.author .columns-author-text {
+    flex: 0 0 calc(75% - 92px);
+  }
+
+  .columns.author .columns-author-social {
+    flex: 0 0 auto;
+    margin: 0 0 0 14px;
+  }
+}
+
+/* stylelint-enable no-descending-specificity */

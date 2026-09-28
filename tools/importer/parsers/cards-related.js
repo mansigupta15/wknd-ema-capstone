@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 /**
- * Parser for cards-related.
+ * Parser for cards-related (emits cards (related)).
  * Base block: Cards (no images). Source: https://wknd.site/us/en/magazine/western-australia.html
  * Source DOM: AEM Core list (div.list.cmp-list--upnext > ul.cmp-list > li.cmp-list__item >
  * a.cmp-list__item-link > span.cmp-list__item-title + span.cmp-list__item-date).
@@ -28,7 +28,7 @@ export default function parse(element, { document }) {
       cells.push([[l, v]]);
     });
     if (!cells.length) element.remove();
-    else element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-related (facts)', cells }));
+    else element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (related, facts)', cells }));
     return;
   }
   element.querySelectorAll('li.cmp-list__item').forEach((item) => {
@@ -61,5 +61,5 @@ export default function parse(element, { document }) {
     element.remove();
     return;
   }
-  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-related', cells }));
+  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (related)', cells }));
 }

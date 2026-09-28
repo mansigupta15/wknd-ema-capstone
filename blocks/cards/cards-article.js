@@ -3,7 +3,8 @@ import { optimizePicture } from '../../scripts/scripts.js';
 import queryIndex from '../../scripts/query-index.js';
 
 /**
- * Article listing cards: one row per card, [linked image | linked title, description].
+ * Cards option "article" (cards (article)): article / adventure cards, one row per card,
+ * [linked image | linked title, description].
  * Tolerates single-cell rows, missing images, and extra cells.
  * Option "locked": members-only teasers (text above a faded image, lock badge,
  * trailing non-link action label).

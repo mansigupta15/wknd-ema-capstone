@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 /**
- * Parser for columns-featured.
+ * Parser for columns-featured (emits columns (featured)).
  * Base block: columns. Source: https://wknd.site/us/en.html
  * Source DOM: AEM Core teaser (.cmp-teaser--featured) with .cmp-teaser__content
  * (pretitle, title, description, CTA) and a lazy-loaded Core image (.cmp-teaser__image).
@@ -111,6 +111,6 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[image || '', content.length ? content : '']];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-featured', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'columns (featured)', cells });
   element.replaceWith(block);
 }

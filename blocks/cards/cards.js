@@ -1,13 +1,27 @@
 import { optimizePicture } from '../../scripts/scripts.js';
 import buildSocialList from '../../scripts/social-links.js';
+import decorateArticle from './cards-article.js';
+import decorateRelated from './cards-related.js';
 
 /**
  * Cards (Block Collection): one row per card, [image] | [text: title, description, links].
- * Option "contributors" (About Us): round photo, name, role; the card's link-only paragraphs
- * (links naming a network, "Facebook") become icon-only social buttons.
+ * Options (variants of this one block, logic in the modules next to this file):
+ * - "article" (cards-article.js): WKND article / adventure cards; with "locked",
+ *   "filter" and "index" (rendered from the query index)
+ * - "related" (cards-related.js): cards without images, the "up next" list; with "facts"
+ * - "contributors" (About Us): round photo, name, role; the card's link-only paragraphs
+ *   (links naming a network, "Facebook") become icon-only social buttons
  * Tolerates cards without an image and extra cells.
  */
-export default function decorate(block) {
+export default async function decorate(block) {
+  if (block.classList.contains('article')) {
+    await decorateArticle(block);
+    return;
+  }
+  if (block.classList.contains('related')) {
+    decorateRelated(block);
+    return;
+  }
   const contributors = block.classList.contains('contributors');
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {

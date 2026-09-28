@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 /**
- * Parser for cards-article.
+ * Parser for cards-article (emits cards (article)).
  * Base block: cards. Source: https://wknd.site/us/en.html
  * Source DOM: AEM Core image list (ul.cmp-image-list > li.cmp-image-list__item >
  * article.cmp-image-list__item-content) with an image link, a title link and a
@@ -102,7 +102,7 @@ function parseLockedTeasers(element, document) {
     element.remove();
     return;
   }
-  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (locked)', cells }));
+  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (article, locked)', cells }));
 }
 
 /** One image-list item -> [linked image] | [linked title (strong), description p], or null. */
@@ -182,7 +182,7 @@ function parseFilterTabs(element, document) {
     element.remove();
     return;
   }
-  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (filter)', cells }));
+  element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (article, filter)', cells }));
 }
 
 /**
@@ -229,7 +229,7 @@ export default function parse(element, { document, params }) {
     const all = [...element.querySelectorAll('.cmp-tabs__tabpanel')][0];
     const config = all && indexConfig([...all.querySelectorAll('li.cmp-image-list__item')], element, document, pageUrl);
     if (config) {
-      element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (index, filter)', cells: config }));
+      element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (article, index, filter)', cells: config }));
       return;
     }
     parseFilterTabs(element, document);
@@ -241,7 +241,7 @@ export default function parse(element, { document, params }) {
 
   const config = indexConfig(items, element, document, pageUrl);
   if (config) {
-    element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards-article (index)', cells: config }));
+    element.replaceWith(WebImporter.Blocks.createBlock(document, { name: 'cards (article, index)', cells: config }));
     return;
   }
 
@@ -252,6 +252,6 @@ export default function parse(element, { document, params }) {
     return;
   }
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'cards-article', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'cards (article)', cells });
   element.replaceWith(block);
 }

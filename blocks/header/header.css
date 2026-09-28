@@ -176,11 +176,11 @@ header .nav-locale-links li {
 header .nav-locale-links li:not(:last-child) {
   margin-right: 5px;
   padding-right: 5px;
-  border-right: 1px solid #f7f7f7;
+  border-right: 1px solid var(--light-color);
 }
 
 header .nav-locale-links a:any-link {
-  color: #f7f7f7;
+  color: var(--light-color);
   line-height: 21px;
   text-decoration: none;
 }
@@ -334,7 +334,7 @@ header .nav-search input {
 }
 
 header .nav-search input::placeholder {
-  color: #757575;
+  color: var(--placeholder-color);
   text-transform: uppercase;
 }
 
@@ -394,7 +394,7 @@ header .nav-signin-panel input {
 }
 
 header .nav-signin-panel input::placeholder {
-  color: #757575;
+  color: var(--placeholder-color);
   text-transform: uppercase;
 }
 
