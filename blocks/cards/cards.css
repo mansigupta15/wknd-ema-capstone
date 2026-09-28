@@ -51,8 +51,10 @@
   border-radius: 50%;
 }
 
+/* the text sits 14px further in than the photo, as in the WKND fragment */
 .cards.contributors .cards-card-body {
   margin: 0;
+  padding: 0 14px;
 }
 
 .cards.contributors .cards-card-body > h3 {
